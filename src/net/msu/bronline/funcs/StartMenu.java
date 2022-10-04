@@ -1,5 +1,6 @@
 package net.msu.bronline.funcs;
 
+import net.msu.bronline.guis.Game;
 import net.msu.bronline.guis.Present;
 
 import javax.swing.*;
@@ -46,11 +47,11 @@ public class StartMenu {
 class Canv extends Canvas {
     JFrame cFrame;
     Present ps;
-
+    Game game;
     boolean dev = false;
     int m_x = 0, m_y = 0;
-    //w,a,s,d,shift,tab
-    boolean[] movements = {false,false,false,false,false,false};
+    //w,a,s,d,shift,tab,lClick,rClick
+    boolean[] movements = {false,false,false,false,false,false,false,false};
 
     int cCur = Cursor.DEFAULT_CURSOR;
 
@@ -66,48 +67,81 @@ class Canv extends Canvas {
     public Canv(JFrame frame) throws IOException {
         cFrame = frame;
         ps = new Present(cFrame, this);
-        setFocusable(true);
+        game = new Game(cFrame, this, movements);
 
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                int cl = ps.isMouseOnStart(e.getX(), e.getY());
-                if(cl != -1){
-                    if(ps.getGame_status() == 1){
-                        if(cl == 0) ps.setGame_status(2);
+                if(ps.getGame_status() < 5) {
+                    int cl = ps.isMouseOnStart(e.getX(), e.getY());
+                    if (cl != -1) {
+                        if (ps.getGame_status() == 1) {
+                            if (cl == 0) ps.setGame_status(2);
+                        } else if (ps.getGame_status() == 2) {
+                            if (cl == 0) ps.setGame_status(3);
+                            if (cl == 1) ps.setGame_status(4);
+                            if (cl == 2) ps.setGame_status(1);
+                        } else if (ps.getGame_status() == 3) {
+                            if (cl == 0) ps.setGame_status(2);
+                            if (cl == 1) ps.setGame_status(5);
+                        } else if (ps.getGame_status() == 4) {
+                            if (cl == 0) ps.setGame_status(2);
+                        }
                     }
-                    else if(ps.getGame_status() == 2){
-                        if(cl == 0) ps.setGame_status(3);
-                        if(cl == 1) ps.setGame_status(4);
-                        if(cl == 2) ps.setGame_status(1);
-                    }
-                    else if(ps.getGame_status() == 3){
-                        if(cl == 0) ps.setGame_status(2);
-                        if(cl == 1) ps.setGame_status(5);
-                    }
-                    else if(ps.getGame_status() == 4){
-                        if(cl == 0) ps.setGame_status(2);
+                } else {
+                    int cl = game.isMouseOnStart(e.getX(), e.getY());
+                    if (cl != -1) {
+                        if (game.getGame_status() == 0) {
+                            if (cl == 0) game.setGame_status(1);
+                        }
+                    } else {
+                        if (game.getGame_status() == 1) {
+                            System.out.println(e.getButton());
+                            if(e.getButton() == MouseEvent.BUTTON1) movements[6] = true;
+                            if(e.getButton() == MouseEvent.BUTTON3) movements[7] = true;
+                        }
                     }
                 }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if(ps.getGame_status() < 5) return;
+                if(e.getButton() == MouseEvent.BUTTON1) movements[6] = false;
+                if(e.getButton() == MouseEvent.BUTTON3) movements[7] = false;
             }
         });
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 updateMouse(e.getX(), e.getY());
-                if(ps.isMouseOnStart(e.getX(), e.getY()) != -1)
-                    updateCaursor(Cursor.HAND_CURSOR);
-                else
-                    updateCaursor(Cursor.DEFAULT_CURSOR);
+                if(ps.getGame_status() < 5){
+                    if(ps.isMouseOnStart(e.getX(), e.getY()) != -1)
+                        updateCaursor(Cursor.HAND_CURSOR);
+                    else
+                        updateCaursor(Cursor.DEFAULT_CURSOR);
+                } else {
+                    if(game.isMouseOnStart(e.getX(), e.getY()) != -1)
+                        updateCaursor(Cursor.HAND_CURSOR);
+                    else
+                        updateCaursor(Cursor.DEFAULT_CURSOR);
+                }
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
                 updateMouse(e.getX(), e.getY());
-                if(ps.isMouseOnStart(e.getX(), e.getY()) != -1)
-                    updateCaursor(Cursor.HAND_CURSOR);
-                else
-                    updateCaursor(Cursor.DEFAULT_CURSOR);
+                if(ps.getGame_status() < 5){
+                    if(ps.isMouseOnStart(e.getX(), e.getY()) != -1)
+                        updateCaursor(Cursor.HAND_CURSOR);
+                    else
+                        updateCaursor(Cursor.DEFAULT_CURSOR);
+                } else {
+                    if(game.isMouseOnStart(e.getX(), e.getY()) != -1)
+                        updateCaursor(Cursor.HAND_CURSOR);
+                    else
+                        updateCaursor(Cursor.DEFAULT_CURSOR);
+                }
             }
         });
 
@@ -229,6 +263,7 @@ class Canv extends Canvas {
 
     public void update() {
         if(ps.getGame_status() < 5) ps.run();
+        else game.run(m_x, m_y);
 //        System.out.println("updated");
     }
 
@@ -245,6 +280,7 @@ class Canv extends Canvas {
         g.fillRect(0,0, cFrame.getWidth(), cFrame.getHeight());
 
         if(ps.getGame_status() < 5) ps.draw(g);
+        else game.draw(g);
 
         if(dev){
             g.setColor((ps.getGame_status() != 2) ? Color.BLACK : Color.CYAN);

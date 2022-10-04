@@ -10,10 +10,17 @@ import java.io.IOException;
 public class Scene {
     JFrame cFrame;
     Canvas cCanv;
-    BufferedImage simg = ImageIO.read(new File(System.getProperty("user.dir")+ File.separator+"res"+File.separator+"m_full.png"));
+    boolean ingame;
+    BufferedImage simg = ImageIO.read(new File(System.getProperty("user.dir")+ File.separator+"res"+File.separator+(ingame ? "m_floor.png" : "m_full.png")));
+    BufferedImage simg2 = ImageIO.read(new File(System.getProperty("user.dir")+ File.separator+"res"+File.separator+"m_plant.png"));
     public Scene(JFrame frame, Canvas canv) throws IOException {
         cFrame = frame;
         cCanv = canv;
+    }
+    public Scene(JFrame frame, Canvas canv, boolean ingame) throws IOException {
+        cFrame = frame;
+        cCanv = canv;
+        this.ingame = ingame;
     }
 
     double x = 0, y = 0;
@@ -39,6 +46,9 @@ public class Scene {
 
     public BufferedImage getImg(){
         return simg;
+    }
+    public BufferedImage getImg(boolean plantorfloor){
+        return plantorfloor ? simg2 : simg;
     }
 
     public void moveForward(double x){

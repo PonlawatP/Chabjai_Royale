@@ -114,10 +114,6 @@ public class Present extends JPanel {
 
                 g.drawImage(btn_back, btn_back_px,btn_back_py, btn_back_px+btn_back_sx,btn_back_py+btn_back_sy,0,0,1020,400,this);
             }
-
-//            g.setColor(Color.BLACK);
-//            g.drawString("zoom: " + zoom_x + " : " + zoom_y, 10, 100);
-//            g.drawString("zoom: " + cCanv.getWidth() + " : " + cFrame.getWidth() + " : " + ((float)cFrame.getWidth() - cCanv.getWidth()), 10, 120);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
