@@ -23,12 +23,8 @@ public class Present extends JPanel {
         setSize(cFrame.getSize());
         setPreferredSize(cFrame.getPreferredSize());
         setBackground(Color.white);
-//        setFocusable(true);
         setVisible(true);
 
-
-
-        timer.schedule(run(), 0, 20);
     }
 
 //    รับโลโก้มาแปลงขนาด แล้วเอามาวางตรงกลาง
@@ -65,18 +61,6 @@ public class Present extends JPanel {
         return bi;
     }
 
-    long prevFrameTime = System.currentTimeMillis();
-    long timeNow = System.currentTimeMillis();
-//
-//    @Override
-//    public int getWidth() {
-//        return cFrame.getWidth()-17;
-//    }
-//    @Override
-//    public int getHeight() {
-//        return cFrame.getHeight()-40;
-//    }
-
 
     int cen_x = 0, cen_y = 0;
     int b_cen_x = 0, b_cen_y = 0;
@@ -88,9 +72,9 @@ public class Present extends JPanel {
 
 //        วาด Logo
         try {
-            if(frameTime >= 60) g.drawImage(getOpacityImg(scene.getImg(), scene.getSize_x(), scene.getSize_y(), scene.getOpacity()), 0,0, cCanv.getWidth(), cCanv.getHeight(),scene.getX(), scene.getY(),scene.getBoundX(), scene.getBoundY(),this);
+            if(frameTime >= 120) g.drawImage(getOpacityImg(scene.getImg(), scene.getSize_x(), scene.getSize_y(), scene.getOpacity()), 0,0, cCanv.getWidth(), cCanv.getHeight(),scene.getX(), scene.getY(),scene.getBoundX(), scene.getBoundY(),this);
 
-            if(frameTime < 60) g.drawImage(getOpacityImg(logo, l_sx, l_sy, opc), l_px+cen_x,l_py+cen_y, this);
+            if(frameTime < 120) g.drawImage(getOpacityImg(logo, l_sx, l_sy, opc), l_px+cen_x,l_py+cen_y, this);
 
 //            play btn
             if(game_status == 1){
@@ -113,6 +97,22 @@ public class Present extends JPanel {
 
                 g.drawImage(btn_host, b_cen_x,btn_py, b_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
                 g.drawImage(btn_join_den, b2_cen_x,btn_py, b2_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
+            }
+            else if(game_status == 3){
+                btn_back_px = 15;
+                btn_back_py = 20;
+                b_cen_x = (cCanv.getWidth()/2)-(btn_sx/2);
+                b_cen_y = (cCanv.getHeight()/2)-(btn_sy/2);
+                btn_py = cCanv.getHeight()-100;
+
+                g.drawImage(btn_back, btn_back_px,btn_back_py, btn_back_px+btn_back_sx,btn_back_py+btn_back_sy,0,0,1020,400,this);
+                g.drawImage(btn_play, b_cen_x,btn_py, b_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
+            }
+            else if(game_status == 4){
+                btn_back_px = 15;
+                btn_back_py = 20;
+
+                g.drawImage(btn_back, btn_back_px,btn_back_py, btn_back_px+btn_back_sx,btn_back_py+btn_back_sy,0,0,1020,400,this);
             }
 
 //            g.setColor(Color.BLACK);
@@ -139,89 +139,74 @@ public class Present extends JPanel {
         this.game_status = game_status;
     }
 
-    Timer timer = new Timer();
-
 //    ตัวแปรทิศทาง ความเร็วของฉาก
     int s_x = Math.random()>=0.5?-1:1, s_y = Math.random()>=0.5?-1:1;
     double s_vx = 0.5 + new Random().nextDouble(0.7), s_vy = 0.5 + new Random().nextDouble(0.7);
-    TimerTask run() {
 
-        return new TimerTask() {
-            @Override
-            public void run() {
-                if(frameTime >= 60){
-//                    if(scene.getOpacity() < 55){
-//                        scene.setOpacity(scene.getOpacity()+2);
-//
-//                        frameTime++;
-//                    }
-                    if(game_status == 0 && scene.getOpacity() < 99){
-                        scene.setOpacity(scene.getOpacity()+2);
-                        if(scene.getOpacity() > 100)
-                            scene.setOpacity(100);
-                        frameTime++;
-                    } else {
-                        if(game_status == 0){
-                            game_status = 1;
-                        } else if(game_status == 1)  {
-                            if(scene.getOpacity() != 100) scene.setOpacity(100);
-                        } else if(game_status == 2)  {
-                            if(scene.getOpacity() != 40) scene.setOpacity(40);
-                        }
-                    }
-
-                    scene.moveForward(s_x*s_vx);
-                    scene.moveUp(s_y*s_vy);
-                    if(scene.getX() < 0 || scene.getBoundX() > scene.getSize_x()){
-                        s_x *= -1;
-                        if(scene.getX() < 0) scene.setX(0); else scene.setX(((scene.getSize_x()-cCanv.getWidth()))-1);
-                    }
-                    if(scene.getY() < 0 || scene.getBoundY() > scene.getSize_y()){
-                        s_y *= -1;
-                        if(scene.getY() < 0) scene.setY(0); else scene.setY(scene.getSize_y()-cCanv.getHeight()-1);
-                    }
-                } else if(frameTime >= 50){
-                    opc -= opc > 0 ? 20 : 0;
-                    frameTime++;
+    public void run() {
+        if(frameTime >= 120){
+            if(game_status == 0 && scene.getOpacity() < 99){
+                scene.setOpacity(scene.getOpacity()+2);
+                if(scene.getOpacity() > 100)
+                    scene.setOpacity(100);
+                frameTime++;
+            } else {
+                if(game_status == 0){
+                    game_status = 1;
+                } else if(game_status == 1)  {
+                    if(scene.getOpacity() != 100) scene.setOpacity(100);
+                } else if(game_status == 2)  {
+                    if(scene.getOpacity() != 40) scene.setOpacity(40);
                 }
-                else if(frameTime >= 10){
-                    if(opc < 50){
-                        l_py -= 2;
-                        opc += 20;
-                    } else {
-                        if(opc < 100){
-                            l_py -= 1;
-                            opc += 3;
-
-                            if(opc > 100)
-                                opc = 100;
-                        }
-                    }
-                    frameTime++;
-                } else {
-                    frameTime++;
-                }
-
-//                repaint();
-//            try {
-//                if(frameTime >= 60) Thread.sleep(1); else Thread.sleep(50);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
             }
-        };
+
+            scene.moveForward(s_x*s_vx);
+            scene.moveUp(s_y*s_vy);
+            if(scene.getX() < 0 || scene.getBoundX() > scene.getSize_x()){
+                s_x *= -1;
+                if(scene.getX() < 0) scene.setX(0); else scene.setX(((scene.getSize_x()-cCanv.getWidth()))-1);
+            }
+            if(scene.getY() < 0 || scene.getBoundY() > scene.getSize_y()){
+                s_y *= -1;
+                if(scene.getY() < 0) scene.setY(0); else scene.setY(scene.getSize_y()-cCanv.getHeight()-1);
+            }
+        } else if(frameTime >= 80){
+            opc -= opc > 0 ? 5 : 0;
+            frameTime++;
+        }
+        else if(frameTime >= 10){
+            if(opc < 50){
+                l_py -= 2;
+                opc += 20;
+            } else {
+                if(opc < 100){
+                    l_py -= 1;
+                    opc += 3;
+
+                    if(opc > 100){
+                        opc = 100;
+                    }
+                }
+            }
+            frameTime++;
+        } else {
+            frameTime++;
+        }
     }
 
     // ------------- ฟังก์ชันเช็คว่าเมาส์อยู่ในปุ่มมั้ย
     public int isMouseOnStart(int x, int y){
         if(game_status == 1){
-            if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)){
-                return 0;
-            }
+            if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 0;
         } else if(game_status == 2) {
             if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 0;
             if((x >= b2_cen_x && x <= b2_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 1;
             if((x >= btn_back_px && x <= btn_back_px+btn_back_sx) && (y >= btn_back_py && y <= btn_back_py+btn_back_sy)) return 2;
+        } else if(game_status == 3) {
+            if((x >= btn_back_px && x <= btn_back_px+btn_back_sx) && (y >= btn_back_py && y <= btn_back_py+btn_back_sy)) return 0;
+            if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 1;
+        }else if(game_status == 4) {
+            if((x >= btn_back_px && x <= btn_back_px+btn_back_sx) && (y >= btn_back_py && y <= btn_back_py+btn_back_sy)) return 0;
         }
 
         return -1;

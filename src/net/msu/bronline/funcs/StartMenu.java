@@ -49,6 +49,8 @@ class Canv extends Canvas {
 
     boolean dev = false;
     int m_x = 0, m_y = 0;
+    //w,a,s,d,shift,tab
+    boolean[] movements = {false,false,false,false,false,false};
 
     int cCur = Cursor.DEFAULT_CURSOR;
 
@@ -64,6 +66,7 @@ class Canv extends Canvas {
     public Canv(JFrame frame) throws IOException {
         cFrame = frame;
         ps = new Present(cFrame, this);
+        setFocusable(true);
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -75,8 +78,15 @@ class Canv extends Canvas {
                     }
                     else if(ps.getGame_status() == 2){
                         if(cl == 0) ps.setGame_status(3);
-                        if(cl == 1) ps.setGame_status(2);
+                        if(cl == 1) ps.setGame_status(4);
                         if(cl == 2) ps.setGame_status(1);
+                    }
+                    else if(ps.getGame_status() == 3){
+                        if(cl == 0) ps.setGame_status(2);
+                        if(cl == 1) ps.setGame_status(5);
+                    }
+                    else if(ps.getGame_status() == 4){
+                        if(cl == 0) ps.setGame_status(2);
                     }
                 }
             }
@@ -108,11 +118,26 @@ class Canv extends Canvas {
 
             @Override
             public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_F12) dev = !dev;
+
+                if(ps.getGame_status() < 5) return;
+                if(e.getKeyCode() == KeyEvent.VK_W) movements[0] = true;
+                if(e.getKeyCode() == KeyEvent.VK_A) movements[1] = true;
+                if(e.getKeyCode() == KeyEvent.VK_S) movements[2] = true;
+                if(e.getKeyCode() == KeyEvent.VK_D) movements[3] = true;
+                if(e.getKeyCode() == KeyEvent.VK_SHIFT) movements[4] = true;
+                if(e.getKeyCode() == KeyEvent.VK_TAB) movements[5] = true;
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_F12) dev = !dev;
+                if(ps.getGame_status() < 5) return;
+                if(e.getKeyCode() == KeyEvent.VK_W) movements[0] = false;
+                if(e.getKeyCode() == KeyEvent.VK_A) movements[1] = false;
+                if(e.getKeyCode() == KeyEvent.VK_S) movements[2] = false;
+                if(e.getKeyCode() == KeyEvent.VK_D) movements[3] = false;
+                if(e.getKeyCode() == KeyEvent.VK_SHIFT) movements[4] = false;
+                if(e.getKeyCode() == KeyEvent.VK_TAB) movements[5] = false;
             }
         });
     }
@@ -152,12 +177,13 @@ class Canv extends Canvas {
                 long gameTime = getCurrentTime();
 
                 long frames = 0;
+                fps = 0;
 
                 long lastFpsCount = getCurrentTime();
 
                 long updateRate = 1000 / 60; // Update 60 times per second
 
-                createBufferStrategy(2);
+                createBufferStrategy(3);
 //
                 do {
                     BufferStrategy bs = getBufferStrategy();
@@ -167,10 +193,10 @@ class Canv extends Canvas {
                     }
                     while (keepRendering.get()) {
                         now = getCurrentTime();
-
+//                        System.out.println("now: " + now + " update: " + updateRate + " = " + (now + updateRate) + " gameT: " + gameTime);
                         while (now + updateRate > gameTime) {
                             // update your logic here
-                            update();
+                                update();
                             gameTime += updateRate;
                             // render
                             do {
@@ -180,7 +206,8 @@ class Canv extends Canvas {
                                     g.dispose();
 
                                     frames++;
-                                    if (now - lastFpsCount > 200) {
+//                                    System.out.println(frames);
+                                    if (now - lastFpsCount > 1000) {
                                         fps = frames;
                                         frames = 0;
                                         lastFpsCount = getCurrentTime();
@@ -200,8 +227,8 @@ class Canv extends Canvas {
         thread.start();
     }
 
-    public void update()
-    {
+    public void update() {
+        if(ps.getGame_status() < 5) ps.run();
 //        System.out.println("updated");
     }
 
@@ -210,19 +237,18 @@ class Canv extends Canvas {
      */
     public void render(Graphics g)
     {
-        if(ps.getGame_status() == 2){
+        if(ps.getGame_status() >= 2 && ps.getGame_status() <= 4){
             g.setColor(Color.BLACK);
         } else {
             g.setColor(Color.WHITE);
         }
         g.fillRect(0,0, cFrame.getWidth(), cFrame.getHeight());
 
-
-        ps.draw(g);
+        if(ps.getGame_status() < 5) ps.draw(g);
 
         if(dev){
             g.setColor((ps.getGame_status() != 2) ? Color.BLACK : Color.CYAN);
-            g.drawString("FPS: " + fps, 10, 20);
+            g.drawString("FPSection: " + fps, 10, 20);
             g.drawString("w: " + cFrame.getWidth() + " h: " + cFrame.getHeight(), 10, 40);
             g.drawString("scene: " + ps.getGame_status(), 10, 60);
             g.drawString("scene_w: " + getWidth() + " scene_h: " + getHeight(), 10, 80);
