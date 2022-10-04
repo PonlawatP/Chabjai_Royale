@@ -4,19 +4,230 @@ import net.msu.bronline.guis.Present;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferStrategy;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class StartMenu extends JFrame {
-    Present ps;
+public class StartMenu {
     public StartMenu() throws IOException {
-        setSize(new Dimension(1280,720));
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
 
-        ps = new Present(this);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JFrame frame = new JFrame();
 
-        setContentPane(ps);
-        setVisible(true);
+                Canv canvas = null;
+                try {
+                    canvas = new Canv(frame);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                frame.add(canvas);
+                frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+                frame.setTitle("BR : FinalLab");
+
+                frame.setPreferredSize(new Dimension(1280, 720));
+                frame.setMinimumSize(new Dimension((int)(1280*0.8), (int)(720*0.8)));
+                frame.pack();
+                frame.setFocusable(true);
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+
+                canvas.start();
+            }
+        });
     }
 
+}
+
+class Canv extends Canvas {
+    JFrame cFrame;
+    Present ps;
+
+    boolean dev = false;
+    int m_x = 0, m_y = 0;
+
+    int cCur = Cursor.DEFAULT_CURSOR;
+
+    public void updateMouse(int x, int y){
+        m_x = x;
+        m_y = y;
+    }
+
+    public void updateCaursor(int c){
+        cCur = c;
+        setCursor(Cursor.getPredefinedCursor(c));
+    }
+    public Canv(JFrame frame) throws IOException {
+        cFrame = frame;
+        ps = new Present(cFrame, this);
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                int cl = ps.isMouseOnStart(e.getX(), e.getY());
+                if(cl != -1){
+                    if(ps.getGame_status() == 1){
+                        if(cl == 0) ps.setGame_status(2);
+                    }
+                    else if(ps.getGame_status() == 2){
+                        if(cl == 0) ps.setGame_status(3);
+                        if(cl == 1) ps.setGame_status(2);
+                        if(cl == 2) ps.setGame_status(1);
+                    }
+                }
+            }
+        });
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                updateMouse(e.getX(), e.getY());
+                if(ps.isMouseOnStart(e.getX(), e.getY()) != -1)
+                    updateCaursor(Cursor.HAND_CURSOR);
+                else
+                    updateCaursor(Cursor.DEFAULT_CURSOR);
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                updateMouse(e.getX(), e.getY());
+                if(ps.isMouseOnStart(e.getX(), e.getY()) != -1)
+                    updateCaursor(Cursor.HAND_CURSOR);
+                else
+                    updateCaursor(Cursor.DEFAULT_CURSOR);
+            }
+        });
+
+        addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_F12) dev = !dev;
+            }
+        });
+    }
+
+    private Thread thread;
+    private AtomicBoolean keepRendering = new AtomicBoolean(true);
+
+    public long getCurrentTime() {
+        return System.nanoTime() / 1000000;
+    }
+
+    public void stop() {
+        if (thread != null) {
+            keepRendering.set(false);
+            try {
+                thread.join();
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * The Game Loop
+     */
+    long fps = 0;
+    public void start() {
+        if (thread != null) {
+            stop();
+        }
+
+        keepRendering.set(true);
+        thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long now = getCurrentTime();
+                long gameTime = getCurrentTime();
+
+                long frames = 0;
+
+                long lastFpsCount = getCurrentTime();
+
+                long updateRate = 1000 / 60; // Update 60 times per second
+
+                createBufferStrategy(2);
+//
+                do {
+                    BufferStrategy bs = getBufferStrategy();
+                    while (bs == null) {
+                        System.out.println("get buffer");
+                        bs = getBufferStrategy();
+                    }
+                    while (keepRendering.get()) {
+                        now = getCurrentTime();
+
+                        while (now + updateRate > gameTime) {
+                            // update your logic here
+                            update();
+                            gameTime += updateRate;
+                            // render
+                            do {
+                                do {
+                                    Graphics g = bs.getDrawGraphics();
+                                    render(g);
+                                    g.dispose();
+
+                                    frames++;
+                                    if (now - lastFpsCount > 200) {
+                                        fps = frames;
+                                        frames = 0;
+                                        lastFpsCount = getCurrentTime();
+//                                        cFrame.setTitle("FPS: " + fps);
+                                    }
+                                }
+                                while (bs.contentsRestored());
+
+                                bs.show();
+                            }
+                            while (bs.contentsLost());
+                        }
+                    }
+                } while (keepRendering.get());
+            }
+        });
+        thread.start();
+    }
+
+    public void update()
+    {
+//        System.out.println("updated");
+    }
+
+    /**
+     * Render the game
+     */
+    public void render(Graphics g)
+    {
+        if(ps.getGame_status() == 2){
+            g.setColor(Color.BLACK);
+        } else {
+            g.setColor(Color.WHITE);
+        }
+        g.fillRect(0,0, cFrame.getWidth(), cFrame.getHeight());
+
+
+        ps.draw(g);
+
+        if(dev){
+            g.setColor((ps.getGame_status() != 2) ? Color.BLACK : Color.CYAN);
+            g.drawString("FPS: " + fps, 10, 20);
+            g.drawString("w: " + cFrame.getWidth() + " h: " + cFrame.getHeight(), 10, 40);
+            g.drawString("scene: " + ps.getGame_status(), 10, 60);
+            g.drawString("scene_w: " + getWidth() + " scene_h: " + getHeight(), 10, 80);
+            g.drawString("Mouse: [" + m_x + " : " + m_y + "] " + Cursor.getPredefinedCursor(cCur).getName(), 10, 100);
+        }
+//        System.out.println("rendered");
+    }
 }
