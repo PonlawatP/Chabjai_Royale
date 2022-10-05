@@ -9,8 +9,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Present extends JPanel {
     JFrame cFrame;
@@ -28,18 +26,19 @@ public class Present extends JPanel {
     }
 
 //    รับโลโก้มาแปลงขนาด แล้วเอามาวางตรงกลาง
-    BufferedImage logo = ImageIO.read(new File(System.getProperty("user.dir")+ File.separator+"res"+File.separator+"logo.png"));
+//    ImageIcon ii = new ImageIcon(getClass().getClassLoader().getResource("imgs/logo.png"));
+    BufferedImage logo = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/logo.png").getPath()));
     float size = .6f;
     int opc = 0;
     int l_sx = (int)(537*size), l_sy = (int)(417*size); //ขนาดภาพ
     int l_px = 0, l_py = 20; //ตำแหน่งภาพ
 
 //    ปุ่ม
-    BufferedImage btn_play = ImageIO.read(new File(System.getProperty("user.dir")+ File.separator+"res"+File.separator+"btn_play.png"));
-    BufferedImage btn_host = ImageIO.read(new File(System.getProperty("user.dir")+ File.separator+"res"+File.separator+"btn_host.png"));
-    BufferedImage btn_join = ImageIO.read(new File(System.getProperty("user.dir")+ File.separator+"res"+File.separator+"btn_join.png"));
-    BufferedImage btn_join_den = ImageIO.read(new File(System.getProperty("user.dir")+ File.separator+"res"+File.separator+"btn_join_den.png"));
-    BufferedImage btn_back = ImageIO.read(new File(System.getProperty("user.dir")+ File.separator+"res"+File.separator+"btn_back.png"));
+    BufferedImage btn_play = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/btn_play.png").getPath()));
+    BufferedImage btn_host = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/btn_host.png").getPath()));
+    BufferedImage btn_join = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/btn_join.png").getPath()));
+    BufferedImage btn_join_den = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/btn_join_den.png").getPath()));
+    BufferedImage btn_back = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/btn_back.png").getPath()));
 
     float btn_size = .5f;
     float btn_back_size = .1f;

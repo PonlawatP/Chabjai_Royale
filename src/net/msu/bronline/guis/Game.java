@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
 public class Game extends JPanel {
     JFrame cFrame;
@@ -28,8 +27,8 @@ public class Game extends JPanel {
 
     }
 
-    BufferedImage btn_play = ImageIO.read(new File(System.getProperty("user.dir")+ File.separator+"res"+File.separator+"btn_play.png"));
-    BufferedImage btn_back = ImageIO.read(new File(System.getProperty("user.dir")+ File.separator+"res"+File.separator+"btn_back.png"));
+    BufferedImage btn_play = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/btn_play.png").getPath()));
+    BufferedImage btn_back = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/btn_back.png").getPath()));
 
     float btn_size = .5f;
     float btn_back_size = .1f;
@@ -55,8 +54,17 @@ public class Game extends JPanel {
     int b_cen_x = 0, b_cen_y = 0;
     public void draw(Graphics ge){
         Graphics2D g = (Graphics2D) ge;
-        g.drawImage(scene.getImg(false), 0,0, cCanv.getWidth(), cCanv.getHeight(),scene.getX(), scene.getY(),scene.getBoundX(), scene.getBoundY(),this);
-        g.drawImage(scene.getImg(true), 0,0, cCanv.getWidth(), cCanv.getHeight(),scene.getX(), scene.getY(),scene.getBoundX(), scene.getBoundY(),this);
+        g.drawImage(
+                scene.getImg(false),
+                0,0
+                , cCanv.getWidth(), cCanv.getHeight(),
+
+                scene.getX(), scene.getY()
+                ,scene.getBoundX(), scene.getBoundY()
+
+                ,this
+        );
+//        g.drawImage(scene.getImg(true), 0,0, cCanv.getWidth(), cCanv.getHeight(),scene.getX(), scene.getY(),scene.getBoundX(), scene.getBoundY(),this);
 
         g.setColor(Color.RED);
 //        g.drawRoundRect(0,0, 10, 10, 3, 3);
@@ -80,6 +88,10 @@ public class Game extends JPanel {
         this.game_status = game_status;
     }
 
+    public Scene getScene() {
+        return scene;
+    }
+    int m_x = 0, m_y = 0;
     double v_speed = 1;
     public void run(int m_x, int m_y) {
         if(getGame_status() == 1){
@@ -88,16 +100,19 @@ public class Game extends JPanel {
             if(movements[2]) scene.moveUp(1*v_speed);
             if(movements[3]) scene.moveForward(1*v_speed);
             if(movements[4]) v_speed = 3; else v_speed = 2;
+
+            this.m_x = m_x;
+            this.m_y = m_y;
+
+            scene.updateMouse(m_x, m_y);
         }
 
-        if(scene.getX() < 0 || scene.getBoundX() > scene.getSize_x()){
-//            s_x *= -1;
-            if(scene.getX() < 0) scene.setX(0); else scene.setX(((scene.getSize_x()-cCanv.getWidth()))-1);
-        }
-        if(scene.getY() < 0 || scene.getBoundY() > scene.getSize_y()){
-//            s_y *= -1;
-            if(scene.getY() < 0) scene.setY(0); else scene.setY(scene.getSize_y()-cCanv.getHeight()-1);
-        }
+//        if(scene.getX() < 0 || scene.getBoundX() > scene.getSize_x()){
+//            if(scene.getX() < 0) scene.setX(0); else scene.setX(((scene.getSize_x()-cCanv.getWidth()))-1);
+//        }
+//        if(scene.getY() < 0 || scene.getBoundY() > scene.getSize_y()){
+//            if(scene.getY() < 0) scene.setY(0); else scene.setY(scene.getSize_y()-cCanv.getHeight()-1);
+//        }
     }
 
     // ------------- ฟังก์ชันเช็คว่าเมาส์อยู่ในปุ่มมั้ย

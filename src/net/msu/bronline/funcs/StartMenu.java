@@ -48,7 +48,7 @@ class Canv extends Canvas {
     JFrame cFrame;
     Present ps;
     Game game;
-    boolean dev = false;
+    boolean dev = true;
     int m_x = 0, m_y = 0;
     //w,a,s,d,shift,tab,lClick,rClick
     boolean[] movements = {false,false,false,false,false,false,false,false};
@@ -68,7 +68,14 @@ class Canv extends Canvas {
         cFrame = frame;
         ps = new Present(cFrame, this);
         game = new Game(cFrame, this, movements);
-
+        ps.setGame_status(5);
+        addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                if(ps.getGame_status() >= 5)
+                    game.getScene().setSize((float) (game.getScene().getSize()+((e.getWheelRotation()*-1)*.05)));
+            }
+        });
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -96,7 +103,6 @@ class Canv extends Canvas {
                         }
                     } else {
                         if (game.getGame_status() == 1) {
-                            System.out.println(e.getButton());
                             if(e.getButton() == MouseEvent.BUTTON1) movements[6] = true;
                             if(e.getButton() == MouseEvent.BUTTON3) movements[7] = true;
                         }
@@ -289,6 +295,7 @@ class Canv extends Canvas {
             g.drawString("scene: " + ps.getGame_status(), 10, 60);
             g.drawString("scene_w: " + getWidth() + " scene_h: " + getHeight(), 10, 80);
             g.drawString("Mouse: [" + m_x + " : " + m_y + "] " + Cursor.getPredefinedCursor(cCur).getName(), 10, 100);
+            g.drawString("zoom: " + game.getScene().getSize(), 10, 120);
         }
 //        System.out.println("rendered");
     }

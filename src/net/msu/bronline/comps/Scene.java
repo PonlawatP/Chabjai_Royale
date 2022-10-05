@@ -11,8 +11,9 @@ public class Scene {
     JFrame cFrame;
     Canvas cCanv;
     boolean ingame;
-    BufferedImage simg = ImageIO.read(new File(System.getProperty("user.dir")+ File.separator+"res"+File.separator+(ingame ? "m_floor.png" : "m_full.png")));
-    BufferedImage simg2 = ImageIO.read(new File(System.getProperty("user.dir")+ File.separator+"res"+File.separator+"m_plant.png"));
+    BufferedImage simg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/m_full.png").getPath()));
+    BufferedImage simg1 = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/m_floor.png").getPath()));
+    BufferedImage simg2 = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/m_plant.png").getPath()));
     public Scene(JFrame frame, Canvas canv) throws IOException {
         cFrame = frame;
         cCanv = canv;
@@ -23,8 +24,16 @@ public class Scene {
         this.ingame = ingame;
     }
 
+    boolean mouse_inp = false;
+    int m_x = 0, m_y = 0;
+    public void updateMouse(int x, int y){
+        if(!mouse_inp) mouse_inp = true;
+        m_x = x;
+        m_y = y;
+    }
+
     double x = 0, y = 0;
-    float size = 1;
+    double size = 1.05;
     int size_x = 2000, size_y = 2000;
     int opc = 0;
 
@@ -32,7 +41,7 @@ public class Scene {
         this.size = size;
     }
 
-    public float getSize() {
+    public double getSize() {
         return size;
     }
 
@@ -48,7 +57,7 @@ public class Scene {
         return simg;
     }
     public BufferedImage getImg(boolean plantorfloor){
-        return plantorfloor ? simg2 : simg;
+        return plantorfloor ? simg2 : simg1;
     }
 
     public void moveForward(double x){
@@ -74,21 +83,28 @@ public class Scene {
     }
 
     public int getX(){
-        return (int)x;
-//        return (int)(x*getZoom());
+//        return (int)x;
+        int p = (int)(x-(cCanv.getWidth()-(cCanv.getWidth()*getSize())));
+        double posmx = ((double) m_x-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
+        return (int)(p + (posmx*15*getSize()));
     }
     public int getY(){
-        return (int)y;
-//        return (int)(y*getZoom());
+//        return (int)y;
+        int p = (int)(y-(cCanv.getHeight()-(cCanv.getHeight()*getSize())));
+        double posmy = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
+        return (int)(p + (posmy*15*getSize()));
     }
     public int getBoundX(){
-        int p = getX()+cCanv.getWidth();
-        return (int)p;
+        double p = x+(cCanv.getWidth()-((cCanv.getWidth()*getSize())-cCanv.getWidth()));
+        double posmx = ((double) m_x-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
+        return (int)(p + (posmx*15*getSize()));
 //        return (int)(p*getZoomCanvas());
     }
     public int getBoundY(){
-        int p = getY()+cCanv.getHeight();
-        return (int)p;
+        double a = (cCanv.getHeight()*(getSize()*-1+2));
+        double p = y+a;
+        double posmy = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
+        return (int)(p + (posmy*15*getSize()));
 //        return (int)(p*getZoomCanvas());
     }
 
