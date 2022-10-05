@@ -4,11 +4,11 @@ import net.msu.bronline.funcs.StartMenu;
 
 import java.io.IOException;
 
-public class Main {
+public class Main_2 {
 
     public static void main(String[] args) {
         try{
-            StartMenu sm = new StartMenu("Player 1", true);
+            StartMenu sm = new StartMenu("Player 2", false);
         }catch (IOException ex){
             System.out.println("File Missing?");
         }

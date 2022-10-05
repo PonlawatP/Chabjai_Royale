@@ -1,6 +1,9 @@
 package net.msu.bronline.guis;
 
+import net.msu.bronline.comps.Player;
 import net.msu.bronline.comps.Scene;
+import net.msu.bronline.network.CientProgram;
+import net.msu.bronline.network.ServerProgram;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -8,23 +11,59 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 
 public class Game extends JPanel {
     JFrame cFrame;
     Canvas cCanv;
     Scene scene;
+    Player p_own;
+
+    boolean hosting = false;
+    Thread t_host;
 
     boolean[] movements;
-    public Game(JFrame cFrame, Canvas canv, boolean[] movements) throws IOException {
+    Present ps;
+    public Game(JFrame cFrame, Canvas canv, boolean[] movements, Present ps, String username, boolean host) throws IOException {
         this.cFrame = cFrame;
         this.cCanv = canv;
         this.movements = movements;
+        this.ps = ps;
+        this.hosting = host;
         scene = new Scene(cFrame, cCanv, true);
         setSize(cFrame.getSize());
         setPreferredSize(cFrame.getPreferredSize());
         setBackground(Color.white);
         setVisible(true);
 
+//        add player
+        p_own = new Player(scene);
+        p_own.setUsername(username);
+        Player.getPlayers().add(p_own);
+
+//        server
+        if(hosting){
+            t_host = new Thread(new ServerProgram(scene, this));
+        } else {
+            t_host = new Thread(new CientProgram(getPlayerOwn().getUsername(), ps, this, false));
+        }
+        startServer();
+    }
+
+    public void startServer(){
+            t_host.start();
+    }
+
+    public boolean isHosting() {
+        return hosting;
+    }
+
+    public void setHosting(boolean hosting) {
+        this.hosting = hosting;
+    }
+
+    public Player getPlayerOwn(){
+        return p_own;
     }
 
     BufferedImage btn_play = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/btn_play.png").getPath()));
@@ -52,6 +91,7 @@ public class Game extends JPanel {
     }
 
     int b_cen_x = 0, b_cen_y = 0;
+    int i = 0, i1 = 0;
     public void draw(Graphics ge){
         Graphics2D g = (Graphics2D) ge;
         g.drawImage(
@@ -64,7 +104,22 @@ public class Game extends JPanel {
 
                 ,this
         );
-//        g.drawImage(scene.getImg(true), 0,0, cCanv.getWidth(), cCanv.getHeight(),scene.getX(), scene.getY(),scene.getBoundX(), scene.getBoundY(),this);
+        Iterator<Player> ps = Player.getPlayers().stream().iterator();
+        i++;
+        if(i >= 2) {
+            i = 0;
+            i1++;
+            if(i1 > 8) i1 = 0;
+        }
+        int a1 = 11;
+        while (ps.hasNext()){
+            Player p = ps.next();
+//            System.out.println(p.getPacket());
+
+            g.drawString(p.getUsername(), p.getPosX()+10, p.getPosY()+10);
+            g.drawImage(p.getPlayerImage(), p.getPosX(), p.getPosY(), p.getPosBoundX(), p.getPosBoundY(),(64*i1)+1,(64*a1)+1,(64*(i1+1))-1, (64*(a1+1))-1,this);
+        }
+        //        g.drawImage(scene.getImg(true), 0,0, cCanv.getWidth(), cCanv.getHeight(),scene.getX(), scene.getY(),scene.getBoundX(), scene.getBoundY(),this);
 
         g.setColor(Color.RED);
 //        g.drawRoundRect(0,0, 10, 10, 3, 3);
@@ -95,11 +150,16 @@ public class Game extends JPanel {
     double v_speed = 1;
     public void run(int m_x, int m_y) {
         if(getGame_status() == 1){
-            if(movements[0]) scene.moveUp(-1*v_speed);
-            if(movements[1]) scene.moveForward(-1*v_speed);
-            if(movements[2]) scene.moveUp(1*v_speed);
-            if(movements[3]) scene.moveForward(1*v_speed);
-            if(movements[4]) v_speed = 3; else v_speed = 2;
+//            if(movements[0]) scene.moveUp(-1*v_speed);
+//            if(movements[1]) scene.moveForward(-1*v_speed);
+//            if(movements[2]) scene.moveUp(1*v_speed);
+//            if(movements[3]) scene.moveForward(1*v_speed);
+            if(movements[0]) p_own.moveUp(-1*v_speed);
+            if(movements[1]) p_own.moveForward(-1*v_speed);
+            if(movements[2]) p_own.moveUp(1*v_speed);
+            if(movements[3]) p_own.moveForward(1*v_speed);
+            if(movements[4]) v_speed = 7; else v_speed = 5;
+            if(movements[8]) v_speed = v_speed/2;
 
             this.m_x = m_x;
             this.m_y = m_y;

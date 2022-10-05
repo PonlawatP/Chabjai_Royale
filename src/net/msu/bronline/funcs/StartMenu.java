@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class StartMenu {
-    public StartMenu() throws IOException {
+    public StartMenu(String username, boolean host) throws IOException {
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -20,7 +20,7 @@ public class StartMenu {
 
                 Canv canvas = null;
                 try {
-                    canvas = new Canv(frame);
+                    canvas = new Canv(frame, username, host);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -28,7 +28,7 @@ public class StartMenu {
                 frame.add(canvas);
                 frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-                frame.setTitle("BR : FinalLab");
+                frame.setTitle("BR : FinalLab  |  "+username);
 
                 frame.setPreferredSize(new Dimension(1280, 720));
                 frame.setMinimumSize(new Dimension((int)(1280*0.8), (int)(720*0.8)));
@@ -50,8 +50,8 @@ class Canv extends Canvas {
     Game game;
     boolean dev = true;
     int m_x = 0, m_y = 0;
-    //w,a,s,d,shift,tab,lClick,rClick
-    boolean[] movements = {false,false,false,false,false,false,false,false};
+    //w,a,s,d,shift,tab,lClick,rClick,c
+    boolean[] movements = {false,false,false,false,false,false,false,false,false};
 
     int cCur = Cursor.DEFAULT_CURSOR;
 
@@ -64,10 +64,10 @@ class Canv extends Canvas {
         cCur = c;
         setCursor(Cursor.getPredefinedCursor(c));
     }
-    public Canv(JFrame frame) throws IOException {
+    public Canv(JFrame frame, String username, boolean host) throws IOException {
         cFrame = frame;
         ps = new Present(cFrame, this);
-        game = new Game(cFrame, this, movements);
+        game = new Game(cFrame, this, movements, ps, username, host);
         ps.setGame_status(5);
         addMouseWheelListener(new MouseWheelListener() {
             @Override
@@ -90,7 +90,10 @@ class Canv extends Canvas {
                             if (cl == 2) ps.setGame_status(1);
                         } else if (ps.getGame_status() == 3) {
                             if (cl == 0) ps.setGame_status(2);
-                            if (cl == 1) ps.setGame_status(5);
+                            if (cl == 1) {
+                                ps.setGame_status(5);
+                                game.setHosting(true);
+                            }
                         } else if (ps.getGame_status() == 4) {
                             if (cl == 0) ps.setGame_status(2);
                         }
@@ -103,8 +106,13 @@ class Canv extends Canvas {
                         }
                     } else {
                         if (game.getGame_status() == 1) {
-                            if(e.getButton() == MouseEvent.BUTTON1) movements[6] = true;
-                            if(e.getButton() == MouseEvent.BUTTON3) movements[7] = true;
+                            if(e.getButton() == MouseEvent.BUTTON1) {
+                                movements[6] = true;
+                                game.getPlayerOwn().setFireTrigger(true);
+                            }
+                            if(e.getButton() == MouseEvent.BUTTON3) {
+                                movements[7] = true;
+                            }
                         }
                     }
                 }
@@ -113,7 +121,10 @@ class Canv extends Canvas {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if(ps.getGame_status() < 5) return;
-                if(e.getButton() == MouseEvent.BUTTON1) movements[6] = false;
+                if(e.getButton() == MouseEvent.BUTTON1) {
+                    movements[6] = false;
+                    game.getPlayerOwn().setFireTrigger(false);
+                }
                 if(e.getButton() == MouseEvent.BUTTON3) movements[7] = false;
             }
         });
@@ -121,6 +132,7 @@ class Canv extends Canvas {
             @Override
             public void mouseDragged(MouseEvent e) {
                 updateMouse(e.getX(), e.getY());
+                game.getPlayerOwn().updateMouse(e.getX(), e.getY());
                 if(ps.getGame_status() < 5){
                     if(ps.isMouseOnStart(e.getX(), e.getY()) != -1)
                         updateCaursor(Cursor.HAND_CURSOR);
@@ -137,6 +149,7 @@ class Canv extends Canvas {
             @Override
             public void mouseMoved(MouseEvent e) {
                 updateMouse(e.getX(), e.getY());
+                game.getPlayerOwn().updateMouse(e.getX(), e.getY());
                 if(ps.getGame_status() < 5){
                     if(ps.isMouseOnStart(e.getX(), e.getY()) != -1)
                         updateCaursor(Cursor.HAND_CURSOR);
@@ -167,6 +180,7 @@ class Canv extends Canvas {
                 if(e.getKeyCode() == KeyEvent.VK_D) movements[3] = true;
                 if(e.getKeyCode() == KeyEvent.VK_SHIFT) movements[4] = true;
                 if(e.getKeyCode() == KeyEvent.VK_TAB) movements[5] = true;
+                if(e.getKeyCode() == KeyEvent.VK_C) movements[8] = true;
             }
 
             @Override
@@ -178,6 +192,7 @@ class Canv extends Canvas {
                 if(e.getKeyCode() == KeyEvent.VK_D) movements[3] = false;
                 if(e.getKeyCode() == KeyEvent.VK_SHIFT) movements[4] = false;
                 if(e.getKeyCode() == KeyEvent.VK_TAB) movements[5] = false;
+                if(e.getKeyCode() == KeyEvent.VK_C) movements[8] = false;
             }
         });
     }
@@ -296,6 +311,7 @@ class Canv extends Canvas {
             g.drawString("scene_w: " + getWidth() + " scene_h: " + getHeight(), 10, 80);
             g.drawString("Mouse: [" + m_x + " : " + m_y + "] " + Cursor.getPredefinedCursor(cCur).getName(), 10, 100);
             g.drawString("zoom: " + game.getScene().getSize(), 10, 120);
+            g.drawString("player: [" + game.getPlayerOwn().getX() + " : " + game.getPlayerOwn().getY() + "]", 10, 160);
         }
 //        System.out.println("rendered");
     }
