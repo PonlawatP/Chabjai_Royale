@@ -72,7 +72,7 @@ class Canv extends Canvas {
         cFrame = frame;
         ps = new Present(cFrame, this, username);
         game = new Game(cFrame, this, movements, ps, username, host);
-        ps.setGame_status(2);
+//        ps.setGame_status(2);
 
         addMouseWheelListener(new MouseWheelListener() {
             @Override
@@ -121,6 +121,7 @@ class Canv extends Canvas {
                             if (cl == 1) {
                                 ps.setGame_status(5);
                                 game.setHosting(true);
+                                game.setGame_status(2);
                             }
                         } else if (ps.getGame_status() == 4) {
                             if (cl == 0) ps.setGame_status(2);
@@ -129,11 +130,11 @@ class Canv extends Canvas {
                 } else {
                     int cl = game.isMouseOnStart(e.getX(), e.getY());
                     if (cl != -1) {
-                        if (game.getGame_status() == 0) {
-                            if (cl == 0) game.setGame_status(1);
-                        }
+//                        if (game.getGame_status() == 0) {
+//                            if (cl == 0) game.setGame_status(1);
+//                        }
                     } else {
-                        if (game.getGame_status() == 1) {
+                        if (game.getGame_status() == 2) {
                             if(e.getButton() == MouseEvent.BUTTON1) {
                                 movements[6] = true;
                                 game.getPlayerOwn().setFireTrigger(true);

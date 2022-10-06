@@ -27,7 +27,14 @@ public class Game extends JPanel {
     ServerProgram sp;
     CientProgram cp;
 
+
+
+    int frameTime = 0;
     boolean start = false;
+    String roomName;
+    int p_amount = 16;
+    int game_status = 0;
+
     public Game(JFrame cFrame, Canvas canv, boolean[] movements, Present ps, String username, boolean host) throws IOException {
         this.cFrame = cFrame;
         this.cCanv = canv;
@@ -43,6 +50,22 @@ public class Game extends JPanel {
         p_own = new Player(scene);
         p_own.setUsername(username);
         Player.getPlayers().add(p_own);
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
+
+    public int getP_amount() {
+        return p_amount;
+    }
+
+    public void setP_amount(int p_amount) {
+        this.p_amount = p_amount;
     }
 
     public boolean isStart() {
@@ -142,16 +165,13 @@ public class Game extends JPanel {
         g.setColor(Color.RED);
 //        g.drawRoundRect(0,0, 10, 10, 3, 3);
 
-        if(game_status == 0){
-            b_cen_x = (cCanv.getWidth()/2)-(btn_sx/2);
-            btn_py = cCanv.getHeight()-100;
-
-            g.drawImage(btn_play, b_cen_x,btn_py, b_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
-        }
+//        if(game_status == 0){
+//            b_cen_x = (cCanv.getWidth()/2)-(btn_sx/2);
+//            btn_py = cCanv.getHeight()-100;
+//
+//            g.drawImage(btn_play, b_cen_x,btn_py, b_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
+//        }
     }
-
-    int frameTime = 0;
-    int game_status = 1;
 
     public int getGame_status() {
         return game_status;
@@ -167,7 +187,7 @@ public class Game extends JPanel {
     int m_x = 0, m_y = 0;
     double v_speed = 1;
     public void run(int m_x, int m_y) {
-        if(getGame_status() == 1){
+        if(getGame_status() == 2){
 //            if(movements[0]) scene.moveUp(-1*v_speed);
 //            if(movements[1]) scene.moveForward(-1*v_speed);
 //            if(movements[2]) scene.moveUp(1*v_speed);
@@ -197,7 +217,7 @@ public class Game extends JPanel {
     public int isMouseOnStart(int x, int y){
         if(game_status == 0){
             if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 0;
-        } else if(game_status == 1){
+        } else if(game_status == 2){
 
         }
 
