@@ -120,6 +120,7 @@ public class Player {
     }
 
     public String getPacket(){
+//        username:player:skin:x:y:mouse_x:mouse_y:hp:armor:armor_type:fireTrigger
         return "player:"+c_r+ ":" + getX() + ":" + getY() + ":" + getMouseX() + ":" + getMouseY() + ":" + getHp() + ":" + getArmor() + ":" + getArmor_type() + ":" + isFireTrigger();
     }
     public void updateFromPacket(String[] data){

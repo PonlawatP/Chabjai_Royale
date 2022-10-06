@@ -2,11 +2,7 @@ package net.msu.bronline.network;
 import net.msu.bronline.guis.Game;
 import net.msu.bronline.guis.Present;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -15,6 +11,11 @@ public class CientProgram implements Runnable{
     private Socket soc;
     private BufferedReader bufReader;
     private BufferedWriter bufWriter;
+
+
+    private Socket socket            = null;
+    private DataInputStream input   = null;
+    private DataOutputStream out     = null;
     private String Username;
 
     Present ps;
@@ -99,17 +100,71 @@ public class CientProgram implements Runnable{
 
     @Override
     public void run() {
-        Socket soc = null;
-        try {
-            soc = new Socket("localhost",50394);
-        } catch (IOException e) {
-            game.setGame_status(0);
-            ps.setGame_status(2);
-            throw new RuntimeException(e);
+//        Socket soc = null;
+//        try {
+//            soc = new Socket("localhost",50394);
+//        } catch (IOException e) {
+//            game.setGame_status(0);
+//            ps.setGame_status(2);
+//            throw new RuntimeException(e);
+//        }
+//        CientProgram client = new CientProgram(soc, Username, ps, game, read_send);
+////        client.ForMessage();
+//        client.sendMess();
+
+        // establish a connection
+        try
+        {
+            socket = new Socket("localhost",50394);
+            System.out.println("Connected");
+
+            // takes input
+            input = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            // sends output to the socket
+            out    = new DataOutputStream(socket.getOutputStream());
         }
-        CientProgram client = new CientProgram(soc, Username, ps, game, read_send);
-//        client.ForMessage();
-        client.sendMess();
+        catch(UnknownHostException u)
+        {
+            System.out.println(u);
+        }
+        catch(IOException i)
+        {
+            System.out.println(i);
+        }
+
+        // string to read message from input
+        String line = "";
+
+        // keep reading until "Over" is input
+        while (!line.equals("close"))
+        {
+            try
+            {
+                out.writeUTF(Username +":"+game.getPlayerOwn().getPacket());
+//                line = input.readLine();
+
+//                if(input.read())
+//                line = input.readUTF();
+
+//                System.out.println((String)(ois.readObject()));
+            }
+            catch(IOException i)
+            {
+                System.out.println(i);
+            }
+        }
+
+        // close the connection
+        try
+        {
+            input.close();
+            out.close();
+            socket.close();
+        }
+        catch(IOException i)
+        {
+            System.out.println(i);
+        }
     }
 
 //    public static void main(String[] args) throws  IOException {

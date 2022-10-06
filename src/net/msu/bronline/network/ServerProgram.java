@@ -2,6 +2,8 @@ package net.msu.bronline.network;
 import net.msu.bronline.comps.Scene;
 import net.msu.bronline.guis.Game;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -32,7 +34,6 @@ public class ServerProgram implements Runnable{
                 Thread t = new Thread(clientHandler);
                 t.start();
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -66,5 +67,6 @@ public class ServerProgram implements Runnable{
         ServerProgram server = new ServerProgram(sev);
         server.setScene(scene);
         server.startSev();
+
     }
 }
