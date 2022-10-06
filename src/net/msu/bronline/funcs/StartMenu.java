@@ -69,6 +69,7 @@ class Canv extends Canvas {
         ps = new Present(cFrame, this);
         game = new Game(cFrame, this, movements, ps, username, host);
         ps.setGame_status(5);
+
         addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {

@@ -5,151 +5,108 @@ import net.msu.bronline.guis.Game;
 
 import  java.io.BufferedReader;
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
 public class ClientHandler implements Runnable{
     public static ArrayList<ClientHandler> clientHandler = new ArrayList<>();
     private Socket soc;
-//    private BufferedReader bufReader;
-//    private BufferedWriter bufWriter;
     private String clientUser;
     Game game;
+    Player cPlayer;
+    Sv_write cw;
 
+    Thread thrd_read;
+    Thread thrd_write;
 
-    private DataInputStream in       =  null;
-    private DataOutputStream out     = null;
+    public String getClientUser() {
+        return clientUser;
+    }
+
+    public Socket getSocket() {
+        return soc;
+    }
+
+    DataInputStream dis;
+    DataOutputStream dos;
     public ClientHandler(Socket soc, Scene scene, Game game) {
         try {
-            this.soc = soc;
-//            this.bufWriter = new BufferedWriter(new OutputStreamWriter(soc.getOutputStream()));
-//            this.bufReader = new BufferedReader(new InputStreamReader(soc.getInputStream()));
-            in = new DataInputStream(new BufferedInputStream(soc.getInputStream()));
-            out = new DataOutputStream(soc.getOutputStream());
-            String[] data = in.readUTF().split(":");
-            this.clientUser = data[0];
             this.game = game;
+            this.soc = soc;
+
+            dis = new DataInputStream(soc.getInputStream());
+            dos = new DataOutputStream(soc.getOutputStream());
+
+            String[] data = dis.readUTF().split(":");
+            this.clientUser = data[0];
             clientHandler.add(this);
-            broadcastMessage("SERVER : "+clientUser+" enter the game");
+//            System.out.println("SERVER : "+clientUser+" enter the game");
 
             Player p = new Player(scene, clientUser, Integer.parseInt(data[2]));
+            cPlayer = p;
             Player.getPlayers().add(p);
+
+            cw = new Sv_write(dos, this);
+            thrd_write = new Thread(cw);
+            thrd_write.start();
+            thrd_read = new Thread(new Sv_read(dis, this, cw));
+            thrd_read.start();
+
+            broadcastMessage(clientUser+":join:"+p.getCharacterID()); //TODO: ทำแบบ broadcast
+            loadPlayersIngame();
         } catch (Exception e) {
-            closeEverything(soc, in, out);
+//            closeEverything(soc, bufReader, bufWriter);
         }
+    }
+
+    public void loadPlayersIngame() {
+        Iterator<Player> pls = new ArrayList<>(Player.getPlayers()).iterator();
+
+        while (pls.hasNext()){
+            Player p = pls.next();
+            if(p.getUsername() == getClientUser()) continue;
+            cw.sendMessage(p.getUsername() + ":" + p.getPacket("load"));
+        }
+    }
+
+    public void broadcastMessage(String mess){
+        Iterator<ClientHandler> chs = new ArrayList<>(clientHandler).iterator();
+        while (chs.hasNext()){
+            ClientHandler ch = chs.next();
+            ch.cw.sendMessage(mess);
+        }
+    }
+
+    public Player getPlayer(){
+        return cPlayer;
+    }
+
+    public Game getGame() {
+        return game;
     }
 
     @Override
     public void run() {
-        String mess;
-        while (soc.isConnected()) {
-//            try {
-//                mess = bufReader.readLine();
-////                broadcastMessage(mess);
-//
-////                System.out.println(mess);
-//                String[] data = mess.split(":");
-//                if(data[1].equalsIgnoreCase("player")){
-//                    Iterator<Player> pls = Player.getPlayers().iterator();
-//                    while (pls.hasNext()){
-//                        Player p = pls.next();
-//                        p.updateFromPacket(data);
-//                    }
-////                    broadcastMessage(mess);
-//                }
-////                broadcastMessage(game.getPlayerOwn().getUsername() + ":" + game.getPlayerOwn().getPacket());
-//            } catch (Exception e) {
-//                closeEverything(soc, bufReader,bufWriter);
-//                break;
-//            }
-
-            try
-            {
-                in = new DataInputStream(new BufferedInputStream(soc.getInputStream()));
-                out = new DataOutputStream(soc.getOutputStream());
-
-                String line = "";
-
-                while (true)
-                {
-//                    ObjectOutputStream oos = new ObjectOutputStream(soc.getOutputStream());
-//                    out = new DataOutputStream(soc.getOutputStream());
-                    try
-                    {
-//                        out.writeUTF("test");
-                        line = in.readUTF();
-//                      System.out.println(line);
-                        String[] data = line.split(":");
-                        if(data[1].equalsIgnoreCase("player")) {
-                            Iterator<Player> pls = Player.getPlayers().iterator();
-                            while (pls.hasNext()) {
-                                Player p = pls.next();
-                                p.updateFromPacket(data);
-
-//                                oos.writeUTF(p.getUsername() +":"+p.getPacket());
-                            }
-                        }
-                    }
-                    catch(IOException i)
-                    {
-                        System.out.println("inline: " + i);
-                        break;
-                    }
-                    out.flush();
-//                    oos.close();
-                }
-                System.out.println("Closing connection");
-
-                in.close();
-            }
-            catch(IOException i)
-            {
-                closeEverything(soc, in,out);
-            }
-        }
 
     }
 
-    public void broadcastMessage(String mess) {
-//        System.out.println(mess);
-//        for (ClientHandler clientHandler : clientHandler) {
-//            try {
-//                if (!clientHandler.clientUser.equals(clientUser)) {
-//                    clientHandler.bufWriter.write(mess);
-//                    clientHandler.bufWriter.newLine();
-//                    clientHandler.bufWriter.flush();
-//                }
-//            } catch (Exception e) {
-//                closeEverything(soc, bufReader,bufWriter);
-//            }
-//        }
-
-    }
-
-
-    private void closeEverything(Socket soc2, DataInputStream bufReader2, DataOutputStream bufWriter2) {
+    public void closeEverything() {
         removeClientHandler();
         try {
-            if (bufReader2 != null) {
-                bufReader2.close();
-            }
-            if (bufWriter2 != null) {
-                bufWriter2.close();
-            }
-            if (soc2 != null) {
-                soc.close();
-            }
+            if(dis != null) dis.close();
+            if(dos != null) dos.close();
+            if(soc != null) soc.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
+    boolean quit = false;
     private void removeClientHandler() {
+        broadcastMessage(clientUser+":quit"); //TODO: ทำแบบ broadcast
+        quit = true;
+        Player.removePlayer(clientUser);
         clientHandler.remove(this);
-        broadcastMessage("SERVER : "+ clientUser + "Left!");
     }
 
 }

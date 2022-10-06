@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 public class Player {
@@ -24,6 +25,10 @@ public class Player {
     Scene scene;
     String username = "Player";
     int c_r = new Random().nextInt(1, 8);
+
+    public int getCharacterID() {
+        return c_r;
+    }
 
     public boolean isFireTrigger() {
         return fireTrigger;
@@ -123,9 +128,13 @@ public class Player {
 //        username:player:skin:x:y:mouse_x:mouse_y:hp:armor:armor_type:fireTrigger
         return "player:"+c_r+ ":" + getX() + ":" + getY() + ":" + getMouseX() + ":" + getMouseY() + ":" + getHp() + ":" + getArmor() + ":" + getArmor_type() + ":" + isFireTrigger();
     }
+    public String getPacket(String type){
+//        username:player:skin:x:y:mouse_x:mouse_y:hp:armor:armor_type:fireTrigger
+        return type+":"+c_r+ ":" + getX() + ":" + getY() + ":" + getMouseX() + ":" + getMouseY() + ":" + getHp() + ":" + getArmor() + ":" + getArmor_type() + ":" + isFireTrigger();
+    }
     public void updateFromPacket(String[] data){
-        if(!data[0].equalsIgnoreCase(username) || !data[1].equalsIgnoreCase("player")) return;
-
+//        System.out.println("'"+username + "' : " + "'"+data[0]+"'");
+        if(!(data[0].equalsIgnoreCase(username) && data[1].equalsIgnoreCase("player"))) return;
         x = Integer.parseInt(data[3]);
         y = Integer.parseInt(data[4]);
         m_x = Integer.parseInt(data[5]);
@@ -134,5 +143,27 @@ public class Player {
         armor = Integer.parseInt(data[8]);
         armor_type = Integer.parseInt(data[9]);
         fireTrigger = Boolean.getBoolean(data[10]);
+    }
+
+    public static void removePlayer(String name){
+        Iterator<Player> ps = getPlayers().iterator();
+        while (ps.hasNext()){
+            Player p = ps.next();
+            if(p.getUsername().equals(name)){
+                ps.remove();
+                break;
+            }
+        }
+    }
+
+    public static Player getPlayer(String name){
+        Iterator<Player> ps = getPlayers().iterator();
+        while (ps.hasNext()){
+            Player p = ps.next();
+            if(p.getUsername().equals(name)){
+                return p;
+            }
+        }
+        return null;
     }
 }

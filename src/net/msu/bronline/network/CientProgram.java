@@ -7,72 +7,56 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
-public class CientProgram implements Runnable{
+public class CientProgram extends Thread implements Runnable{
     private Socket soc;
-    private BufferedReader bufReader;
-    private BufferedWriter bufWriter;
 
-
-    private Socket socket            = null;
-    private DataInputStream input   = null;
-    private DataOutputStream out     = null;
-    private String Username;
+    DataInputStream dis;
+    DataOutputStream dos;
 
     Present ps;
     Game game;
-    boolean read_send;
+    private String Username;
 
-    public CientProgram(Socket soc,String Username, Present ps, Game game, boolean read_send) {
+    Thread thrd_write;
+    Thread thrd_read;
+    Cli_write cw;
+    public CientProgram(String Username, Present ps, Game game) {
         try {
-            this.soc = soc;
-            this.bufWriter = new BufferedWriter(new OutputStreamWriter(soc.getOutputStream()));
-            this.bufReader = new BufferedReader(new InputStreamReader(soc.getInputStream()));
             this.Username = Username;
             this.ps = ps;
             this.game = game;
-            this.read_send = read_send;
-        } catch (Exception e) {
-            closeEverything(soc, bufReader,bufWriter);
-        }
-    }
-    public CientProgram(String Username, Present ps, Game game, boolean read_send) {
-            this.Username = Username;
-            this.ps = ps;
-            this.game = game;
-            this.read_send = read_send;
-    }
-    public void sendMess() {
-        try {
-            bufWriter.write(Username +":"+game.getPlayerOwn().getPacket());
-            bufWriter.newLine();
-            bufWriter.flush();
 
-            while (soc.isConnected()) {
-                if(game.getGame_status() == 1){
-//                    System.out.println(game.getGame_status());
-                    bufWriter.write(Username +":"+game.getPlayerOwn().getPacket());
-                    bufWriter.newLine();
-                    bufWriter.flush();
+            soc = new Socket("localhost",50394);
 
-//                    String msgGroup;
-//                    msgGroup =  bufReader.readLine();
-//                    System.out.println(msgGroup);
-                }
-            }
+            dis = new DataInputStream(soc.getInputStream());
+            dos = new DataOutputStream(soc.getOutputStream());
+
+            cw = new Cli_write(dos, this);
+            thrd_write = new Thread(cw);
+            thrd_write.start();
+            thrd_read = new Thread(new Cli_read(dis, this, cw));
+            thrd_read.start();
         } catch (Exception e) {
-            closeEverything(soc, bufReader,bufWriter);
+            game.setGame_status(0);
+            ps.setGame_status(2);
+            closeEverything();
+            e.printStackTrace();
         }
     }
 
-    private void closeEverything(Socket soc2, BufferedReader bufReader2, BufferedWriter bufWriter2) {
+    public String getUsername() {
+        return Username;
+    }
+
+    public void closeEverything() {
         try {
-            if (bufReader2 != null) {
-                bufReader2.close();
+            if (dis != null) {
+                dis.close();
             }
-            if (bufWriter2 != null) {
-                bufWriter2.close();
+            if (dos != null) {
+                dos.close();
             }
-            if (soc2 != null) {
+            if (soc != null) {
                 soc.close();
             }
         } catch (Exception e) {
@@ -80,102 +64,9 @@ public class CientProgram implements Runnable{
         }
 
     }
-    public void ForMessage() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String msgGroup;
-                while (soc.isConnected()) {
-                    try {
-                        msgGroup =  bufReader.readLine();
-                        System.out.println(msgGroup);
-                    } catch (Exception e) {
-                        closeEverything(soc, bufReader,bufWriter);
-                    }
-                }
-
-            }
-        }).start();
-    }
-
+    boolean quit = false;
     @Override
     public void run() {
-//        Socket soc = null;
-//        try {
-//            soc = new Socket("localhost",50394);
-//        } catch (IOException e) {
-//            game.setGame_status(0);
-//            ps.setGame_status(2);
-//            throw new RuntimeException(e);
-//        }
-//        CientProgram client = new CientProgram(soc, Username, ps, game, read_send);
-////        client.ForMessage();
-//        client.sendMess();
-
-        // establish a connection
-        try
-        {
-            socket = new Socket("localhost",50394);
-            System.out.println("Connected");
-
-            // takes input
-            input = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-            // sends output to the socket
-            out    = new DataOutputStream(socket.getOutputStream());
-        }
-        catch(UnknownHostException u)
-        {
-            System.out.println(u);
-        }
-        catch(IOException i)
-        {
-            System.out.println(i);
-        }
-
-        // string to read message from input
-        String line = "";
-
-        // keep reading until "Over" is input
-        while (!line.equals("close"))
-        {
-            try
-            {
-                out.writeUTF(Username +":"+game.getPlayerOwn().getPacket());
-//                line = input.readLine();
-
-//                if(input.read())
-//                line = input.readUTF();
-
-//                System.out.println((String)(ois.readObject()));
-            }
-            catch(IOException i)
-            {
-                System.out.println(i);
-            }
-        }
-
-        // close the connection
-        try
-        {
-            input.close();
-            out.close();
-            socket.close();
-        }
-        catch(IOException i)
-        {
-            System.out.println(i);
-        }
     }
-
-//    public static void main(String[] args) throws  IOException {
-//        Scanner sc = new Scanner(System.in);
-//        System.out.print("Enter your name : ");
-//        String user = sc.nextLine();
-//        Socket soc = new Socket("localhost",50394);
-//        CientProgram client = new CientProgram(soc, user);
-//        client.ForMessage();
-//        client.sendMess();
-//    }
-
 
 }

@@ -45,7 +45,7 @@ public class Game extends JPanel {
         if(hosting){
             t_host = new Thread(new ServerProgram(scene, this));
         } else {
-            t_host = new Thread(new CientProgram(getPlayerOwn().getUsername(), ps, this, false));
+            t_host = new Thread(new CientProgram(getPlayerOwn().getUsername(), ps, this));
         }
         startServer();
     }

@@ -19,17 +19,13 @@ public class ServerProgram implements Runnable{
         this.scene = scene;
         this.game = game;
     }
-
-    public void setScene(Scene scene) {
-        this.scene = scene;
-    }
-
     public void startSev() {
         System.out.println("Server starting...");
         try {
             while (!sev.isClosed()){
                 Socket soc = sev.accept();
                 System.out.println("Client has connected!");
+
                 ClientHandler clientHandler = new ClientHandler(soc, scene, game);
                 Thread t = new Thread(clientHandler);
                 t.start();
@@ -37,6 +33,7 @@ public class ServerProgram implements Runnable{
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("Server stop...");
     }
 
     public void close() {
@@ -49,24 +46,13 @@ public class ServerProgram implements Runnable{
         }
     }
 
-//    public static void main(String[] args) throws IOException {
-//        ServerSocket sev;
-//        sev = new ServerSocket(50394);
-//        ServerProgram server = new ServerProgram(sev);
-//        server.startSev();
-//    }
-
     @Override
     public void run() {
-        ServerSocket sev;
         try {
             sev = new ServerSocket(50394);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        ServerProgram server = new ServerProgram(sev);
-        server.setScene(scene);
-        server.startSev();
-
+        startSev();
     }
 }
