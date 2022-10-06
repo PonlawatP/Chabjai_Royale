@@ -13,7 +13,6 @@ public class Sv_read extends Thread implements Runnable{
         this.dis = dis;
         this.ch = ch;
         this.cw = cw;
-//        System.out.println(ch.getClientUser()+" write thread run!");
     }
 
     @Override

@@ -24,6 +24,10 @@ public class Game extends JPanel {
 
     boolean[] movements;
     Present ps;
+    ServerProgram sp;
+    CientProgram cp;
+
+    boolean start = false;
     public Game(JFrame cFrame, Canvas canv, boolean[] movements, Present ps, String username, boolean host) throws IOException {
         this.cFrame = cFrame;
         this.cCanv = canv;
@@ -36,22 +40,33 @@ public class Game extends JPanel {
         setBackground(Color.white);
         setVisible(true);
 
-//        add player
         p_own = new Player(scene);
         p_own.setUsername(username);
         Player.getPlayers().add(p_own);
-
-//        server
-        if(hosting){
-            t_host = new Thread(new ServerProgram(scene, this));
-        } else {
-            t_host = new Thread(new CientProgram(getPlayerOwn().getUsername(), ps, this));
-        }
-        startServer();
     }
 
-    public void startServer(){
-            t_host.start();
+    public boolean isStart() {
+        return start;
+    }
+
+    public void setStart(boolean start) {
+        this.start = start;
+    }
+
+    public void startMode(){
+        if(hosting){
+            sp = new ServerProgram(scene, this);
+            t_host = new Thread(sp);
+        } else {
+            cp = new CientProgram(getPlayerOwn().getUsername(), ps, this);
+            t_host = new Thread(cp);
+        }
+        t_host.start();
+    }
+    public void stopMode(){
+        if(hosting) {
+            sp.closeSev();
+        }
     }
 
     public boolean isHosting() {
@@ -112,11 +127,14 @@ public class Game extends JPanel {
             if(i1 > 8) i1 = 0;
         }
         int a1 = 11;
+        g.setFont(new Font("Kanit Light", Font.PLAIN, 14));
         while (ps.hasNext()){
             Player p = ps.next();
 //            System.out.println(p.getPacket());
-
-            g.drawString(p.getUsername(), p.getPosX()+10, p.getPosY()+10);
+            g.setColor(Color.BLACK);
+            g.drawString(p.getUsername(), p.getPosX()+(64/2)-(((14*p.getUsername().length())/2)/2)+1, p.getPosY()+6);
+            g.setColor(Color.WHITE);
+            g.drawString(p.getUsername(), p.getPosX()+(64/2)-(((14*p.getUsername().length())/2)/2), p.getPosY()+5);
             g.drawImage(p.getPlayerImage(), p.getPosX(), p.getPosY(), p.getPosBoundX(), p.getPosBoundY(),(64*i1)+1,(64*a1)+1,(64*(i1+1))-1, (64*(a1+1))-1,this);
         }
         //        g.drawImage(scene.getImg(true), 0,0, cCanv.getWidth(), cCanv.getHeight(),scene.getX(), scene.getY(),scene.getBoundX(), scene.getBoundY(),this);

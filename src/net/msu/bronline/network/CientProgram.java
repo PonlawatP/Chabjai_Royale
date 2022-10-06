@@ -37,11 +37,14 @@ public class CientProgram extends Thread implements Runnable{
             thrd_read = new Thread(new Cli_read(dis, this, cw));
             thrd_read.start();
         } catch (Exception e) {
-            game.setGame_status(0);
-            ps.setGame_status(2);
             closeEverything();
             e.printStackTrace();
         }
+    }
+
+    public void exitGame(){
+        game.setGame_status(0);
+        ps.setGame_status(2);
     }
 
     public String getUsername() {

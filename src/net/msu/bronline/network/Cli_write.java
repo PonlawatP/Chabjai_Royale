@@ -14,7 +14,6 @@ public class Cli_write extends Thread implements Runnable{
     public Cli_write(DataOutputStream dos, CientProgram cp){
         this.dos = dos;
         this.cp = cp;
-//        System.out.println(cp.getUsername()+" read thread run!");
     }
 
     public void sendMessage(String mess) {

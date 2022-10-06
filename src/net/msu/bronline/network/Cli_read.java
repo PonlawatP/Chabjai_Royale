@@ -16,7 +16,6 @@ public class Cli_read extends Thread implements Runnable{
         this.dis = dis;
         this.cp = cp;
         this.cw = cw;
-//        System.out.println(cp.getUsername()+" write thread run!");
     }
 
     @Override
@@ -24,13 +23,10 @@ public class Cli_read extends Thread implements Runnable{
         while (!cp.quit){
             try {
                 for(String mess : dis.readUTF().split("::ln::")) {
-//                    System.out.println(mess);
                     String[] data = mess.split(":");
                     if(!data[1].equalsIgnoreCase("player")) System.out.println(mess);
 
                     if (data[1].equalsIgnoreCase("player")) {
-//                    Player p = Player.getPlayer(data[0]);
-//                    if(p != null) p.updateFromPacket(data);
 
                         Iterator<Player> ps = Player.getPlayers().iterator();
                         while (ps.hasNext()) {
@@ -53,6 +49,7 @@ public class Cli_read extends Thread implements Runnable{
             }
             catch (SocketException es){
                 cp.closeEverything();
+                cp.exitGame();
             }
             catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);

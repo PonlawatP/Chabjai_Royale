@@ -7,6 +7,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ServerProgram implements Runnable{
     private ServerSocket sev;
@@ -24,19 +25,23 @@ public class ServerProgram implements Runnable{
         try {
             while (!sev.isClosed()){
                 Socket soc = sev.accept();
-                System.out.println("Client has connected!");
-
-                ClientHandler clientHandler = new ClientHandler(soc, scene, game);
-                Thread t = new Thread(clientHandler);
-                t.start();
+//                System.out.println("Client has connected!");
+                DataInputStream dis = new DataInputStream(soc.getInputStream());
+                if(dis.available() != 0){
+                    System.out.println("run ClientHandler");
+                    ClientHandler clientHandler = new ClientHandler(soc, scene, game);
+                    Thread t = new Thread(clientHandler);
+                    t.start();
+                }
             }
+        } catch (SocketException e) {
         } catch (Exception e) {
             e.printStackTrace();
         }
         System.out.println("Server stop...");
     }
 
-    public void close() {
+    public void closeSev() {
         try {
             if (sev != null) {
                 sev.close();

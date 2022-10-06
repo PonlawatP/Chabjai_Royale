@@ -10,7 +10,7 @@ import java.io.IOException;
 public class Scene {
     JFrame cFrame;
     Canvas cCanv;
-    boolean ingame;
+    boolean ingame = false;
     BufferedImage simg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/m_full.png").getPath()));
     BufferedImage simg1 = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/m_floor.png").getPath()));
     BufferedImage simg2 = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/m_plant.png").getPath()));
@@ -86,25 +86,25 @@ public class Scene {
 //        return (int)x;
         int p = (int)(x-(cCanv.getWidth()-(cCanv.getWidth()*getSize())));
         double posmx = ((double) m_x-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
-        return (int)(p + (posmx*15*getSize()));
+        return ingame ? (int)(p + (posmx*15*getSize())) : (int)x;
     }
     public int getY(){
 //        return (int)y;
         int p = (int)(y-(cCanv.getHeight()-(cCanv.getHeight()*getSize())));
         double posmy = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
-        return (int)(p + (posmy*15*getSize()));
+        return ingame ? (int)(p + (posmy*15*getSize())) : (int)y;
     }
     public int getBoundX(){
         double p = x+(cCanv.getWidth()-((cCanv.getWidth()*getSize())-cCanv.getWidth()));
         double posmx = ((double) m_x-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
-        return (int)(p + (posmx*15*getSize()));
+        return ingame ? (int)(p + (posmx*15*getSize())) : (int)x+cCanv.getWidth();
 //        return (int)(p*getZoomCanvas());
     }
     public int getBoundY(){
         double a = (cCanv.getHeight()*(getSize()*-1+2));
         double p = y+a;
         double posmy = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
-        return (int)(p + (posmy*15*getSize()));
+        return ingame ? (int)(p + (posmy*15*getSize())) : (int)y+cCanv.getHeight();
 //        return (int)(p*getZoomCanvas());
     }
 

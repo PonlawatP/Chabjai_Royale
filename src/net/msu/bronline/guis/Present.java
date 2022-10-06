@@ -8,21 +8,29 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
+import java.net.InetSocketAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.*;
+import java.util.List;
+
+import static net.msu.bronline.funcs.Utils.getInsidePosition;
 
 public class Present extends JPanel {
     JFrame cFrame;
     Canvas cCanv;
     Scene scene;
-    public Present(JFrame cFrame, Canvas canv) throws IOException {
+    String username;
+    public Present(JFrame cFrame, Canvas canv, String username) throws IOException {
         this.cFrame = cFrame;
         this.cCanv = canv;
+        this.username = username;
         scene = new Scene(cFrame, cCanv);
         setSize(cFrame.getSize());
         setPreferredSize(cFrame.getPreferredSize());
         setBackground(Color.white);
         setVisible(true);
-
     }
 
 //    รับโลโก้มาแปลงขนาด แล้วเอามาวางตรงกลาง
@@ -77,7 +85,15 @@ public class Present extends JPanel {
 
 //            play btn
             if(game_status == 1){
-                btn_py = cCanv.getHeight()-200;
+                btn_py = getInsidePosition(0, cCanv.getHeight(), 80);
+
+                g.setFont(new Font("Kanit Bold", Font.PLAIN, 75));
+                String ss = "JABCHAI ROYALE";
+                g.setColor(new Color(0x543200));
+                g.drawString(ss, cCanv.getWidth()/2-(((75*ss.length())/2)/2)-(((75*ss.length())/2)/2/4), getInsidePosition(0, cCanv.getHeight(), 51));
+                g.setColor(Color.ORANGE);
+                g.drawString(ss, cCanv.getWidth()/2-(((75*ss.length())/2)/2)-(((75*ss.length())/2)/2/4), getInsidePosition(0, cCanv.getHeight(), 50));
+
 
                 b_cen_x = (cCanv.getWidth()/2)-(btn_sx/2);
                 b_cen_y = (cCanv.getHeight()/2)-(btn_sy/2);
@@ -92,7 +108,15 @@ public class Present extends JPanel {
                 btn_back_px = 15;
                 btn_back_py = 20;
 
+
+                g.setFont(new Font("Kanit Bold", Font.PLAIN, 45));
+                g.setColor(Color.WHITE);
+                String ss = "Select Servers";
+                g.drawString(ss, cCanv.getWidth()/2-((45*ss.length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 10));
+
                 g.drawImage(btn_back, btn_back_px,btn_back_py, btn_back_px+btn_back_sx,btn_back_py+btn_back_sy,0,0,1020,400,this);
+
+                drawJoinPlayerBoxes(g);
 
                 g.drawImage(btn_host, b_cen_x,btn_py, b_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
                 g.drawImage(btn_join_den, b2_cen_x,btn_py, b2_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
@@ -104,6 +128,11 @@ public class Present extends JPanel {
                 b_cen_y = (cCanv.getHeight()/2)-(btn_sy/2);
                 btn_py = cCanv.getHeight()-100;
 
+                g.setFont(new Font("Kanit Bold", Font.PLAIN, 45));
+                g.setColor(Color.WHITE);
+                String ss = "\"" + username +"'s Room" + "\" Hosting";
+                g.drawString(ss, cCanv.getWidth()/2-((45*ss.length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 10));
+
                 g.drawImage(btn_back, btn_back_px,btn_back_py, btn_back_px+btn_back_sx,btn_back_py+btn_back_sy,0,0,1020,400,this);
                 g.drawImage(btn_play, b_cen_x,btn_py, b_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
             }
@@ -111,11 +140,59 @@ public class Present extends JPanel {
                 btn_back_px = 15;
                 btn_back_py = 20;
 
+                g.setFont(new Font("Kanit Bold", Font.PLAIN, 45));
+                g.setColor(Color.WHITE);
+                String ss = username +"'s Room";
+                g.drawString(ss, cCanv.getWidth()/2-((45*ss.length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 10));
+
+                g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
+                String ss2 = "Starting";
+                g.drawString(ss2, cCanv.getWidth()/2-((20*ss2.length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 15));
+
+                g.setFont(new Font("Kanit Bold", Font.PLAIN, 45));
+                g.setColor(Color.WHITE);
+                String ss3 = "Starting in 5";
+                g.drawString(ss3, cCanv.getWidth()/2-((45*ss3.length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 50));
+
                 g.drawImage(btn_back, btn_back_px,btn_back_py, btn_back_px+btn_back_sx,btn_back_py+btn_back_sy,0,0,1020,400,this);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    public void drawJoinPlayerBoxes(Graphics ge){
+        int x = getInsidePosition(0, cCanv.getWidth(), 7), y = getInsidePosition(0, cCanv.getHeight(), 15);
+        int sx = getInsidePosition(0, cCanv.getWidth(), 93)-x, sy = 100;
+        String room = username + "'s Room";
+        String name = "("+username+")";
+        String amount = "1/16";
+        String status = "Waiting Players...";
+        boolean isClick = false;
+        boolean isHover = false;
+
+        Graphics2D g = (Graphics2D) ge;
+        BufferedImage bi = new BufferedImage(sx, sy, BufferedImage.TYPE_INT_ARGB_PRE);
+        Graphics2D g2 = bi.createGraphics();
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ((!isClick && isHover ? 5 : 10)/100f)));
+        if(!isClick && !isHover) g2.setColor(Color.BLACK);
+        g2.fillRect(0,0, sx, sy);
+        g2.dispose();
+
+        g.drawImage(bi,x,y, this);
+        g.setFont(new Font("Kanit Bold", Font.PLAIN, 30));
+
+        g.setColor(Color.black);
+        g.drawString(room, getInsidePosition(x, x+sx, 2), 30+getInsidePosition(y, y+sy, 12));
+        g.drawString(amount, getInsidePosition(x, x+sx, 98)-(30*(amount.length()/2)), 30+getInsidePosition(y, y+sy, 12));
+
+        g.setColor(Color.WHITE);
+        g.drawString(room, getInsidePosition(x, x+sx, 2), 30+getInsidePosition(y, y+sy, 10));
+        g.drawString(amount, getInsidePosition(x, x+sx, 98)-(30*(amount.length()/2)), 30+getInsidePosition(y, y+sy, 10));
+        g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
+        g.setColor(Color.LIGHT_GRAY);
+        g.drawString(name, getInsidePosition(x, x+sx, 2) + (int)(((30 * room.length())/2) * 1.15), 30+getInsidePosition(y, y+sy, 10));
+        g.setColor(Color.CYAN);
+        g.drawString(status, getInsidePosition(x, x+sx, 2), (getInsidePosition(y, y+sy, 90))-10);
     }
 
     int frameTime = 0;

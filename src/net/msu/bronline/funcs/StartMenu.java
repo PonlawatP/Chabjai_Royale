@@ -2,13 +2,17 @@ package net.msu.bronline.funcs;
 
 import net.msu.bronline.guis.Game;
 import net.msu.bronline.guis.Present;
+import net.msu.bronline.network.NetworkDevices;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferStrategy;
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static java.lang.Thread.sleep;
 
 public class StartMenu {
     public StartMenu(String username, boolean host) throws IOException {
@@ -66,9 +70,9 @@ class Canv extends Canvas {
     }
     public Canv(JFrame frame, String username, boolean host) throws IOException {
         cFrame = frame;
-        ps = new Present(cFrame, this);
+        ps = new Present(cFrame, this, username);
         game = new Game(cFrame, this, movements, ps, username, host);
-        ps.setGame_status(5);
+        ps.setGame_status(2);
 
         addMouseWheelListener(new MouseWheelListener() {
             @Override
@@ -84,13 +88,36 @@ class Canv extends Canvas {
                     int cl = ps.isMouseOnStart(e.getX(), e.getY());
                     if (cl != -1) {
                         if (ps.getGame_status() == 1) {
-                            if (cl == 0) ps.setGame_status(2);
+                            if (cl == 0) { //into game interface
+                                ps.setGame_status(2);
+//                                System.out.println(java.util.Arrays.toString(Present.getBroadcastAddresses(50394)));
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        while (ps.getGame_status() == 2){
+                                            NetworkDevices.getNetworkDevices();
+                                            try {
+                                                sleep(5000);
+                                            } catch (InterruptedException ex) {
+                                                throw new RuntimeException(ex);
+                                            }
+                                        }
+                                    }
+                                }).start();
+                            }
                         } else if (ps.getGame_status() == 2) {
-                            if (cl == 0) ps.setGame_status(3);
+                            if (cl == 0) { //host
+                                ps.setGame_status(3);
+                                game.setHosting(true);
+                                game.startMode();
+                            }
                             if (cl == 1) ps.setGame_status(4);
                             if (cl == 2) ps.setGame_status(1);
                         } else if (ps.getGame_status() == 3) {
-                            if (cl == 0) ps.setGame_status(2);
+                            if (cl == 0) { //back
+                                game.stopMode();
+                                ps.setGame_status(2);
+                            }
                             if (cl == 1) {
                                 ps.setGame_status(5);
                                 game.setHosting(true);
@@ -271,7 +298,6 @@ class Canv extends Canvas {
                                     }
                                 }
                                 while (bs.contentsRestored());
-
                                 bs.show();
                             }
                             while (bs.contentsLost());
@@ -286,7 +312,6 @@ class Canv extends Canvas {
     public void update() {
         if(ps.getGame_status() < 5) ps.run();
         else game.run(m_x, m_y);
-//        System.out.println("updated");
     }
 
     /**
@@ -294,7 +319,8 @@ class Canv extends Canvas {
      */
     public void render(Graphics g)
     {
-        if(ps.getGame_status() >= 2 && ps.getGame_status() <= 4){
+        boolean darkscene = ps.getGame_status() >= 2 && ps.getGame_status() <= 4;
+        if(darkscene){
             g.setColor(Color.BLACK);
         } else {
             g.setColor(Color.WHITE);
@@ -305,7 +331,8 @@ class Canv extends Canvas {
         else game.draw(g);
 
         if(dev){
-            g.setColor((ps.getGame_status() != 2) ? Color.BLACK : Color.CYAN);
+            g.setFont(new Font("Kanit Light", Font.PLAIN, 12));
+            g.setColor((!darkscene) ? Color.BLACK : Color.CYAN);
             g.drawString("FPSection: " + fps, 10, 20);
             g.drawString("w: " + cFrame.getWidth() + " h: " + cFrame.getHeight(), 10, 40);
             g.drawString("scene: " + ps.getGame_status(), 10, 60);
@@ -314,6 +341,5 @@ class Canv extends Canvas {
             g.drawString("zoom: " + game.getScene().getSize(), 10, 120);
             g.drawString("player: [" + game.getPlayerOwn().getX() + " : " + game.getPlayerOwn().getY() + "]", 10, 160);
         }
-//        System.out.println("rendered");
     }
 }

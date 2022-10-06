@@ -19,7 +19,6 @@ public class Sv_write extends Thread implements Runnable{
     public Sv_write(DataOutputStream dos, ClientHandler ch){
         this.dos = dos;
         this.ch = ch;
-//        System.out.println(ch.getClientUser()+" read thread run!");
     }
 
     public void sendMessage(String mess) {
