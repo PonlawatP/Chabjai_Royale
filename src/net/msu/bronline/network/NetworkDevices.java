@@ -13,10 +13,6 @@ import java.util.List;
 public class NetworkDevices {
     private static int port = 50394;
 
-    public static void main(String[] args) {
-        getNetworkDevices();
-    }
-
     static List<String> fipList = new ArrayList<>();
     public static List<String> getHostsIP(){
         return fipList;
