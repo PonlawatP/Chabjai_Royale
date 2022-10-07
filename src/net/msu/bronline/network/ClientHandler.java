@@ -80,6 +80,8 @@ public class ClientHandler implements Runnable{
         Iterator<ClientHandler> chs = new ArrayList<>(clientHandler).iterator();
         while (chs.hasNext()){
             ClientHandler ch = chs.next();
+            if(ch.cw == null) continue;
+
             ch.cw.sendMessage(mess);
         }
     }

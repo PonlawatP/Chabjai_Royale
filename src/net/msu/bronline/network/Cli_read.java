@@ -54,7 +54,6 @@ public class Cli_read extends Thread implements Runnable{
                     } else if (data[1].equalsIgnoreCase("desc")) {
                         getGame().setStatus_desc(data[2]);
                     } else if (data[1].equalsIgnoreCase("act")) {
-                        System.out.println(data[2]);
                         switch (data[2]){
                             case "pre_start":
                                 getGame().setGame_status(1);

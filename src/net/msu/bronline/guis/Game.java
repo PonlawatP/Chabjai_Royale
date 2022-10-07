@@ -235,33 +235,40 @@ public class Game extends JPanel {
     public void drawUI(Graphics ge) throws IOException{
         Graphics2D g = (Graphics2D) ge;
         //ui-code here
-        Iterator<Player> ps = Player.getPlayers().stream().iterator();
 //        g.setColor(new Color(0,0,0,70));
 //        g.fillRect(33,cFrame.getHeight()-180,320,110);
-        BufferedImage Fimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/FG.png").getPath()));
+
+        BufferedImage Fimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/F.png").getPath()));
         g.drawImage(Fimg,33,cFrame.getHeight()-150,this);
 
-        g.setColor(Color.RED);
+        g.setColor(Color.BLACK);
+        g.fillRect(180,cFrame.getHeight()-90,240,13);
+        g.setColor(Color.white);
         g.fillRect(180,cFrame.getHeight()-90,240,13);
 
-        g.setColor(Color.white);
-        g.fillRect(180,cFrame.getHeight()-100,240,8);
-        while (ps.hasNext()){
-            Player p = ps.next();
-            g.setFont(new Font("Kanit Light", Font.PLAIN, 30));
-            g.setColor(Color.WHITE);
-            g.drawString(p.getUsername(),180,cFrame.getHeight()-110);
-        }
+        g.setColor(new Color(0xC5C5CE));
+        g.fillRect(180,cFrame.getHeight()-100,220,8);
+
+        Player p = getGame().getPlayerOwn();
+        g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
+        g.setColor(Color.WHITE);
+        g.drawString(p.getUsername(),180,cFrame.getHeight()-115);
+
 //        g.setColor(new Color(0,0,0,70));
 //        g.fillRect(913,cFrame.getHeight()-180,320,110);
-        BufferedImage FGimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/FG.png").getPath()));
+        BufferedImage FGimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/F.png").getPath()));
         g.drawImage(FGimg,813,cFrame.getHeight()-150,this);
 
         BufferedImage Gimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/G.png").getPath()));
         g.drawImage(Gimg,883,cFrame.getHeight()-140,200,70,this);
 
         g.setColor(Color.white);
-        g.drawString("20/20",1113,cFrame.getHeight()-80);
+        g.setFont(new Font("Kanit Light", Font.PLAIN, 50));
+        g.drawString("20",1115,cFrame.getHeight()-100);
+        g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
+        g.drawString("120",1163,cFrame.getHeight()-80);
+//        g.setColor(Color.white);
+//        g.drawString("120",1113,cFrame.getHeight()-80);
 
     }
 

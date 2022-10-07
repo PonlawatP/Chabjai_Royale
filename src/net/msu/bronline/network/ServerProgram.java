@@ -31,7 +31,7 @@ public class ServerProgram implements Runnable{
         try {
             while (sev != null && !sev.isClosed()){
                 Socket soc = sev.accept();
-                System.out.println("Client has connected!");
+//                System.out.println("Client has connected!");
                 DataInputStream dis = new DataInputStream(soc.getInputStream());
                 if (dis.available() != 0){
                     String data = dis.readUTF();
