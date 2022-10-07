@@ -168,7 +168,7 @@ public class Game extends JPanel {
         }
         //        g.drawImage(scene.getImg(true), 0,0, cCanv.getWidth(), cCanv.getHeight(),scene.getX(), scene.getY(),scene.getBoundX(), scene.getBoundY(),this);
 
-        g.setColor(Color.RED);
+//        g.setColor(Color.RED);
 //        g.drawRoundRect(0,0, 10, 10, 3, 3);
 
 //        if(game_status == 0){
@@ -177,6 +177,13 @@ public class Game extends JPanel {
 //
 //            g.drawImage(btn_play, b_cen_x,btn_py, b_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
 //        }
+
+        drawUI(g);
+    }
+
+    public void drawUI(Graphics ge){
+        Graphics2D g = (Graphics2D) ge;
+        //ui-code here
     }
 
     public int getGame_status() {

@@ -328,21 +328,11 @@ public class Present extends JPanel {
             if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 0;
         } else if(game_status == 2) {
             if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 0;
-            if((x >= b2_cen_x && x <= b2_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 1;
+            if((x >= b2_cen_x && x <= b2_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy) && checkHostNumber(x, y) != -1) return 1;
             if((x >= btn_back_px && x <= btn_back_px+btn_back_sx) && (y >= btn_back_py && y <= btn_back_py+btn_back_sy)) return 2;
 
-            int host_amount = NetworkDevices.getHostsIP().size();
-            for(int i = 0; i < host_amount; i++) {
-                int cx = getInsidePosition(0, cCanv.getWidth(), 7);
+            if(checkHostNumber(x, y) != -1) return 3;
 
-
-                int sx = getInsidePosition(0, cCanv.getWidth(), 93) - cx, sy = 100;
-
-                int cy = (sy * (i)) + (5 * i) - (int) (25 * scroll);
-
-                if ((x >= 0+cx && x <= sx+cx) && (y >= getInsidePosition(0, cCanv.getHeight(), 15)+cy && y <= getInsidePosition(0, cCanv.getHeight(), 15)+cy+((sy*(i+1))+(5*i))))
-                    return 3;
-            }
             } else if(game_status == 3) {
             if((x >= btn_back_px && x <= btn_back_px+btn_back_sx) && (y >= btn_back_py && y <= btn_back_py+btn_back_sy)) return 0;
             if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 1;
@@ -350,6 +340,21 @@ public class Present extends JPanel {
             if((x >= btn_back_px && x <= btn_back_px+btn_back_sx) && (y >= btn_back_py && y <= btn_back_py+btn_back_sy)) return 0;
         }
 
+        return -1;
+    }
+    public int checkHostNumber(int x, int y){
+        int host_amount = NetworkDevices.getHostsIP().size();
+        for(int i = 0; i < host_amount; i++) {
+            int cx = getInsidePosition(0, cCanv.getWidth(), 7);
+
+
+            int sx = getInsidePosition(0, cCanv.getWidth(), 93) - cx, sy = 100;
+
+            int cy = (sy * (i)) + (5 * i) - (int) (25 * scroll);
+
+            if ((x >= 0+cx && x <= sx+cx) && (y >= getInsidePosition(0, cCanv.getHeight(), 15)+cy && y <= getInsidePosition(0, cCanv.getHeight(), 15)+cy+((sy*(i+1))+(5*i))))
+                return i;
+        }
         return -1;
     }
 }
