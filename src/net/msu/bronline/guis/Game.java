@@ -136,7 +136,7 @@ public class Game extends JPanel {
 
     int b_cen_x = 0, b_cen_y = 0;
     int i = 0, i1 = 0;
-    public void draw(Graphics ge){
+    public void draw(Graphics ge)  {
         Graphics2D g = (Graphics2D) ge;
         g.drawImage(
                 scene.getImg(false),
@@ -178,12 +178,38 @@ public class Game extends JPanel {
 //            g.drawImage(btn_play, b_cen_x,btn_py, b_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
 //        }
 
-        drawUI(g);
+        try {
+            drawUI(g);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void drawUI(Graphics ge){
+    public void drawUI(Graphics ge) throws IOException{
         Graphics2D g = (Graphics2D) ge;
         //ui-code here
+        Iterator<Player> ps = Player.getPlayers().stream().iterator();
+        g.setColor(new Color(0,0,0,70));
+        g.fillRect(33,cFrame.getHeight()-180,320,110);
+
+        g.setColor(Color.RED);
+        g.fillRect(120,cFrame.getHeight()-110,200,20);
+
+        g.setColor(Color.white);
+        g.fillRect(120,cFrame.getHeight()-130,200,10);
+        while (ps.hasNext()){
+            Player p = ps.next();
+            g.setFont(new Font("Kanit Light", Font.PLAIN, 30));
+            g.setColor(Color.WHITE);
+            g.drawString(p.getUsername(),120,cFrame.getHeight()-150);
+        }
+        g.setColor(new Color(0,0,0,70));
+        g.fillRect(913,cFrame.getHeight()-180,320,110);
+
+
+        BufferedImage Gimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/G.png").getPath()));
+        g.drawImage(Gimg,973,cFrame.getHeight()-160,200,80,this);
+
     }
 
     public int getGame_status() {
