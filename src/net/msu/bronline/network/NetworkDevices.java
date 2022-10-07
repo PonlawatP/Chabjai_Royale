@@ -69,6 +69,7 @@ public class NetworkDevices {
 //                    System.out.println("\tSOCKET ERROR - " + ex.getMessage());
                     continue;
                 }
+
                 System.out.println("Found socket for: " + ip);
                 fipList.add(ip);
                 socket.close();

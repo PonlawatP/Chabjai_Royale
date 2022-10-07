@@ -23,6 +23,13 @@ public class Main {
         user.setFont(new Font("Kanit Light", Font.PLAIN, 16));
         user.setText("Default_Player");
 
+        try{
+            new StartMenu(user.getText(), true);
+            return;
+        }catch (IOException ex){
+            System.out.println("File Missing?");
+        }
+
         JFrame f = new JFrame("Insert Username");
         f.setLayout(new BorderLayout());
         f.setSize(300, 100);

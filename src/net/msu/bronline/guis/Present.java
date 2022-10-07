@@ -160,39 +160,70 @@ public class Present extends JPanel {
             throw new RuntimeException(e);
         }
     }
+
+    int scroll = 15;
+
+    public int getScroll() {
+        return scroll;
+    }
+
+    public void setScroll(int scroll) {
+        this.scroll = scroll;
+    }
+
     public void drawJoinPlayerBoxes(Graphics ge){
-        int x = getInsidePosition(0, cCanv.getWidth(), 7), y = getInsidePosition(0, cCanv.getHeight(), 15);
-        int sx = getInsidePosition(0, cCanv.getWidth(), 93)-x, sy = 100;
-        String room = username + "'s Room";
-        String name = "("+username+")";
-        String amount = "1/16";
-        String status = "Waiting Players...";
-        boolean isClick = false;
-        boolean isHover = false;
-
         Graphics2D g = (Graphics2D) ge;
-        BufferedImage bi = new BufferedImage(sx, sy, BufferedImage.TYPE_INT_ARGB_PRE);
-        Graphics2D g2 = bi.createGraphics();
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ((!isClick && isHover ? 5 : 10)/100f)));
-        if(!isClick && !isHover) g2.setColor(Color.BLACK);
-        g2.fillRect(0,0, sx, sy);
-        g2.dispose();
 
-        g.drawImage(bi,x,y, this);
-        g.setFont(new Font("Kanit Bold", Font.PLAIN, 30));
+        BufferedImage bg = new BufferedImage(cCanv.getWidth(), getInsidePosition(0, cCanv.getHeight(), 65), BufferedImage.TYPE_INT_ARGB_PRE);
+        Graphics2D gg = bg.createGraphics();
+        gg.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+//        gg.setColor(Color.BLACK);
+//        gg.fillRect(0,0, cCanv.getWidth(), getInsidePosition(0, cCanv.getHeight(), 65));
 
-        g.setColor(Color.black);
-        g.drawString(room, getInsidePosition(x, x+sx, 2), 30+getInsidePosition(y, y+sy, 12));
-        g.drawString(amount, getInsidePosition(x, x+sx, 98)-(30*(amount.length()/2)), 30+getInsidePosition(y, y+sy, 12));
+//        if(25*scroll < 0 || (25*scroll)+(100*4))
+//            setScroll(0);
 
-        g.setColor(Color.WHITE);
-        g.drawString(room, getInsidePosition(x, x+sx, 2), 30+getInsidePosition(y, y+sy, 10));
-        g.drawString(amount, getInsidePosition(x, x+sx, 98)-(30*(amount.length()/2)), 30+getInsidePosition(y, y+sy, 10));
-        g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
-        g.setColor(Color.LIGHT_GRAY);
-        g.drawString(name, getInsidePosition(x, x+sx, 2) + (int)(((30 * room.length())/2) * 1.15), 30+getInsidePosition(y, y+sy, 10));
-        g.setColor(Color.CYAN);
-        g.drawString(status, getInsidePosition(x, x+sx, 2), (getInsidePosition(y, y+sy, 90))-10);
+        for(int i = 0; i < 4; i++){
+            int x = getInsidePosition(0, cCanv.getWidth(), 7);
+            int y = 0;
+
+            int sx = getInsidePosition(0, cCanv.getWidth(), 93)-x, sy = 100;
+
+            y = y + (sy*(i))+(5*i) - (25*scroll);
+
+            String room = username + "'s Room";
+            String name = "("+username+")";
+            String amount = "1/16";
+            String status = "Waiting Players...";
+            boolean isClick = false;
+            boolean isHover = false;
+
+            BufferedImage bi = new BufferedImage(sx, sy, BufferedImage.TYPE_INT_ARGB_PRE);
+            Graphics2D g2 = bi.createGraphics();
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ((!isClick && isHover ? 5 : 10)/100f)));
+            if(!isClick && !isHover) g2.setColor(Color.BLACK);
+            g2.fillRect(0,0, sx, sy);
+            g2.dispose();
+
+            gg.drawImage(bi,x,y, this);
+            gg.setFont(new Font("Kanit Bold", Font.PLAIN, 30));
+
+            gg.setColor(Color.black);
+            gg.drawString(room, getInsidePosition(x, x+sx, 2), 30+getInsidePosition(y, y+sy, 12));
+            gg.drawString(amount, getInsidePosition(x, x+sx, 98)-(30*(amount.length()/2)), 30+getInsidePosition(y, y+sy, 12));
+
+            gg.setColor(Color.WHITE);
+            gg.drawString(room, getInsidePosition(x, x+sx, 2), 30+getInsidePosition(y, y+sy, 10));
+            gg.drawString(amount, getInsidePosition(x, x+sx, 98)-(30*(amount.length()/2)), 30+getInsidePosition(y, y+sy, 10));
+            gg.setFont(new Font("Kanit Light", Font.PLAIN, 20));
+            gg.setColor(Color.LIGHT_GRAY);
+            gg.drawString(name, getInsidePosition(x, x+sx, 2) + (int)(((30 * room.length())/2) * 1.15), 30+getInsidePosition(y, y+sy, 10));
+            gg.setColor(Color.CYAN);
+            gg.drawString(status, getInsidePosition(x, x+sx, 2), (getInsidePosition(y, y+sy, 90))-10);
+        }
+
+        gg.dispose();
+        g.drawImage(bg,0,getInsidePosition(0, cCanv.getHeight(), 15), this);
     }
 
     int frameTime = 0;

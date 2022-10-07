@@ -72,13 +72,18 @@ class Canv extends Canvas {
         cFrame = frame;
         ps = new Present(cFrame, this, username);
         game = new Game(cFrame, this, movements, ps, username, host);
-//        ps.setGame_status(2);
+        ps.setGame_status(2);
 
         addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
                 if(ps.getGame_status() >= 5)
                     game.getScene().setSize((float) (game.getScene().getSize()+((e.getWheelRotation()*-1)*.05)));
+                else{
+                    if(ps.getGame_status() == 2){
+                        ps.setScroll(ps.getScroll()+e.getWheelRotation());
+                    }
+                }
             }
         });
         addMouseListener(new MouseAdapter() {
