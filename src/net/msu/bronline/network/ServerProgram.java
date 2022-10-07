@@ -7,6 +7,7 @@ import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -25,7 +26,7 @@ public class ServerProgram implements Runnable{
     public void startSev() {
         System.out.println("Server starting...");
         try {
-            while (!sev.isClosed()){
+            while (sev != null && !sev.isClosed()){
                 Socket soc = sev.accept();
                 System.out.println("Client has connected!");
                 DataInputStream dis = new DataInputStream(soc.getInputStream());
@@ -54,6 +55,7 @@ public class ServerProgram implements Runnable{
     }
 
     public void closeSev() {
+        game.setGame_status(0);
         try {
             if (sev != null) {
                 sev.close();
@@ -67,6 +69,8 @@ public class ServerProgram implements Runnable{
     public void run() {
         try {
             sev = new ServerSocket(50394);
+        } catch (BindException e) {
+            game.stopMode();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

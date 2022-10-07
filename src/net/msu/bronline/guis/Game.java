@@ -105,6 +105,7 @@ public class Game extends JPanel {
     public void stopMode(){
         if(hosting) {
             sp.closeSev();
+            ps.setGame_status(2);
         } else {
             cp.closeEverything();
         }
