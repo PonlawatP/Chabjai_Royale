@@ -189,29 +189,32 @@ public class Game extends JPanel {
         Graphics2D g = (Graphics2D) ge;
         //ui-code here
         Iterator<Player> ps = Player.getPlayers().stream().iterator();
-        g.setColor(new Color(0,0,0,70));
-        g.fillRect(33,cFrame.getHeight()-180,320,110);
+//        g.setColor(new Color(0,0,0,70));
+//        g.fillRect(33,cFrame.getHeight()-180,320,110);
+        BufferedImage Fimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/FG.png").getPath()));
+        g.drawImage(Fimg,33,cFrame.getHeight()-150,this);
 
         g.setColor(Color.RED);
-        g.fillRect(120,cFrame.getHeight()-110,200,20);
+        g.fillRect(180,cFrame.getHeight()-90,240,13);
 
         g.setColor(Color.white);
-        g.fillRect(120,cFrame.getHeight()-130,200,10);
+        g.fillRect(180,cFrame.getHeight()-100,240,8);
         while (ps.hasNext()){
             Player p = ps.next();
             g.setFont(new Font("Kanit Light", Font.PLAIN, 30));
             g.setColor(Color.WHITE);
-            g.drawString(p.getUsername(),120,cFrame.getHeight()-150);
+            g.drawString(p.getUsername(),180,cFrame.getHeight()-110);
         }
-        g.setColor(new Color(0,0,0,70));
-        g.fillRect(913,cFrame.getHeight()-180,320,110);
-
+//        g.setColor(new Color(0,0,0,70));
+//        g.fillRect(913,cFrame.getHeight()-180,320,110);
+        BufferedImage FGimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/FG.png").getPath()));
+        g.drawImage(FGimg,813,cFrame.getHeight()-150,this);
 
         BufferedImage Gimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/G.png").getPath()));
-        g.drawImage(Gimg,973,cFrame.getHeight()-160,200,80,this);
+        g.drawImage(Gimg,883,cFrame.getHeight()-140,200,70,this);
 
         g.setColor(Color.white);
-        g.drawString("20/20",1143,cFrame.getHeight()-80);
+        g.drawString("20/20",1113,cFrame.getHeight()-80);
 
     }
 
