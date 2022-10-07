@@ -3,6 +3,7 @@ package net.msu.bronline.network;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.SocketException;
 
 public class Sv_read extends Thread implements Runnable{
@@ -26,10 +27,8 @@ public class Sv_read extends Thread implements Runnable{
                     }
                 }
                 sleep(2);
-            } catch (EOFException ex){
-                ex.printStackTrace();
-            }
-            catch (SocketException es){
+            } catch (EOFException | SocketException ex){
+//                ex.printStackTrace();
                 ch.closeEverything();
             }
             catch (IOException e) {

@@ -3,6 +3,7 @@ package net.msu.bronline.network;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.SocketException;
 import java.util.Stack;
 
@@ -10,10 +11,13 @@ public class Cli_write extends Thread implements Runnable{
     DataOutputStream dos;
     CientProgram cp;
     Stack<String> st = new Stack<>();
+    Socket soc;
 
-    public Cli_write(DataOutputStream dos, CientProgram cp){
+    public Cli_write(DataOutputStream dos, CientProgram cp, Socket soc){
         this.dos = dos;
         this.cp = cp;
+        this.soc = soc;
+        sendMessage(cp.getUsername()+":join:"+cp.game.getPlayerOwn().getCharacterID());
     }
 
     public void sendMessage(String mess) {
@@ -32,7 +36,7 @@ public class Cli_write extends Thread implements Runnable{
 
             for (String Mdata : mess.split("::ln::")){
                 String[] data = Mdata.split(":");
-                if (!data[1].equalsIgnoreCase("player")) System.out.println(Mdata);
+                if (!data[1].equalsIgnoreCase("player")) System.out.println("[s] " + Mdata);
             }
 
             try {
@@ -50,9 +54,9 @@ public class Cli_write extends Thread implements Runnable{
     }
     @Override
     public void run() {
-        while (!cp.quit){
+        while (!cp.quit && !soc.isClosed()){
             try {
-                sendMessage(cp.getUsername() + ":" + cp.game.getPlayerOwn().getPacket());
+//                sendMessage(cp.getUsername() + ":" + cp.game.getPlayerOwn().getPacket());
 
                 sendMessageToServer();
                 sleep(2);

@@ -27,10 +27,11 @@ public class ServerProgram implements Runnable{
         try {
             while (!sev.isClosed()){
                 Socket soc = sev.accept();
-//                System.out.println("Client has connected!");
+                System.out.println("Client has connected!");
                 DataInputStream dis = new DataInputStream(soc.getInputStream());
                 if (dis.available() != 0){
-                    if(dis.readUTF().equalsIgnoreCase("ping")){
+                    String data = dis.readUTF();
+                    if(data.equalsIgnoreCase("ping")){
 //                        System.out.println("pinging: client => server...");
                         DataOutputStream dos = new DataOutputStream(soc.getOutputStream());
 //                        conf:name:username:amount:max:status
@@ -39,12 +40,11 @@ public class ServerProgram implements Runnable{
 //                        soc.close();
                         continue;
                     }
-
-                    System.out.println("run ClientHandler");
-                    ClientHandler clientHandler = new ClientHandler(soc, scene, game);
-                    Thread t = new Thread(clientHandler);
-                    t.start();
                 }
+
+                ClientHandler clientHandler = new ClientHandler(soc, scene, game);
+                Thread t = new Thread(clientHandler);
+                t.start();
             }
         } catch (SocketException e) {
         } catch (Exception e) {

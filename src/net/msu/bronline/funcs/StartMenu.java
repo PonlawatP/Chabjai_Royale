@@ -118,8 +118,23 @@ class Canv extends Canvas {
                                 game.setHosting(true);
                                 game.startMode();
                             }
-                            if (cl == 1) ps.setGame_status(4);
-                            if (cl == 2) ps.setGame_status(1);
+                            if (cl == 1) { //join
+                                ps.setGame_status(4);
+                                game.setHosting(false);
+                                String ip = (String) NetworkDevices.getHostsIP().keySet().toArray()[ps.getI_click()];
+                                System.out.println("serverip: " + ip);
+                                game.setIp(ip);
+
+                                game.startMode();
+                            }
+                            if (cl == 2) {
+                                ps.setGame_status(1);
+                            }
+
+                            if(cl == 3){ // server
+                                int hn = ps.checkHostNumber(e.getX(), e.getY());
+                                ps.setI_click(hn);
+                            }
                         } else if (ps.getGame_status() == 3) {
                             if (cl == 0) { //back
                                 game.stopMode();
@@ -127,11 +142,17 @@ class Canv extends Canvas {
                             }
                             if (cl == 1) {
                                 ps.setGame_status(5);
-                                game.setHosting(true);
                                 game.setGame_status(2);
                             }
                         } else if (ps.getGame_status() == 4) {
-                            if (cl == 0) ps.setGame_status(2);
+                            if (cl == 0) {
+                                ps.setGame_status(2);
+                                game.stopMode();
+                            }
+                        }
+                    } else {
+                        if(ps.getGame_status() == 2){
+                            ps.setI_click(-1);
                         }
                     }
                 } else {

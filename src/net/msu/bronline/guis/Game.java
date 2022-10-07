@@ -82,12 +82,22 @@ public class Game extends JPanel {
         this.start = start;
     }
 
+    String ip = "0.0.0.0";
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getIP() {
+        return ip;
+    }
+
     public void startMode(){
         if(hosting){
             sp = new ServerProgram(scene, this);
             t_host = new Thread(sp);
         } else {
-            cp = new CientProgram(getPlayerOwn().getUsername(), ps, this);
+            cp = new CientProgram(getPlayerOwn().getUsername(), ip, ps, this);
             t_host = new Thread(cp);
         }
         t_host.start();
@@ -95,6 +105,8 @@ public class Game extends JPanel {
     public void stopMode(){
         if(hosting) {
             sp.closeSev();
+        } else {
+            cp.closeEverything();
         }
     }
 

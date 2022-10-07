@@ -35,7 +35,7 @@ public class Sv_write extends Thread implements Runnable{
             String mess = st.pop();
             for (String Mdata : mess.split("::ln::")){
                 String[] data = Mdata.split(":");
-                if (!data[1].equalsIgnoreCase("player")) System.out.println(Mdata);
+                if (!data[1].equalsIgnoreCase("player")) System.out.println("[s] " + Mdata);
             }
 
             try {

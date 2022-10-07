@@ -5,6 +5,7 @@ import net.msu.bronline.comps.Player;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.SocketException;
 import java.util.Iterator;
 
@@ -12,19 +13,21 @@ public class Cli_read extends Thread implements Runnable{
     DataInputStream dis;
     CientProgram cp;
     Cli_write cw;
-    public Cli_read(DataInputStream dis, CientProgram cp, Cli_write cw){
+    Socket soc;
+    public Cli_read(DataInputStream dis, CientProgram cp, Cli_write cw, Socket soc){
         this.dis = dis;
         this.cp = cp;
         this.cw = cw;
+        this.soc = soc;
     }
 
     @Override
     public void run() {
-        while (!cp.quit){
+        while (!cp.quit && !soc.isClosed()){
             try {
                 for(String mess : dis.readUTF().split("::ln::")) {
                     String[] data = mess.split(":");
-                    if(!data[1].equalsIgnoreCase("player")) System.out.println(mess);
+                    if(!data[1].equalsIgnoreCase("player")) System.out.println("[r] " + mess);
 
                     if (data[1].equalsIgnoreCase("player")) {
 
@@ -48,6 +51,7 @@ public class Cli_read extends Thread implements Runnable{
                 ex.printStackTrace();
             }
             catch (SocketException es){
+//                es.printStackTrace();
                 cp.closeEverything();
                 cp.exitGame();
             }

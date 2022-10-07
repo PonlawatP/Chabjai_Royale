@@ -120,7 +120,7 @@ public class Present extends JPanel {
                 drawJoinPlayerBoxes(g);
 
                 g.drawImage(btn_host, b_cen_x,btn_py, b_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
-                g.drawImage(btn_join_den, b2_cen_x,btn_py, b2_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
+                g.drawImage((i_click != -1 && i_click < NetworkDevices.getHostsIP().size() ? btn_join : btn_join_den), b2_cen_x,btn_py, b2_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
             }
             else if(game_status == 3){
                 btn_back_px = 15;
@@ -172,6 +172,17 @@ public class Present extends JPanel {
         this.scroll = scroll;
     }
 
+    int i_hover = -1;
+    int i_click = -1;
+
+    public int getI_click() {
+        return i_click;
+    }
+
+    public void setI_click(int i_click) {
+        this.i_click = i_click;
+    }
+
     public void drawJoinPlayerBoxes(Graphics ge){
         Graphics2D g = (Graphics2D) ge;
 
@@ -220,8 +231,8 @@ public class Present extends JPanel {
                     status = "Waiting Players...";
                     break;
             }
-            boolean isClick = false;
-            boolean isHover = false;
+            boolean isClick = i_click == i;
+            boolean isHover = i_hover == i;
 
             BufferedImage bi = new BufferedImage(sx, sy, BufferedImage.TYPE_INT_ARGB_PRE);
             Graphics2D g2 = bi.createGraphics();
@@ -328,25 +339,26 @@ public class Present extends JPanel {
             if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 0;
         } else if(game_status == 2) {
             if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 0;
-            if((x >= b2_cen_x && x <= b2_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy) && checkHostNumber(x, y) != -1) return 1;
+            if((x >= b2_cen_x && x <= b2_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy) && (i_click != -1 && i_click < NetworkDevices.getHostsIP().size())) return 1;
             if((x >= btn_back_px && x <= btn_back_px+btn_back_sx) && (y >= btn_back_py && y <= btn_back_py+btn_back_sy)) return 2;
-
-            if(checkHostNumber(x, y) != -1) return 3;
+            int hn = checkHostNumber(x, y);
+            i_hover = hn;
+            if(hn != -1) return 3;
 
             } else if(game_status == 3) {
             if((x >= btn_back_px && x <= btn_back_px+btn_back_sx) && (y >= btn_back_py && y <= btn_back_py+btn_back_sy)) return 0;
             if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 1;
-        }else if(game_status == 4) {
+        } else if(game_status == 4) {
             if((x >= btn_back_px && x <= btn_back_px+btn_back_sx) && (y >= btn_back_py && y <= btn_back_py+btn_back_sy)) return 0;
         }
 
         return -1;
     }
+
     public int checkHostNumber(int x, int y){
         int host_amount = NetworkDevices.getHostsIP().size();
         for(int i = 0; i < host_amount; i++) {
             int cx = getInsidePosition(0, cCanv.getWidth(), 7);
-
 
             int sx = getInsidePosition(0, cCanv.getWidth(), 93) - cx, sy = 100;
 

@@ -37,10 +37,17 @@ public class ClientHandler implements Runnable{
             dis = new DataInputStream(soc.getInputStream());
             dos = new DataOutputStream(soc.getOutputStream());
 
-            String[] data = dis.readUTF().split(":");
+            String mdata = dis.readUTF();
+            String[] data = mdata.split(":");
+
+            if(!mdata.contains(":") || data[0] == "") {
+                closeSocOnly();
+                return;
+            }
+
             this.clientUser = data[0];
             clientHandler.add(this);
-//            System.out.println("SERVER : "+clientUser+" enter the game");
+            System.out.println("SERVER : "+clientUser+" enter the game");
 
             Player p = new Player(scene, clientUser, Integer.parseInt(data[2]));
             cPlayer = p;
@@ -100,9 +107,19 @@ public class ClientHandler implements Runnable{
             e.printStackTrace();
         }
     }
+    public void closeSocOnly() {
+        try {
+            if(dis != null) dis.close();
+            if(dos != null) dos.close();
+            if(soc != null) soc.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     boolean quit = false;
     private void removeClientHandler() {
+        System.out.println("SERVER : "+clientUser+" quit");
         broadcastMessage(clientUser+":quit"); //TODO: ทำแบบ broadcast
         quit = true;
         Player.removePlayer(clientUser);
