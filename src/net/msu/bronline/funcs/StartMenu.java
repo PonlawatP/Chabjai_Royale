@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static java.lang.Thread.sleep;
 import static net.msu.bronline.funcs.Utils.runServerFinder;
 import static net.msu.bronline.guis.Game.getGame;
+import static net.msu.bronline.guis.Present.getPresent;
 
 public class StartMenu {
     public StartMenu(String username, boolean host) throws IOException {
@@ -73,7 +74,7 @@ class Canv extends Canvas {
         ps = new Present(cFrame, this, username);
         new Game(cFrame, this, movements, username, host);
 
-        ps.setGame_status(3);
+        ps.setGame_status(1);
         ps.setFrameTime(120);
         ps.getScene().setOpacity(40);
 
@@ -125,15 +126,16 @@ class Canv extends Canvas {
                                 int hn = ps.checkHostNumber(e.getX(), e.getY());
                                 ps.setI_click(hn);
                             }
-                        } else if (ps.getGame_status() == 3) {
+                        } else if (ps.getGame_status() == 3) { //host page
                             if (cl == 0) { //back
                                 ps.setGame_status(2);
                                 getGame().stopMode();
                                 runServerFinder();
                             }
                             if (cl == 1) {
-                                ps.setGame_status(5);
-                                getGame().setGame_status(2);
+//                                ps.setGame_status(5);
+//                                getGame().setGame_status(2);
+                                getGame().startGame();
                             }
                         } else if (ps.getGame_status() == 4) {
                             if (cl == 0) {
@@ -221,6 +223,7 @@ class Canv extends Canvas {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode() == KeyEvent.VK_F12) dev = !dev;
+                if(e.getKeyCode() == KeyEvent.VK_ESCAPE && getPresent().getGame_status() == 5) getGame().stopMode();
 
                 if(ps.getGame_status() < 5) return;
                 if(e.getKeyCode() == KeyEvent.VK_W) movements[0] = true;

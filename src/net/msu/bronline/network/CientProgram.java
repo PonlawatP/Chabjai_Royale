@@ -5,6 +5,7 @@ import net.msu.bronline.guis.Present;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import static net.msu.bronline.funcs.Utils.runServerFinder;
@@ -76,5 +77,4 @@ public class CientProgram extends Thread implements Runnable{
     @Override
     public void run() {
     }
-
 }

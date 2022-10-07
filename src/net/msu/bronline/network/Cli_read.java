@@ -10,6 +10,7 @@ import java.net.SocketException;
 import java.util.Iterator;
 
 import static net.msu.bronline.guis.Game.getGame;
+import static net.msu.bronline.guis.Present.getPresent;
 
 public class Cli_read extends Thread implements Runnable{
     DataInputStream dis;
@@ -33,7 +34,6 @@ public class Cli_read extends Thread implements Runnable{
                     if(!data[1].equalsIgnoreCase("player")) System.out.println("[r] " + mess);
 
                     if (data[1].equalsIgnoreCase("player")) {
-
                         Iterator<Player> ps = Player.getPlayers().iterator();
                         while (ps.hasNext()) {
                             Player p = ps.next();
@@ -51,6 +51,25 @@ public class Cli_read extends Thread implements Runnable{
                             Player.getPlayers().add(Player.getPlayers().size(), p);
                     } else if (data[1].equalsIgnoreCase("quit")) {
                         Player.removePlayer(data[0]);
+                    } else if (data[1].equalsIgnoreCase("desc")) {
+                        getGame().setStatus_desc(data[2]);
+                    } else if (data[1].equalsIgnoreCase("act")) {
+                        System.out.println(data[2]);
+                        switch (data[2]){
+                            case "pre_start":
+                                getGame().setGame_status(1);
+                                break;
+                            case "start":
+                                getGame().setGame_status(2);
+                                getPresent().setGame_status(5);
+                                break;
+                            case "ended":
+                                getGame().setGame_status(3);
+                                break;
+                            case "stop":
+                                getGame().setGame_status(0);
+                                break;
+                        }
                     } else if (data[1].equalsIgnoreCase("shutdown")) {
                         if(!data[0].equals("host")) continue;
                         cp.closeEverything();

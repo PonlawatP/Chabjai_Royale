@@ -108,7 +108,7 @@ public class NetworkDevices {
                     }
                 }).start();
 
-                System.out.println("Found socket for: " + ip);
+//                System.out.println("Found socket for: " + ip);
             }
         } catch (IOException | InterruptedException e) {
 //            System.out.println("\nPROCESS/READER ERROR - " + e.getMessage());

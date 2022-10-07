@@ -3,6 +3,7 @@ package net.msu.bronline.guis;
 import net.msu.bronline.comps.Player;
 import net.msu.bronline.comps.Scene;
 import net.msu.bronline.network.CientProgram;
+import net.msu.bronline.network.ClientHandler;
 import net.msu.bronline.network.ServerProgram;
 
 import javax.imageio.ImageIO;
@@ -11,6 +12,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import static net.msu.bronline.guis.Present.getPresent;
@@ -67,10 +69,14 @@ public class Game extends JPanel {
     }
     public void updateRoom(String[] data){
         //username:conf:name:amount:max:status
+        int g_all = Integer.parseInt(data[4]);
+        int g_prstatus = Integer.parseInt(data[5]);
+        int g_gstatus = Integer.parseInt(data[6]);
         setHostUser(data[0]);
         setRoomName(data[2]);
-        setP_amount(Integer.parseInt(data[4]));
-        setGame_status(Integer.parseInt(data[5]));
+        setP_amount(g_all);
+        setGame_status(g_gstatus);
+        getPresent().setGame_status((g_prstatus == 3) ? 4 : g_prstatus);
     }
 
     public void setHostUser(String hostUser) {
@@ -132,10 +138,10 @@ public class Game extends JPanel {
     public void stopMode(){
         if(hosting) {
             if(sp != null) sp.closeSev();
-            getPresent().setGame_status(2);
         } else {
             if(cp != null) cp.closeEverything();
         }
+        getPresent().setGame_status(2);
         resetGame();
     }
 
@@ -189,7 +195,7 @@ public class Game extends JPanel {
 
                 ,this
         );
-        Iterator<Player> ps = Player.getPlayers().stream().iterator();
+        Iterator<Player> ps = new ArrayList<>(Player.getPlayers()).iterator();
         i++;
         if(i >= 2) {
             i = 0;
@@ -299,6 +305,16 @@ public class Game extends JPanel {
 //        }
     }
 
+    String status_desc = "Waiting Players";
+
+    public String getStatus_desc() {
+        return status_desc;
+    }
+
+    public void setStatus_desc(String status_desc) {
+        this.status_desc = status_desc;
+    }
+
     // ------------- ฟังก์ชันเช็คว่าเมาส์อยู่ในปุ่มมั้ย
     public int isMouseOnStart(int x, int y){
         if(game_status == 0){
@@ -309,6 +325,25 @@ public class Game extends JPanel {
 
         return -1;
     }
+
+    public void startGame() {
+        ClientHandler.broadcastMessage("host:act:pre_start");
+        setGame_status(1);
+        try {
+            for(int i = 5; i >= 0; i--){
+                ClientHandler.broadcastMessage("host:desc:Starting in " + i);
+                setStatus_desc("Starting in " + i);
+                Thread.sleep(1000);
+            }
+        } catch (InterruptedException ex){
+            ex.printStackTrace();
+        }
+        ClientHandler.broadcastMessage("host:act:start");
+        setGame_status(2);
+        getPresent().setGame_status(5);
+    }
+
+
 
     public static Game getGame(){
         return g;

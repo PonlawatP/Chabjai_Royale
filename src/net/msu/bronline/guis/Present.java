@@ -143,13 +143,14 @@ public class Present extends JPanel {
                 g.drawString(ss, cCanv.getWidth()/2-((45*ss.length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 10));
 
                 g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
-                String ss2 = "Waiting Players";
-                g.drawString(ss2, cCanv.getWidth()/2-((20*ss2.length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 15));
+                g.drawString(getGame().getStatus_desc(), cCanv.getWidth()/2-((20*getGame().getStatus_desc().length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 15));
 
                 drawHostPlayerUI(g);
 
-                g.drawImage(btn_back, btn_back_px,btn_back_py, btn_back_px+btn_back_sx,btn_back_py+btn_back_sy,0,0,1020,400,this);
-                g.drawImage(btn_play, b_cen_x,btn_py, b_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
+                if(getGame().getGame_status() == 0){
+                    g.drawImage(btn_back, btn_back_px,btn_back_py, btn_back_px+btn_back_sx,btn_back_py+btn_back_sy,0,0,1020,400,this);
+                    g.drawImage(btn_play, b_cen_x,btn_py, b_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
+                }
             }
             else if(game_status == 4){
                 btn_back_px = 15;
@@ -161,17 +162,16 @@ public class Present extends JPanel {
                 g.drawString(ss, cCanv.getWidth()/2-((45*ss.length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 10));
 
                 g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
-                String ss2 = "Waiting Players";
-                g.drawString(ss2, cCanv.getWidth()/2-((20*ss2.length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 15));
+                g.drawString(getGame().getStatus_desc(), cCanv.getWidth()/2-((20*getGame().getStatus_desc().length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 15));
 
-                drawHostPlayerUI(g);
-
-//                g.setFont(new Font("Kanit Bold", Font.PLAIN, 45));
-//                g.setColor(Color.WHITE);
-//                String ss3 = "Starting in 5";
-//                g.drawString(ss3, cCanv.getWidth()/2-((45*ss3.length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 50));
-
-                g.drawImage(btn_back, btn_back_px,btn_back_py, btn_back_px+btn_back_sx,btn_back_py+btn_back_sy,0,0,1020,400,this);
+                if(getGame().getGame_status() == 0) {
+                    drawHostPlayerUI(g);
+                    g.drawImage(btn_back, btn_back_px, btn_back_py, btn_back_px + btn_back_sx, btn_back_py + btn_back_sy, 0, 0, 1020, 400, this);
+                } else {
+                    g.setFont(new Font("Kanit Bold", Font.PLAIN, 45));
+                    g.setColor(Color.WHITE);
+                    g.drawString(getGame().getStatus_desc(), cCanv.getWidth()/2-((45*getGame().getStatus_desc().length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 50));
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -244,13 +244,13 @@ public class Present extends JPanel {
 
             y = y + (sy*(i))+(5*i) - (int)(25*scroll);
 
-            String ip = (String) NetworkDevices.getHostsIP().keySet().toArray()[i];
-            String[] data = NetworkDevices.getHostsIP().get(ip);
+            String ip = NetworkDevices.getHostIP(i);
+            String[] data = NetworkDevices.getHostDetails(i);
             String room = data[2];
             String name = "("+data[0]+")";
             String amount = data[3]+"/"+data[4];
             String status;
-            switch (data[5]){
+            switch (data[6]){
                 case "1":
                     status = "Starting";
                     break;

@@ -45,10 +45,10 @@ public class Cli_write extends Thread implements Runnable{
                 dos.writeUTF(mess);
                 dos.flush();
             } catch (EOFException ex){
-                ex.printStackTrace();
+//                ex.printStackTrace();
             }
             catch (SocketException es){
-                es.printStackTrace();
+//                es.printStackTrace();
             }
             catch (IOException e) {
                 throw new RuntimeException(e);
@@ -59,7 +59,7 @@ public class Cli_write extends Thread implements Runnable{
     public void run() {
         while (!cp.quit && !soc.isClosed()){
             try {
-//                sendMessage(cp.getUsername() + ":" + cp.getGame().getPlayerOwn().getPacket());
+                if(getGame().getGame_status() == 2 || getGame().getGame_status() == 3) sendMessage(cp.getUsername() + ":" + getGame().getPlayerOwn().getPacket());
 
                 sendMessageToServer();
                 sleep(2);

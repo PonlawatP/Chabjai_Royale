@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.net.SocketException;
 
 import static net.msu.bronline.guis.Game.getGame;
+import static net.msu.bronline.guis.Present.getPresent;
 
 public class ServerProgram implements Runnable{
     private ServerSocket sev;
@@ -37,8 +38,8 @@ public class ServerProgram implements Runnable{
                     if(data.equalsIgnoreCase("ping")){
 //                        System.out.println("pinging: client => server...");
                         DataOutputStream dos = new DataOutputStream(soc.getOutputStream());
-//                        username:conf:name:amount:max:status
-                        dos.writeUTF(getGame().getPlayerOwn().getUsername()+":conf:"+getGame().getRoomName()+":"+ Player.getPlayers().size()+":"+getGame().getMaxPlayer()+":"+getGame().getGame_status());
+//                        username:conf:name:amount:max:pr_status:game_status
+                        dos.writeUTF(getGame().getPlayerOwn().getUsername()+":conf:"+getGame().getRoomName()+":"+ Player.getPlayers().size()+":"+getGame().getMaxPlayer()+":"+getPresent().getGame_status()+":"+getGame().getGame_status());
                         dos.flush();
 //                        soc.close();
                         continue;
