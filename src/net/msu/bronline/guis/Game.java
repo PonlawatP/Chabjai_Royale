@@ -177,7 +177,7 @@ public class Game extends JPanel {
 
     int b_cen_x = 0, b_cen_y = 0;
     int i = 0, i1 = 0;
-    public void draw(Graphics ge){
+    public void draw(Graphics ge)  {
         Graphics2D g = (Graphics2D) ge;
         g.drawImage(
                 scene.getImg(false),
@@ -219,12 +219,44 @@ public class Game extends JPanel {
 //            g.drawImage(btn_play, b_cen_x,btn_py, b_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
 //        }
 
-        drawUI(g);
+        try {
+            drawUI(g);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void drawUI(Graphics ge){
+    public void drawUI(Graphics ge) throws IOException{
         Graphics2D g = (Graphics2D) ge;
         //ui-code here
+        Iterator<Player> ps = Player.getPlayers().stream().iterator();
+//        g.setColor(new Color(0,0,0,70));
+//        g.fillRect(33,cFrame.getHeight()-180,320,110);
+        BufferedImage Fimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/FG.png").getPath()));
+        g.drawImage(Fimg,33,cFrame.getHeight()-150,this);
+
+        g.setColor(Color.RED);
+        g.fillRect(180,cFrame.getHeight()-90,240,13);
+
+        g.setColor(Color.white);
+        g.fillRect(180,cFrame.getHeight()-100,240,8);
+        while (ps.hasNext()){
+            Player p = ps.next();
+            g.setFont(new Font("Kanit Light", Font.PLAIN, 30));
+            g.setColor(Color.WHITE);
+            g.drawString(p.getUsername(),180,cFrame.getHeight()-110);
+        }
+//        g.setColor(new Color(0,0,0,70));
+//        g.fillRect(913,cFrame.getHeight()-180,320,110);
+        BufferedImage FGimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/FG.png").getPath()));
+        g.drawImage(FGimg,813,cFrame.getHeight()-150,this);
+
+        BufferedImage Gimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/G.png").getPath()));
+        g.drawImage(Gimg,883,cFrame.getHeight()-140,200,70,this);
+
+        g.setColor(Color.white);
+        g.drawString("20/20",1113,cFrame.getHeight()-80);
+
     }
 
     public int getGame_status() {
