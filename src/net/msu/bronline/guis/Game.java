@@ -210,6 +210,9 @@ public class Game extends JPanel {
         BufferedImage Gimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/G.png").getPath()));
         g.drawImage(Gimg,973,cFrame.getHeight()-160,200,80,this);
 
+        g.setColor(Color.white);
+        g.drawString("20/20",1143,cFrame.getHeight()-80);
+
     }
 
     public int getGame_status() {
