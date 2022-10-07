@@ -1,6 +1,7 @@
 package net.msu.bronline.guis;
 
 import net.msu.bronline.comps.Scene;
+import net.msu.bronline.network.NetworkDevices;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -161,13 +162,13 @@ public class Present extends JPanel {
         }
     }
 
-    int scroll = 15;
+    double scroll = 0;
 
-    public int getScroll() {
+    public double getScroll() {
         return scroll;
     }
 
-    public void setScroll(int scroll) {
+    public void setScroll(double scroll) {
         this.scroll = scroll;
     }
 
@@ -180,21 +181,45 @@ public class Present extends JPanel {
 //        gg.setColor(Color.BLACK);
 //        gg.fillRect(0,0, cCanv.getWidth(), getInsidePosition(0, cCanv.getHeight(), 65));
 
-//        if(25*scroll < 0 || (25*scroll)+(100*4))
-//            setScroll(0);
+//        System.out.println(((100*6)+(5*6)) + " : " + (getInsidePosition(0, cCanv.getHeight(), 65)+(25*scroll)));
 
-        for(int i = 0; i < 4; i++){
+        int host_amount = NetworkDevices.getHostsIP().size();
+
+//        if(25*scroll < 0 || getInsidePosition(0, cCanv.getHeight(), 65)+(25*scroll) < getInsidePosition(0, cCanv.getHeight(), 65))
+        if(25*scroll < 0)
+            scroll += 0.5;
+//        System.out.println(getInsidePosition(0, cCanv.getHeight(), 65)+(25*scroll) + " : " + ((100*(host_amount))+(5*host_amount)));
+        if(getInsidePosition(0, cCanv.getHeight(), 65)+(25*scroll) >= (100*(host_amount))+(5*host_amount))
+            scroll -= 0.5;
+
+        for(int i = 0; i < host_amount; i++){
             int x = getInsidePosition(0, cCanv.getWidth(), 7);
             int y = 0;
 
             int sx = getInsidePosition(0, cCanv.getWidth(), 93)-x, sy = 100;
 
-            y = y + (sy*(i))+(5*i) - (25*scroll);
+            y = y + (sy*(i))+(5*i) - (int)(25*scroll);
 
-            String room = username + "'s Room";
-            String name = "("+username+")";
-            String amount = "1/16";
-            String status = "Waiting Players...";
+            String ip = (String) NetworkDevices.getHostsIP().keySet().toArray()[i];
+            String[] data = NetworkDevices.getHostsIP().get(ip);
+            String room = data[1];
+            String name = "("+data[2]+")";
+            String amount = data[3]+"/"+data[4];
+            String status;
+            switch (data[5]){
+                case "1":
+                    status = "Starting";
+                    break;
+                case "2":
+                    status = "Started";
+                    break;
+                case "3":
+                    status = "Ended";
+                    break;
+                default:
+                    status = "Waiting Players...";
+                    break;
+            }
             boolean isClick = false;
             boolean isHover = false;
 
@@ -305,7 +330,20 @@ public class Present extends JPanel {
             if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 0;
             if((x >= b2_cen_x && x <= b2_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 1;
             if((x >= btn_back_px && x <= btn_back_px+btn_back_sx) && (y >= btn_back_py && y <= btn_back_py+btn_back_sy)) return 2;
-        } else if(game_status == 3) {
+
+            int host_amount = NetworkDevices.getHostsIP().size();
+            for(int i = 0; i < host_amount; i++) {
+                int cx = getInsidePosition(0, cCanv.getWidth(), 7);
+
+
+                int sx = getInsidePosition(0, cCanv.getWidth(), 93) - cx, sy = 100;
+
+                int cy = (sy * (i)) + (5 * i) - (int) (25 * scroll);
+
+                if ((x >= 0+cx && x <= sx+cx) && (y >= getInsidePosition(0, cCanv.getHeight(), 15)+cy && y <= getInsidePosition(0, cCanv.getHeight(), 15)+cy+((sy*(i+1))+(5*i))))
+                    return 3;
+            }
+            } else if(game_status == 3) {
             if((x >= btn_back_px && x <= btn_back_px+btn_back_sx) && (y >= btn_back_py && y <= btn_back_py+btn_back_sy)) return 0;
             if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 1;
         }else if(game_status == 4) {

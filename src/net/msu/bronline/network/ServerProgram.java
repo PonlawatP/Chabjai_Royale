@@ -1,9 +1,11 @@
 package net.msu.bronline.network;
+import net.msu.bronline.comps.Player;
 import net.msu.bronline.comps.Scene;
 import net.msu.bronline.guis.Game;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -27,7 +29,17 @@ public class ServerProgram implements Runnable{
                 Socket soc = sev.accept();
 //                System.out.println("Client has connected!");
                 DataInputStream dis = new DataInputStream(soc.getInputStream());
-                if(dis.available() != 0){
+                if (dis.available() != 0){
+                    if(dis.readUTF().equalsIgnoreCase("ping")){
+//                        System.out.println("pinging: client => server...");
+                        DataOutputStream dos = new DataOutputStream(soc.getOutputStream());
+//                        conf:name:username:amount:max:status
+                        dos.writeUTF("conf:"+game.getRoomName()+":"+game.getPlayerOwn().getUsername()+":"+ Player.getPlayers().size()+":"+game.getMaxPlayer()+":"+game.getGame_status());
+                        dos.flush();
+//                        soc.close();
+                        continue;
+                    }
+
                     System.out.println("run ClientHandler");
                     ClientHandler clientHandler = new ClientHandler(soc, scene, game);
                     Thread t = new Thread(clientHandler);

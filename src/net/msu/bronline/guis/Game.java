@@ -50,6 +50,12 @@ public class Game extends JPanel {
         p_own = new Player(scene);
         p_own.setUsername(username);
         Player.getPlayers().add(p_own);
+
+        roomName = getPlayerOwn().getUsername()+"'s Room";
+    }
+
+    public int getMaxPlayer(){
+        return p_amount;
     }
 
     public String getRoomName() {

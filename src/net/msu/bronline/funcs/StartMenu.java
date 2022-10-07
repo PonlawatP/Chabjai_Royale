@@ -95,14 +95,16 @@ class Canv extends Canvas {
                         if (ps.getGame_status() == 1) {
                             if (cl == 0) { //into game interface
                                 ps.setGame_status(2);
-//                                System.out.println(java.util.Arrays.toString(Present.getBroadcastAddresses(50394)));
+                                ps.setScroll(0);
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
                                         while (ps.getGame_status() == 2){
                                             NetworkDevices.getNetworkDevices();
                                             try {
-                                                sleep(5000);
+                                                sleep(1000);
+                                                NetworkDevices.updateHost();
+                                                sleep(1000);
                                             } catch (InterruptedException ex) {
                                                 throw new RuntimeException(ex);
                                             }
