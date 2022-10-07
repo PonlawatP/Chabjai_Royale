@@ -11,13 +11,19 @@ public class NetworkDevices {
 
     static HashMap<String, String[]>  fipList = new HashMap<>();
     static HashMap<String, String[]> tflp = new HashMap<>();
-    public static HashMap<String, String[]>  getHostsIP(){
+    public static HashMap<String, String[]> getHostsIP(){
         return fipList;
+    }
+    public static String[] getHostDetails(int id){
+        return fipList.get(fipList.keySet().toArray()[id]);
+    }
+    public static String getHostIP(int id){
+        return (String) fipList.keySet().toArray()[id];
     }
 
     public static HashMap<String, String[]>  getNetworkDevices(){
 //        System.out.println("------------------------");
-        System.out.println("Lookup-ip process");
+//        System.out.println("Lookup-ip process");
 //        fipList.clear();
         try {
             Process process = Runtime.getRuntime().exec("arp -a");
@@ -105,10 +111,10 @@ public class NetworkDevices {
                 System.out.println("Found socket for: " + ip);
             }
         } catch (IOException | InterruptedException e) {
-            System.out.println("\nPROCESS/READER ERROR - " + e.getMessage());
+//            System.out.println("\nPROCESS/READER ERROR - " + e.getMessage());
         }
 //        System.out.println("Ended lookup-ip process");
-        System.out.println("------------------------");
+//        System.out.println("------------------------");
         return fipList;
     }
 

@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Stack;
 
+import static net.msu.bronline.guis.Game.getGame;
+
 public class Cli_write extends Thread implements Runnable{
     DataOutputStream dos;
     CientProgram cp;
@@ -17,7 +19,7 @@ public class Cli_write extends Thread implements Runnable{
         this.dos = dos;
         this.cp = cp;
         this.soc = soc;
-        sendMessage(cp.getUsername()+":join:"+cp.game.getPlayerOwn().getCharacterID());
+        sendMessage(cp.getUsername()+":join:"+getGame().getPlayerOwn().getCharacterID());
     }
 
     public void sendMessage(String mess) {
@@ -46,6 +48,7 @@ public class Cli_write extends Thread implements Runnable{
                 ex.printStackTrace();
             }
             catch (SocketException es){
+                es.printStackTrace();
             }
             catch (IOException e) {
                 throw new RuntimeException(e);
@@ -56,7 +59,7 @@ public class Cli_write extends Thread implements Runnable{
     public void run() {
         while (!cp.quit && !soc.isClosed()){
             try {
-//                sendMessage(cp.getUsername() + ":" + cp.game.getPlayerOwn().getPacket());
+//                sendMessage(cp.getUsername() + ":" + cp.getGame().getPlayerOwn().getPacket());
 
                 sendMessageToServer();
                 sleep(2);

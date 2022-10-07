@@ -13,7 +13,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
+import static net.msu.bronline.guis.Present.getPresent;
+
 public class Game extends JPanel {
+    public static Game g;
     JFrame cFrame;
     Canvas cCanv;
     Scene scene;
@@ -23,7 +26,6 @@ public class Game extends JPanel {
     Thread t_host;
 
     boolean[] movements;
-    Present ps;
     ServerProgram sp;
     CientProgram cp;
 
@@ -34,12 +36,13 @@ public class Game extends JPanel {
     String roomName;
     int p_amount = 16;
     int game_status = 0;
+    String hostUser = "";
 
-    public Game(JFrame cFrame, Canvas canv, boolean[] movements, Present ps, String username, boolean host) throws IOException {
+    public Game(JFrame cFrame, Canvas canv, boolean[] movements, String username, boolean host) throws IOException {
+        g = this;
         this.cFrame = cFrame;
         this.cCanv = canv;
         this.movements = movements;
-        this.ps = ps;
         this.hosting = host;
         scene = new Scene(cFrame, cCanv, true);
         setSize(cFrame.getSize());
@@ -52,6 +55,30 @@ public class Game extends JPanel {
         Player.getPlayers().add(p_own);
 
         roomName = getPlayerOwn().getUsername()+"'s Room";
+    }
+    public void resetGame() {
+        try{
+            String user = p_own.getUsername();
+            Player.getPlayers().clear();
+            new Game(cFrame, cCanv, movements, user, hosting);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+    public void updateRoom(String[] data){
+        //username:conf:name:amount:max:status
+        setHostUser(data[0]);
+        setRoomName(data[2]);
+        setP_amount(Integer.parseInt(data[4]));
+        setGame_status(Integer.parseInt(data[5]));
+    }
+
+    public void setHostUser(String hostUser) {
+        this.hostUser = hostUser;
+    }
+
+    public String getHostUser() {
+        return hostUser;
     }
 
     public int getMaxPlayer(){
@@ -97,18 +124,19 @@ public class Game extends JPanel {
             sp = new ServerProgram(scene, this);
             t_host = new Thread(sp);
         } else {
-            cp = new CientProgram(getPlayerOwn().getUsername(), ip, ps, this);
+            cp = new CientProgram(getPlayerOwn().getUsername(), ip);
             t_host = new Thread(cp);
         }
         t_host.start();
     }
     public void stopMode(){
         if(hosting) {
-            sp.closeSev();
-            ps.setGame_status(2);
+            if(sp != null) sp.closeSev();
+            getPresent().setGame_status(2);
         } else {
-            cp.closeEverything();
+            if(cp != null) cp.closeEverything();
         }
+        resetGame();
     }
 
     public boolean isHosting() {
@@ -248,5 +276,9 @@ public class Game extends JPanel {
         }
 
         return -1;
+    }
+
+    public static Game getGame(){
+        return g;
     }
 }

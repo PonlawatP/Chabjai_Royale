@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Iterator;
 
+import static net.msu.bronline.guis.Game.getGame;
+
 public class Cli_read extends Thread implements Runnable{
     DataInputStream dis;
     CientProgram cp;
@@ -25,6 +27,7 @@ public class Cli_read extends Thread implements Runnable{
     public void run() {
         while (!cp.quit && !soc.isClosed()){
             try {
+                int cnt = 0;
                 for(String mess : dis.readUTF().split("::ln::")) {
                     String[] data = mess.split(":");
                     if(!data[1].equalsIgnoreCase("player")) System.out.println("[r] " + mess);
@@ -36,13 +39,22 @@ public class Cli_read extends Thread implements Runnable{
                             Player p = ps.next();
                             p.updateFromPacket(data);
                         }
-                    } else if (data[1].equalsIgnoreCase("load") || data[1].equalsIgnoreCase("join")) {
-                        if(data[1].equalsIgnoreCase("join") && data[0].equals(cp.getUsername())) continue;
-                        Player p = new Player(cp.game.getScene(), data[0], Integer.parseInt(data[2]));
+                    } else if (data[1].equalsIgnoreCase("load")){
+                        Player p = new Player(getGame().getScene(), data[0], Integer.parseInt(data[2]));
                         p.updateFromPacket(data);
-                        Player.getPlayers().add(p);
+                        Player.getPlayers().add(cnt, p);
+                        cnt++;
+                    } else if (data[1].equalsIgnoreCase("join")){
+                            if(data[0].equals(cp.getUsername())) continue;
+                            Player p = new Player(getGame().getScene(), data[0], Integer.parseInt(data[2]));
+                            p.updateFromPacket(data);
+                            Player.getPlayers().add(Player.getPlayers().size(), p);
                     } else if (data[1].equalsIgnoreCase("quit")) {
                         Player.removePlayer(data[0]);
+                    } else if (data[1].equalsIgnoreCase("shutdown")) {
+                        if(!data[0].equals("host")) continue;
+                        cp.closeEverything();
+                        cp.exitGame();
                     }
                 }
 

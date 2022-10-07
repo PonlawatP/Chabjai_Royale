@@ -8,11 +8,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferStrategy;
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.lang.Thread.sleep;
+import static net.msu.bronline.funcs.Utils.runServerFinder;
+import static net.msu.bronline.guis.Game.getGame;
 
 public class StartMenu {
     public StartMenu(String username, boolean host) throws IOException {
@@ -51,8 +52,7 @@ public class StartMenu {
 class Canv extends Canvas {
     JFrame cFrame;
     Present ps;
-    Game game;
-    boolean dev = true;
+    boolean dev = false;
     int m_x = 0, m_y = 0;
     //w,a,s,d,shift,tab,lClick,rClick,c
     boolean[] movements = {false,false,false,false,false,false,false,false,false};
@@ -64,21 +64,24 @@ class Canv extends Canvas {
         m_y = y;
     }
 
-    public void updateCaursor(int c){
+    public void updateCursor(int c){
         cCur = c;
         setCursor(Cursor.getPredefinedCursor(c));
     }
     public Canv(JFrame frame, String username, boolean host) throws IOException {
         cFrame = frame;
         ps = new Present(cFrame, this, username);
-        game = new Game(cFrame, this, movements, ps, username, host);
-        ps.setGame_status(2);
+        new Game(cFrame, this, movements, username, host);
+
+        ps.setGame_status(3);
+        ps.setFrameTime(120);
+        ps.getScene().setOpacity(40);
 
         addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
                 if(ps.getGame_status() >= 5)
-                    game.getScene().setSize((float) (game.getScene().getSize()+((e.getWheelRotation()*-1)*.05)));
+                    getGame().getScene().setSize((float) (getGame().getScene().getSize()+((e.getWheelRotation()*-1)*.05)));
                 else{
                     if(ps.getGame_status() == 2){
                         ps.setScroll(ps.getScroll()+e.getWheelRotation());
@@ -96,36 +99,23 @@ class Canv extends Canvas {
                             if (cl == 0) { //into game interface
                                 ps.setGame_status(2);
                                 ps.setScroll(0);
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        while (ps.getGame_status() == 2){
-                                            NetworkDevices.getNetworkDevices();
-                                            try {
-                                                sleep(1000);
-                                                NetworkDevices.updateHost();
-                                                sleep(1000);
-                                            } catch (InterruptedException ex) {
-                                                throw new RuntimeException(ex);
-                                            }
-                                        }
-                                    }
-                                }).start();
+                                runServerFinder();
                             }
                         } else if (ps.getGame_status() == 2) {
                             if (cl == 0) { //host
                                 ps.setGame_status(3);
-                                game.setHosting(true);
-                                game.startMode();
+                                getGame().setHosting(true);
+                                getGame().startMode();
                             }
                             if (cl == 1) { //join
                                 ps.setGame_status(4);
-                                game.setHosting(false);
-                                String ip = (String) NetworkDevices.getHostsIP().keySet().toArray()[ps.getI_click()];
+                                getGame().setHosting(false);
+                                String ip = NetworkDevices.getHostIP(ps.getI_click());
                                 System.out.println("serverip: " + ip);
-                                game.setIp(ip);
+                                getGame().setIp(ip);
+                                getGame().updateRoom(NetworkDevices.getHostDetails(ps.getI_click()));
 
-                                game.startMode();
+                                getGame().startMode();
                             }
                             if (cl == 2) {
                                 ps.setGame_status(1);
@@ -137,17 +127,19 @@ class Canv extends Canvas {
                             }
                         } else if (ps.getGame_status() == 3) {
                             if (cl == 0) { //back
-                                game.stopMode();
                                 ps.setGame_status(2);
+                                getGame().stopMode();
+                                runServerFinder();
                             }
                             if (cl == 1) {
                                 ps.setGame_status(5);
-                                game.setGame_status(2);
+                                getGame().setGame_status(2);
                             }
                         } else if (ps.getGame_status() == 4) {
                             if (cl == 0) {
                                 ps.setGame_status(2);
-                                game.stopMode();
+                                getGame().stopMode();
+                                runServerFinder();
                             }
                         }
                     } else {
@@ -156,16 +148,16 @@ class Canv extends Canvas {
                         }
                     }
                 } else {
-                    int cl = game.isMouseOnStart(e.getX(), e.getY());
+                    int cl = getGame().isMouseOnStart(e.getX(), e.getY());
                     if (cl != -1) {
-//                        if (game.getGame_status() == 0) {
-//                            if (cl == 0) game.setGame_status(1);
+//                        if (getGame().getGame_status() == 0) {
+//                            if (cl == 0) getGame().setGame_status(1);
 //                        }
                     } else {
-                        if (game.getGame_status() == 2) {
+                        if (getGame().getGame_status() == 2) {
                             if(e.getButton() == MouseEvent.BUTTON1) {
                                 movements[6] = true;
-                                game.getPlayerOwn().setFireTrigger(true);
+                                getGame().getPlayerOwn().setFireTrigger(true);
                             }
                             if(e.getButton() == MouseEvent.BUTTON3) {
                                 movements[7] = true;
@@ -180,7 +172,7 @@ class Canv extends Canvas {
                 if(ps.getGame_status() < 5) return;
                 if(e.getButton() == MouseEvent.BUTTON1) {
                     movements[6] = false;
-                    game.getPlayerOwn().setFireTrigger(false);
+                    getGame().getPlayerOwn().setFireTrigger(false);
                 }
                 if(e.getButton() == MouseEvent.BUTTON3) movements[7] = false;
             }
@@ -189,34 +181,34 @@ class Canv extends Canvas {
             @Override
             public void mouseDragged(MouseEvent e) {
                 updateMouse(e.getX(), e.getY());
-                game.getPlayerOwn().updateMouse(e.getX(), e.getY());
+                if(getGame().getPlayerOwn()!=null) getGame().getPlayerOwn().updateMouse(e.getX(), e.getY());
                 if(ps.getGame_status() < 5){
                     if(ps.isMouseOnStart(e.getX(), e.getY()) != -1)
-                        updateCaursor(Cursor.HAND_CURSOR);
+                        updateCursor(Cursor.HAND_CURSOR);
                     else
-                        updateCaursor(Cursor.DEFAULT_CURSOR);
+                        updateCursor(Cursor.DEFAULT_CURSOR);
                 } else {
-                    if(game.isMouseOnStart(e.getX(), e.getY()) != -1)
-                        updateCaursor(Cursor.HAND_CURSOR);
+                    if(getGame().isMouseOnStart(e.getX(), e.getY()) != -1)
+                        updateCursor(Cursor.HAND_CURSOR);
                     else
-                        updateCaursor(Cursor.DEFAULT_CURSOR);
+                        updateCursor(Cursor.DEFAULT_CURSOR);
                 }
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
                 updateMouse(e.getX(), e.getY());
-                game.getPlayerOwn().updateMouse(e.getX(), e.getY());
+                if(getGame().getPlayerOwn()!=null)getGame().getPlayerOwn().updateMouse(e.getX(), e.getY());
                 if(ps.getGame_status() < 5){
                     if(ps.isMouseOnStart(e.getX(), e.getY()) != -1)
-                        updateCaursor(Cursor.HAND_CURSOR);
+                        updateCursor(Cursor.HAND_CURSOR);
                     else
-                        updateCaursor(Cursor.DEFAULT_CURSOR);
+                        updateCursor(Cursor.DEFAULT_CURSOR);
                 } else {
-                    if(game.isMouseOnStart(e.getX(), e.getY()) != -1)
-                        updateCaursor(Cursor.HAND_CURSOR);
+                    if(getGame().isMouseOnStart(e.getX(), e.getY()) != -1)
+                        updateCursor(Cursor.HAND_CURSOR);
                     else
-                        updateCaursor(Cursor.DEFAULT_CURSOR);
+                        updateCursor(Cursor.DEFAULT_CURSOR);
                 }
             }
         });
@@ -253,7 +245,6 @@ class Canv extends Canvas {
             }
         });
     }
-
     private Thread thread;
     private AtomicBoolean keepRendering = new AtomicBoolean(true);
 
@@ -340,7 +331,7 @@ class Canv extends Canvas {
 
     public void update() {
         if(ps.getGame_status() < 5) ps.run();
-        else game.run(m_x, m_y);
+        else getGame().run(m_x, m_y);
     }
 
     /**
@@ -357,7 +348,7 @@ class Canv extends Canvas {
         g.fillRect(0,0, cFrame.getWidth(), cFrame.getHeight());
 
         if(ps.getGame_status() < 5) ps.draw(g);
-        else game.draw(g);
+        else getGame().draw(g);
 
         if(dev){
             g.setFont(new Font("Kanit Light", Font.PLAIN, 12));
@@ -367,8 +358,8 @@ class Canv extends Canvas {
             g.drawString("scene: " + ps.getGame_status(), 10, 60);
             g.drawString("scene_w: " + getWidth() + " scene_h: " + getHeight(), 10, 80);
             g.drawString("Mouse: [" + m_x + " : " + m_y + "] " + Cursor.getPredefinedCursor(cCur).getName(), 10, 100);
-            g.drawString("zoom: " + game.getScene().getSize(), 10, 120);
-            g.drawString("player: [" + game.getPlayerOwn().getX() + " : " + game.getPlayerOwn().getY() + "]", 10, 160);
+            g.drawString("zoom: " + getGame().getScene().getSize(), 10, 120);
+            g.drawString("player: [" + getGame().getPlayerOwn().getX() + " : " + getGame().getPlayerOwn().getY() + "]", 10, 160);
         }
     }
 }

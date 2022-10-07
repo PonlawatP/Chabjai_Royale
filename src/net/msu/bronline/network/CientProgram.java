@@ -7,25 +7,24 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
+import static net.msu.bronline.funcs.Utils.runServerFinder;
+import static net.msu.bronline.guis.Game.getGame;
+import static net.msu.bronline.guis.Present.getPresent;
+
 public class CientProgram extends Thread implements Runnable{
     Socket soc;
 
     DataInputStream dis;
     DataOutputStream dos;
-
-    Present ps;
-    Game game;
     private String Username;
 
     Thread thrd_write;
     Thread thrd_read;
     Cli_write cw;
     String ip;
-    public CientProgram(String Username, String ip, Present ps, Game game) {
+    public CientProgram(String Username, String ip) {
         try {
             this.Username = Username;
-            this.ps = ps;
-            this.game = game;
             this.ip = ip;
 
             soc = new Socket(ip,50394);
@@ -47,8 +46,9 @@ public class CientProgram extends Thread implements Runnable{
 
     public void exitGame(){
         quit = true;
-        game.setGame_status(0);
-        ps.setGame_status(2);
+        getPresent().setGame_status(2);
+        getGame().resetGame();
+        runServerFinder();
     }
 
     public String getUsername() {

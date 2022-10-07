@@ -12,6 +12,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import static net.msu.bronline.guis.Game.getGame;
+
 public class ServerProgram implements Runnable{
     private ServerSocket sev;
     public ServerProgram(ServerSocket sev) {
@@ -35,8 +37,8 @@ public class ServerProgram implements Runnable{
                     if(data.equalsIgnoreCase("ping")){
 //                        System.out.println("pinging: client => server...");
                         DataOutputStream dos = new DataOutputStream(soc.getOutputStream());
-//                        conf:name:username:amount:max:status
-                        dos.writeUTF("conf:"+game.getRoomName()+":"+game.getPlayerOwn().getUsername()+":"+ Player.getPlayers().size()+":"+game.getMaxPlayer()+":"+game.getGame_status());
+//                        username:conf:name:amount:max:status
+                        dos.writeUTF(getGame().getPlayerOwn().getUsername()+":conf:"+getGame().getRoomName()+":"+ Player.getPlayers().size()+":"+getGame().getMaxPlayer()+":"+getGame().getGame_status());
                         dos.flush();
 //                        soc.close();
                         continue;
@@ -55,7 +57,8 @@ public class ServerProgram implements Runnable{
     }
 
     public void closeSev() {
-        game.setGame_status(0);
+        ClientHandler.broadcastMessage("host:shutdown");
+        getGame().setGame_status(0);
         try {
             if (sev != null) {
                 sev.close();
@@ -70,7 +73,7 @@ public class ServerProgram implements Runnable{
         try {
             sev = new ServerSocket(50394);
         } catch (BindException e) {
-            game.stopMode();
+            getGame().stopMode();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

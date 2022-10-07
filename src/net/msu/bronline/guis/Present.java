@@ -1,5 +1,6 @@
 package net.msu.bronline.guis;
 
+import net.msu.bronline.comps.Player;
 import net.msu.bronline.comps.Scene;
 import net.msu.bronline.network.NetworkDevices;
 
@@ -16,14 +17,18 @@ import java.net.SocketException;
 import java.util.*;
 import java.util.List;
 
+import static net.msu.bronline.funcs.Utils.getColor;
 import static net.msu.bronline.funcs.Utils.getInsidePosition;
+import static net.msu.bronline.guis.Game.getGame;
 
 public class Present extends JPanel {
+    static Present ps;
     JFrame cFrame;
     Canvas cCanv;
     Scene scene;
     String username;
     public Present(JFrame cFrame, Canvas canv, String username) throws IOException {
+        ps = this;
         this.cFrame = cFrame;
         this.cCanv = canv;
         this.username = username;
@@ -69,6 +74,9 @@ public class Present extends JPanel {
         return bi;
     }
 
+    public Scene getScene() {
+        return scene;
+    }
 
     int cen_x = 0, cen_y = 0;
     int b_cen_x = 0, b_cen_y = 0;
@@ -131,8 +139,14 @@ public class Present extends JPanel {
 
                 g.setFont(new Font("Kanit Bold", Font.PLAIN, 45));
                 g.setColor(Color.WHITE);
-                String ss = "\"" + username +"'s Room" + "\" Hosting";
+                String ss = "\"" + getGame().getRoomName() + "\" Hosting";
                 g.drawString(ss, cCanv.getWidth()/2-((45*ss.length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 10));
+
+                g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
+                String ss2 = "Waiting Players";
+                g.drawString(ss2, cCanv.getWidth()/2-((20*ss2.length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 15));
+
+                drawHostPlayerUI(g);
 
                 g.drawImage(btn_back, btn_back_px,btn_back_py, btn_back_px+btn_back_sx,btn_back_py+btn_back_sy,0,0,1020,400,this);
                 g.drawImage(btn_play, b_cen_x,btn_py, b_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
@@ -143,22 +157,41 @@ public class Present extends JPanel {
 
                 g.setFont(new Font("Kanit Bold", Font.PLAIN, 45));
                 g.setColor(Color.WHITE);
-                String ss = username +"'s Room";
+                String ss = getGame().getRoomName() != null ? getGame().getRoomName() : "";
                 g.drawString(ss, cCanv.getWidth()/2-((45*ss.length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 10));
 
                 g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
-                String ss2 = "Starting";
+                String ss2 = "Waiting Players";
                 g.drawString(ss2, cCanv.getWidth()/2-((20*ss2.length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 15));
 
-                g.setFont(new Font("Kanit Bold", Font.PLAIN, 45));
-                g.setColor(Color.WHITE);
-                String ss3 = "Starting in 5";
-                g.drawString(ss3, cCanv.getWidth()/2-((45*ss3.length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 50));
+                drawHostPlayerUI(g);
+
+//                g.setFont(new Font("Kanit Bold", Font.PLAIN, 45));
+//                g.setColor(Color.WHITE);
+//                String ss3 = "Starting in 5";
+//                g.drawString(ss3, cCanv.getWidth()/2-((45*ss3.length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 50));
 
                 g.drawImage(btn_back, btn_back_px,btn_back_py, btn_back_px+btn_back_sx,btn_back_py+btn_back_sy,0,0,1020,400,this);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void drawHostPlayerUI(Graphics2D g){
+        g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
+
+        Iterator<Player> ps = new ArrayList<>(Player.getPlayers()).iterator();
+
+        int i = 0;
+        while(ps.hasNext()){
+            Player p = ps.next();
+
+            g.setColor(getColor(p.getCharacterID()));
+            String pname = p.getUsername();
+            g.drawRect(getInsidePosition(0, cCanv.getWidth(), 5),getInsidePosition(0, cCanv.getHeight(), 25)+(70*i)+(5*i)-(90/2),70, 70);
+            g.drawString(pname, getInsidePosition(0, cCanv.getWidth(), 5)+70+25, getInsidePosition(0, cCanv.getHeight(), 25)+(70*i)+(5*i));
+            i++;
         }
     }
 
@@ -213,8 +246,8 @@ public class Present extends JPanel {
 
             String ip = (String) NetworkDevices.getHostsIP().keySet().toArray()[i];
             String[] data = NetworkDevices.getHostsIP().get(ip);
-            String room = data[1];
-            String name = "("+data[2]+")";
+            String room = data[2];
+            String name = "("+data[0]+")";
             String amount = data[3]+"/"+data[4];
             String status;
             switch (data[5]){
@@ -263,11 +296,20 @@ public class Present extends JPanel {
     }
 
     int frameTime = 0;
+
+    public int getFrameTime() {
+        return frameTime;
+    }
+
+    public void setFrameTime(int frameTime) {
+        this.frameTime = frameTime;
+    }
+
     /*
-        0 = present
-        1 = main
-        2 = start-join
-     */
+                0 = present
+                1 = main
+                2 = start-join
+             */
     int game_status = 0;
 
     public int getGame_status() {
@@ -368,5 +410,9 @@ public class Present extends JPanel {
                 return i;
         }
         return -1;
+    }
+
+    public static Present getPresent(){
+        return ps;
     }
 }

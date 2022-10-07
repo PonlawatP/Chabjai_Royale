@@ -76,7 +76,7 @@ public class ClientHandler implements Runnable{
         }
     }
 
-    public void broadcastMessage(String mess){
+    public static void broadcastMessage(String mess){
         Iterator<ClientHandler> chs = new ArrayList<>(clientHandler).iterator();
         while (chs.hasNext()){
             ClientHandler ch = chs.next();
