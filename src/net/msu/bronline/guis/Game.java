@@ -195,6 +195,16 @@ public class Game extends JPanel {
 
                 ,this
         );
+        drawPlayer(g);
+
+        try {
+            drawUI(g);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void drawPlayer(Graphics2D g){
         Iterator<Player> ps = new ArrayList<>(Player.getPlayers()).iterator();
         i++;
         if(i >= 2) {
@@ -203,33 +213,65 @@ public class Game extends JPanel {
             if(i1 > 8) i1 = 0;
         }
         int a1 = 11;
+
         g.setFont(new Font("Kanit Light", Font.PLAIN, 14));
+
         while (ps.hasNext()){
             Player p = ps.next();
 //            System.out.println(p.getPacket());
+
             g.setColor(Color.BLACK);
-            g.drawString(p.getUsername(), p.getPosX()+(64/2)-(((14*p.getUsername().length())/2)/2)+1, p.getPosY()+6);
+            g.fillRoundRect(p.getPosX(),p.getPosY()+4, 64, 3, 2, 2);
+            g.setColor(new Color(0xC5C5CE));
+            g.fillRoundRect(p.getPosX(),p.getPosY()+4, 64, 3, 2, 2);
+            g.setColor(Color.BLACK);
+            g.fillRoundRect(p.getPosX(),p.getPosY()+7, 64, 3, 2, 2);
+            g.setColor(new Color(0xA11414));
+            g.fillRoundRect(p.getPosX(),p.getPosY()+7, 64, 3, 2, 2);
+
+            g.setColor(Color.BLACK);
+            g.drawString(p.getUsername(), p.getPosX()+(64/2)-(((14*p.getUsername().length())/2)/2)+1, p.getPosY()+1);
             g.setColor(Color.WHITE);
-            g.drawString(p.getUsername(), p.getPosX()+(64/2)-(((14*p.getUsername().length())/2)/2), p.getPosY()+5);
+            g.drawString(p.getUsername(), p.getPosX()+(64/2)-(((14*p.getUsername().length())/2)/2), p.getPosY());
+
+//            draw ammo
+            drawAmmo(g, p);
+
             g.drawImage(p.getPlayerImage(), p.getPosX(), p.getPosY(), p.getPosBoundX(), p.getPosBoundY(),(64*i1)+1,(64*a1)+1,(64*(i1+1))-1, (64*(a1+1))-1,this);
         }
-        //        g.drawImage(scene.getImg(true), 0,0, cCanv.getWidth(), cCanv.getHeight(),scene.getX(), scene.getY(),scene.getBoundX(), scene.getBoundY(),this);
+    }
 
-//        g.setColor(Color.RED);
-//        g.drawRoundRect(0,0, 10, 10, 3, 3);
-
-//        if(game_status == 0){
-//            b_cen_x = (cCanv.getWidth()/2)-(btn_sx/2);
-//            btn_py = cCanv.getHeight()-100;
+    public void drawAmmo(Graphics2D g, Player p){
+        double posmx = ((double) m_x-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
+        double posmy = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
 //
-//            g.drawImage(btn_play, b_cen_x,btn_py, b_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
+//        double posemx = 0;
+//        double posemy = 0;
+//        int zx = 0;
+//        int zy = 0;
+//
+//        int des_mx = m_x+(int)((posmx*15*scene.getSize()));
+//        int des_my = m_y+(int)((posmy*15*scene.getSize()));
+//
+//        if(p.getUsername() != getPlayerOwn().getUsername()){
+//            posemx = ((double) p.getMouseX()-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
+//            posemy = ((double) p.getMouseY()-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
+//            zx =  ((int)(cCanv.getWidth()*scene.getSize()) - cCanv.getWidth());
+//            zy =  ((int)(cCanv.getHeight()*scene.getSize()) - cCanv.getHeight());
+//
+//            des_mx = (p.getMouseX()+(((int)((posmx*15)*scene.getSize())+(int)((posemx*15)*scene.getSize()))*-1))-zx;
+//            des_my = (p.getMouseY()+(((int)((posmy*15)*scene.getSize())+(int)((posemy*15)*scene.getSize()))*-1))-zy;
 //        }
 
-        try {
-            drawUI(g);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        g.setColor(Color.BLACK);
+        int calc_cenx = p.getPosX()+(64/2)-(p.getPosX()+(64/2)-p.getMouseX());
+        int calc_ceny = p.getPosY()+42-(p.getPosY()+42-p.getMouseY());
+        calc_cenx -= (int)((posmx*15*scene.getSize()));
+        calc_ceny -= (int)((posmy*15*scene.getSize()));
+        g.drawString("x:" + (p.getPosX()+(64/2)) + " y: " + (p.getPosY()+42) + " [" + (p.getPosX()+(64/2)+p.getMouseX()) + ":" + (p.getPosY()+42+p.getMouseY()) + "]", p.getPosX(), p.getPosY()+75);
+        g.drawString("x:" + p.getMouseX() + " y:" + p.getMouseY(), p.getPosX(), p.getPosY()+95);
+        g.drawString("x:" + calc_cenx + " y:" + calc_ceny, p.getPosX(), p.getPosY()+115);
+        g.drawLine(p.getPosX()+(64/2), p.getPosY()+42, calc_cenx, calc_ceny);
     }
 
     public void drawUI(Graphics ge) throws IOException{
@@ -246,6 +288,8 @@ public class Game extends JPanel {
         g.setColor(Color.white);
         g.fillRect(180,cFrame.getHeight()-90,240,13);
 
+        g.setColor(Color.BLACK);
+        g.fillRect(180,cFrame.getHeight()-100,220,8);
         g.setColor(new Color(0xC5C5CE));
         g.fillRect(180,cFrame.getHeight()-100,220,8);
 
@@ -336,15 +380,15 @@ public class Game extends JPanel {
     public void startGame() {
         ClientHandler.broadcastMessage("host:act:pre_start");
         setGame_status(1);
-        try {
-            for(int i = 5; i >= 0; i--){
-                ClientHandler.broadcastMessage("host:desc:Starting in " + i);
-                setStatus_desc("Starting in " + i);
-                Thread.sleep(1000);
-            }
-        } catch (InterruptedException ex){
-            ex.printStackTrace();
-        }
+//        try {
+//            for(int i = 5; i >= 0; i--){
+//                ClientHandler.broadcastMessage("host:desc:Starting in " + i);
+//                setStatus_desc("Starting in " + i);
+//                Thread.sleep(1000);
+//            }
+//        } catch (InterruptedException ex){
+//            ex.printStackTrace();
+//        }
         ClientHandler.broadcastMessage("host:act:start");
         setGame_status(2);
         getPresent().setGame_status(5);

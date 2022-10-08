@@ -221,6 +221,11 @@ public class Present extends JPanel {
 
         BufferedImage bg = new BufferedImage(cCanv.getWidth(), getInsidePosition(0, cCanv.getHeight(), 65), BufferedImage.TYPE_INT_ARGB_PRE);
         Graphics2D gg = bg.createGraphics();
+
+        RenderingHints rh = new RenderingHints(
+                RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        gg.setRenderingHints(rh);
         gg.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
 //        gg.setColor(Color.BLACK);
 //        gg.fillRect(0,0, cCanv.getWidth(), getInsidePosition(0, cCanv.getHeight(), 65));

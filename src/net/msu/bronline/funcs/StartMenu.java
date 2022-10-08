@@ -342,6 +342,12 @@ class Canv extends Canvas {
      */
     public void render(Graphics g)
     {
+        Graphics2D g2 = (Graphics2D) g;
+        RenderingHints rh = new RenderingHints(
+                RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g2.setRenderingHints(rh);
+
         boolean darkscene = ps.getGame_status() >= 2 && ps.getGame_status() <= 4;
         if(darkscene){
             g.setColor(Color.BLACK);
@@ -361,8 +367,8 @@ class Canv extends Canvas {
             g.drawString("scene: " + ps.getGame_status(), 10, 60);
             g.drawString("scene_w: " + getWidth() + " scene_h: " + getHeight(), 10, 80);
             g.drawString("Mouse: [" + m_x + " : " + m_y + "] " + Cursor.getPredefinedCursor(cCur).getName(), 10, 100);
-            g.drawString("zoom: " + getGame().getScene().getSize(), 10, 120);
-            g.drawString("player: [" + getGame().getPlayerOwn().getX() + " : " + getGame().getPlayerOwn().getY() + "]", 10, 160);
+            g.drawString("zoom: " + (getGame().getScene() != null ? getGame().getScene().getSize() : "no)"), 10, 120);
+            g.drawString("player: [" + (getGame().getPlayerOwn() != null ? getGame().getPlayerOwn().getX() + " : " + getGame().getPlayerOwn().getY() : "null") + "]", 10, 160);
         }
     }
 }

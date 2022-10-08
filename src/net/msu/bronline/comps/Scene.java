@@ -33,7 +33,7 @@ public class Scene {
     }
 
     double x = 0, y = 0;
-    double size = 1.05;
+    double size = 1;
     int size_x = 2000, size_y = 2000;
     int opc = 0;
 
