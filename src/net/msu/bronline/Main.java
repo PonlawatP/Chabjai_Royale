@@ -13,8 +13,8 @@ public class Main {
     public static void main(String[] args) {
         try {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(Main.class.getClassLoader().getResource("imgs/Kanit-Light.ttf").getPath())));
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(Main.class.getClassLoader().getResource("imgs/Kanit-Bold.ttf").getPath())));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, Main.class.getClassLoader().getResourceAsStream("imgs/Kanit-Light.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, Main.class.getClassLoader().getResourceAsStream("imgs/Kanit-Bold.ttf")));
         } catch (IOException|FontFormatException e) {
             //Handle exception
         }

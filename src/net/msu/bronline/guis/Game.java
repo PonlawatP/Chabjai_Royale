@@ -165,8 +165,8 @@ public class Game extends JPanel {
         return p_own;
     }
 
-    BufferedImage btn_play = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/btn_play.png").getPath()));
-    BufferedImage btn_back = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/btn_back.png").getPath()));
+    BufferedImage btn_play = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/btn_play.png"));
+    BufferedImage btn_back = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/btn_back.png"));
 
     float btn_size = .5f;
     float btn_back_size = .1f;
@@ -298,7 +298,7 @@ public class Game extends JPanel {
         Graphics2D g = (Graphics2D) ge;
         //ui-code here
 
-        BufferedImage Fimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/F.png").getPath()));
+        BufferedImage Fimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/F.png"));
         g.drawImage(Fimg,33,cFrame.getHeight()-150,this);
 
         g.setColor(Color.BLACK);
@@ -318,10 +318,10 @@ public class Game extends JPanel {
 
 //        g.setColor(new Color(0,0,0,70));
 //        g.fillRect(913,cFrame.getHeight()-180,320,110);
-        BufferedImage FGimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/F.png").getPath()));
+        BufferedImage FGimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/F.png"));
         g.drawImage(FGimg,813,cFrame.getHeight()-150,this);
 
-        BufferedImage Gimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/G.png").getPath()));
+        BufferedImage Gimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/G.png"));
         g.drawImage(Gimg,883,cFrame.getHeight()-140,200,70,this);
 
         g.setColor(Color.white);

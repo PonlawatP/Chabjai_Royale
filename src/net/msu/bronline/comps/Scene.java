@@ -11,9 +11,9 @@ public class Scene {
     JFrame cFrame;
     Canvas cCanv;
     boolean ingame = false;
-    BufferedImage simg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/m_full.png").getPath()));
-    BufferedImage simg1 = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/m_floor.png").getPath()));
-    BufferedImage simg2 = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/m_plant.png").getPath()));
+    BufferedImage simg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/m_full.png"));
+    BufferedImage simg1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/m_floor.png"));
+    BufferedImage simg2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/m_plant.png"));
     public Scene(JFrame frame, Canvas canv) throws IOException {
         cFrame = frame;
         cCanv = canv;

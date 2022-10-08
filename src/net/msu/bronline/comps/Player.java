@@ -47,14 +47,14 @@ public class Player {
 
     public Player(Scene scene) throws IOException {
         this.scene = scene;
-        cimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/cha/chars_"+c_r+".png").getPath()));
+        cimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/cha/chars_"+c_r+".png"));
     }
 
     public Player(Scene scene, String username, int chr) throws IOException {
         this.scene = scene;
         this.username = username;
         c_r = chr;
-        cimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/cha/chars_"+c_r+".png").getPath()));
+        cimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/cha/chars_"+c_r+".png"));
     }
 
     int ammo = 37;

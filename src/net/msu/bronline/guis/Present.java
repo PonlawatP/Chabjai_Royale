@@ -43,18 +43,19 @@ public class Present extends JPanel {
 
 //    รับโลโก้มาแปลงขนาด แล้วเอามาวางตรงกลาง
 //    ImageIcon ii = new ImageIcon(getClass().getClassLoader().getResource("imgs/logo.png"));
-    BufferedImage logo = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/logo.png").getPath()));
+    
+    BufferedImage logo = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/logo.png"));
     float size = .6f;
     int opc = 0;
     int l_sx = (int)(537*size), l_sy = (int)(417*size); //ขนาดภาพ
     int l_px = 0, l_py = 20; //ตำแหน่งภาพ
 
 //    ปุ่ม
-    BufferedImage btn_play = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/btn_play.png").getPath()));
-    BufferedImage btn_host = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/btn_host.png").getPath()));
-    BufferedImage btn_join = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/btn_join.png").getPath()));
-    BufferedImage btn_join_den = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/btn_join_den.png").getPath()));
-    BufferedImage btn_back = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/btn_back.png").getPath()));
+    BufferedImage btn_play = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/btn_play.png"));
+    BufferedImage btn_host = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/btn_host.png"));
+    BufferedImage btn_join = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/btn_join.png"));
+    BufferedImage btn_join_den = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/btn_join_den.png"));
+    BufferedImage btn_back = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/btn_back.png"));
 
     float btn_size = .5f;
     float btn_back_size = .1f;
