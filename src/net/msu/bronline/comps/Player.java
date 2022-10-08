@@ -186,11 +186,11 @@ public class Player {
                 Ammo am = new Ammo(this, x, y, m_x, m_y);
                 getAmmo().add(am);
 
-                if(getGame().isHosting()) {
-                    ClientHandler.broadcastMessage(getUsername()+":shoot:"+x+":"+y+":"+m_x+":"+m_y);
-                } else {
-                    getGame().getClientProgram().getCwrite().sendMessage(getUsername()+":shoot:"+x+":"+y+":"+m_x+":"+m_y);
-                }
+//                if(getGame().isHosting()) {
+//                    ClientHandler.broadcastMessage(getUsername()+":shoot:"+x+":"+y+":"+m_x+":"+m_y);
+//                } else {
+//                    getGame().getClientProgram().getCwrite().sendMessage(getUsername()+":shoot:"+x+":"+y+":"+m_x+":"+m_y);
+//                }
             }
             return true;
         }

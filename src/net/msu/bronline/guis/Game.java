@@ -355,10 +355,10 @@ public class Game extends JPanel {
             if(movements[3]) p_own.moveForward(1*v_speed);
             if(movements[4]) v_speed = 7; else v_speed = 5;
             if(movements[6]) {
-                p_own.shoot();
+//                p_own.shoot();
             } else {
                 if(p_own.isFireTrigger()){
-                    p_own.shoot();
+//                    p_own.shoot();
                     p_own.setFireTrigger(false);
                 }
             }
@@ -369,6 +369,19 @@ public class Game extends JPanel {
 
             this.m_x = m_x;
             this.m_y = m_y;
+
+            Iterator<Player> ps = new ArrayList<>(Player.getPlayers()).iterator();
+            while (ps.hasNext()) {
+                Player p = ps.next();
+                if (p.isFireTrigger()){
+                    p.shoot();
+                }
+                Iterator<Ammo> ams = new ArrayList<>(p.getAmmo()).iterator();
+                while (ams.hasNext()) {
+                    Ammo a = ams.next();
+                    a.runProjectile();
+                }
+            }
 
             scene.updateMouse(m_x, m_y);
         }

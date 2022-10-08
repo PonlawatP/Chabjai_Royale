@@ -24,4 +24,11 @@ public class Ammo {
     public int[] getDimStop() {
         return new int[]{(int) dx, (int) dy};
     }
+
+    public boolean runProjectile(){
+        x+=0.5;
+        y+=0.5;
+        return false;
+    }
+
 }
