@@ -249,6 +249,7 @@ class Canv extends Canvas {
         });
     }
     private Thread thread;
+    private Thread funcThread;
     private AtomicBoolean keepRendering = new AtomicBoolean(true);
 
     public long getCurrentTime() {
@@ -260,6 +261,13 @@ class Canv extends Canvas {
             keepRendering.set(false);
             try {
                 thread.join();
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if (funcThread != null) {
+            try {
+                funcThread.join();
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
@@ -276,6 +284,7 @@ class Canv extends Canvas {
         }
 
         keepRendering.set(true);
+
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -302,7 +311,7 @@ class Canv extends Canvas {
 //                        System.out.println("now: " + now + " update: " + updateRate + " = " + (now + updateRate) + " gameT: " + gameTime);
                         while (now + updateRate > gameTime) {
                             // update your logic here
-                                update();
+//                            update();
                             gameTime += updateRate;
                             // render
                             do {
@@ -330,6 +339,27 @@ class Canv extends Canvas {
             }
         });
         thread.start();
+
+        funcThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long now = getCurrentTime();
+                long gameTime = getCurrentTime();
+
+                long lastFpsCount = getCurrentTime();
+                long updateRate = 1000 / 60; // Update 60 times per second
+                while (keepRendering.get()) {
+                    now = getCurrentTime();
+//                        System.out.println("now: " + now + " update: " + updateRate + " = " + (now + updateRate) + " gameT: " + gameTime);
+                    while (now + updateRate > gameTime) {
+                        // update your logic here
+                        update();
+                        gameTime += updateRate;
+                    }
+                } while (keepRendering.get());
+            }
+        });
+        funcThread.start();
     }
 
     public void update() {
