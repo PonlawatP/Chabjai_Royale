@@ -21,6 +21,8 @@ import static net.msu.bronline.guis.Present.getPresent;
 
 public class Game extends JPanel {
     public static Game g;
+
+    public static long delta, lastLoopTime;
     JFrame cFrame;
     Canvas cCanv;
     Scene scene;
@@ -266,7 +268,7 @@ public class Game extends JPanel {
             double posax = ((double) m_x-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
             double posay = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
 
-            int ax = a.getDimStart()[0]+(64/2), ay = a.getDimStart()[1]+42;
+            int ax = a.getDimStart()[0]+(64/2)-5, ay = a.getDimStart()[1]+42-5;
             int adx = a.getDimStop()[0], ady = a.getDimStop()[1];
             ax -= mpalx;
             ay -= mpaly;
@@ -274,12 +276,12 @@ public class Game extends JPanel {
             ady -= mpaly;
 
             if(dev){
-                g.drawLine(ax, ay, adx, ady);
+                g.drawLine(ax+5, ay+5, adx, ady);
                 g.drawString("x: "+a.getDimStart()[0] + " y: " + a.getDimStart()[1], ax+15, ay);
                 g.drawString("dx: "+a.getDimStop()[0] + " dy: " + a.getDimStop()[1], ax+15, ay+20);
                 g.drawString("px: "+posax + " py: " + posay, ax+15, ay+40);
             }
-            g.fillOval(ax-5, ay-5, 10, 10);
+            g.fillOval(ax, ay, 10, 10);
         }
 
         if(dev){
@@ -373,9 +375,6 @@ public class Game extends JPanel {
             Iterator<Player> ps = new ArrayList<>(Player.getPlayers()).iterator();
             while (ps.hasNext()) {
                 Player p = ps.next();
-//                if (p.isFireTrigger()){
-//                    p.shoot();
-//                }
                 Iterator<Ammo> ams = new ArrayList<>(p.getAmmo()).iterator();
                 while (ams.hasNext()) {
                     Ammo a = ams.next();

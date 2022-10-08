@@ -18,6 +18,7 @@ import static net.msu.bronline.guis.Game.getGame;
 import static net.msu.bronline.guis.Present.getPresent;
 
 public class StartMenu {
+
     public StartMenu(String username, boolean host) throws IOException {
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -398,6 +399,8 @@ class Canv extends Canvas {
         funcThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                Game.delta = System.currentTimeMillis() - Game.lastLoopTime;
+                Game.lastLoopTime = System.currentTimeMillis();
                 long now = getCurrentTime();
                 long gameTime = getCurrentTime();
 

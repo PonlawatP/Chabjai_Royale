@@ -420,6 +420,10 @@ public class Present extends JPanel {
         return -1;
     }
 
+    public Canvas getcCanv() {
+        return cCanv;
+    }
+
     public static Present getPresent(){
         return ps;
     }
