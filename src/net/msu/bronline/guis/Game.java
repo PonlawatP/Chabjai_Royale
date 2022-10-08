@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static net.msu.bronline.funcs.Utils.dev;
 import static net.msu.bronline.guis.Present.getPresent;
 
 public class Game extends JPanel {
@@ -244,41 +245,25 @@ public class Game extends JPanel {
     public void drawAmmo(Graphics2D g, Player p){
         double posmx = ((double) m_x-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
         double posmy = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
-//
-//        double posemx = 0;
-//        double posemy = 0;
-//        int zx = 0;
-//        int zy = 0;
-//
-//        int des_mx = m_x+(int)((posmx*15*scene.getSize()));
-//        int des_my = m_y+(int)((posmy*15*scene.getSize()));
-//
-//        if(p.getUsername() != getPlayerOwn().getUsername()){
-//            posemx = ((double) p.getMouseX()-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
-//            posemy = ((double) p.getMouseY()-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
-//            zx =  ((int)(cCanv.getWidth()*scene.getSize()) - cCanv.getWidth());
-//            zy =  ((int)(cCanv.getHeight()*scene.getSize()) - cCanv.getHeight());
-//
-//            des_mx = (p.getMouseX()+(((int)((posmx*15)*scene.getSize())+(int)((posemx*15)*scene.getSize()))*-1))-zx;
-//            des_my = (p.getMouseY()+(((int)((posmy*15)*scene.getSize())+(int)((posemy*15)*scene.getSize()))*-1))-zy;
-//        }
 
-        g.setColor(Color.BLACK);
         int calc_cenx = p.getPosX()+(64/2)-(p.getPosX()+(64/2)-p.getMouseX());
         int calc_ceny = p.getPosY()+42-(p.getPosY()+42-p.getMouseY());
         calc_cenx -= (int)((posmx*15*scene.getSize()));
         calc_ceny -= (int)((posmy*15*scene.getSize()));
-        g.drawString("x:" + (p.getPosX()+(64/2)) + " y: " + (p.getPosY()+42) + " [" + (p.getPosX()+(64/2)+p.getMouseX()) + ":" + (p.getPosY()+42+p.getMouseY()) + "]", p.getPosX(), p.getPosY()+75);
-        g.drawString("x:" + p.getMouseX() + " y:" + p.getMouseY(), p.getPosX(), p.getPosY()+95);
-        g.drawString("x:" + calc_cenx + " y:" + calc_ceny, p.getPosX(), p.getPosY()+115);
-        g.drawLine(p.getPosX()+(64/2), p.getPosY()+42, calc_cenx, calc_ceny);
+
+        if(dev){
+            g.setColor(Color.BLACK);
+            g.drawLine(p.getPosX()+(64/2), p.getPosY()+42, calc_cenx, calc_ceny);
+            g.drawString("x:" + (p.getPosX()+(64/2)) + " y: " + (p.getPosY()+42) + " [" + (p.getPosX()+(64/2)+p.getMouseX()) + ":" + (p.getPosY()+42+p.getMouseY()) + "]", p.getPosX(), p.getPosY()+75);
+            g.drawString("x:" + p.getMouseX() + " y:" + p.getMouseY(), p.getPosX(), p.getPosY()+95);
+            g.drawString("x:" + calc_cenx + " y:" + calc_ceny, p.getPosX(), p.getPosY()+115);
+            g.drawString("fire: " + p.isFireTrigger(), p.getPosX(), p.getPosY()+135);
+        }
     }
 
     public void drawUI(Graphics ge) throws IOException{
         Graphics2D g = (Graphics2D) ge;
         //ui-code here
-//        g.setColor(new Color(0,0,0,70));
-//        g.fillRect(33,cFrame.getHeight()-180,320,110);
 
         BufferedImage Fimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/F.png").getPath()));
         g.drawImage(Fimg,33,cFrame.getHeight()-150,this);
@@ -331,15 +316,17 @@ public class Game extends JPanel {
     double v_speed = 1;
     public void run(int m_x, int m_y) {
         if(getGame_status() == 2){
-//            if(movements[0]) scene.moveUp(-1*v_speed);
-//            if(movements[1]) scene.moveForward(-1*v_speed);
-//            if(movements[2]) scene.moveUp(1*v_speed);
-//            if(movements[3]) scene.moveForward(1*v_speed);
             if(movements[0]) p_own.moveUp(-1*v_speed);
             if(movements[1]) p_own.moveForward(-1*v_speed);
             if(movements[2]) p_own.moveUp(1*v_speed);
             if(movements[3]) p_own.moveForward(1*v_speed);
             if(movements[4]) v_speed = 7; else v_speed = 5;
+            if(movements[6]) {
+
+            }
+            if(movements[6]) {
+
+            }
             if(movements[8]) v_speed = v_speed/2;
 
             this.m_x = m_x;

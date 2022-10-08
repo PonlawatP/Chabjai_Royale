@@ -32,6 +32,7 @@ public class Cli_read extends Thread implements Runnable{
                 for(String mess : dis.readUTF().split("::ln::")) {
                     String[] data = mess.split(":");
                     if(!data[1].equalsIgnoreCase("player")) System.out.println("[r] " + mess);
+//                    System.out.println("[r] " + mess);
 
                     if (data[1].equalsIgnoreCase("player")) {
                         Iterator<Player> ps = Player.getPlayers().iterator();

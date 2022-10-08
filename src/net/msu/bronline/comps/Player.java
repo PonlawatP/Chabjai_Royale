@@ -52,6 +52,11 @@ public class Player {
         cimg = ImageIO.read(new File(getClass().getClassLoader().getResource("imgs/cha/chars_"+c_r+".png").getPath()));
     }
 
+    int ammo = 20;
+    int ammo_cld = 0;
+    int re_ammo_cld = 0;
+    int ammo_cld_lim = 3;
+
     public BufferedImage getPlayerImage(){
         return cimg;
     }
@@ -142,7 +147,7 @@ public class Player {
         hp = Integer.parseInt(data[7]);
         armor = Integer.parseInt(data[8]);
         armor_type = Integer.parseInt(data[9]);
-        fireTrigger = Boolean.getBoolean(data[10]);
+        fireTrigger = data[10].equalsIgnoreCase("true");
     }
 
     public static void removePlayer(String name){

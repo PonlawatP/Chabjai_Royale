@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.lang.Thread.sleep;
+import static net.msu.bronline.funcs.Utils.dev;
 import static net.msu.bronline.funcs.Utils.runServerFinder;
 import static net.msu.bronline.guis.Game.getGame;
 import static net.msu.bronline.guis.Present.getPresent;
@@ -53,7 +54,6 @@ public class StartMenu {
 class Canv extends Canvas {
     JFrame cFrame;
     Present ps;
-    boolean dev = false;
     int m_x = 0, m_y = 0;
     //w,a,s,d,shift,tab,lClick,rClick,c
     boolean[] movements = {false,false,false,false,false,false,false,false,false};
@@ -294,7 +294,7 @@ class Canv extends Canvas {
                 do {
                     BufferStrategy bs = getBufferStrategy();
                     while (bs == null) {
-                        System.out.println("get buffer");
+//                        System.out.println("get buffer");
                         bs = getBufferStrategy();
                     }
                     while (keepRendering.get()) {
