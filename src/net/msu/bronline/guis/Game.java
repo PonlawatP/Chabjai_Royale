@@ -418,15 +418,15 @@ public class Game extends JPanel {
     public void startGame() {
         ClientHandler.broadcastMessage("host:act:pre_start");
         setGame_status(1);
-//        try {
-//            for(int i = 5; i >= 0; i--){
-//                ClientHandler.broadcastMessage("host:desc:Starting in " + i);
-//                setStatus_desc("Starting in " + i);
-//                Thread.sleep(1000);
-//            }
-//        } catch (InterruptedException ex){
-//            ex.printStackTrace();
-//        }
+        try {
+            for(int i = 5; i >= 0; i--){
+                ClientHandler.broadcastMessage("host:desc:Starting in " + i);
+                setStatus_desc("Starting in " + i);
+                Thread.sleep(1000);
+            }
+        } catch (InterruptedException ex){
+            ex.printStackTrace();
+        }
         ClientHandler.broadcastMessage("host:act:start");
         setGame_status(2);
         getPresent().setGame_status(5);

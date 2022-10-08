@@ -157,14 +157,18 @@ class Canv extends Canvas {
                                     return;
                                 }
 //
-                                ps.setGame_status(4);
-                                getGame().setHosting(false);
                                 String ip = NetworkDevices.getHostIP(ps.getI_click());
                                 System.out.println("serverip: " + ip);
-                                getGame().setIp(ip);
-                                getGame().updateRoom(NetworkDevices.getHostDetails(ps.getI_click()));
 
-                                getGame().startMode();
+                                String[] data = NetworkDevices.getCustomHost(ip);
+                                if(data != null){
+                                    ps.setGame_status(4);
+                                    getGame().setHosting(false);
+                                    getGame().setIp(ip);
+                                    getGame().updateRoom(data);
+
+                                    getGame().startMode();
+                                }
                             }
                             if (cl == 2) {
                                 ps.setGame_status(1);
@@ -271,7 +275,10 @@ class Canv extends Canvas {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode() == KeyEvent.VK_F12) dev = !dev;
-                if(e.getKeyCode() == KeyEvent.VK_ESCAPE && getPresent().getGame_status() == 5) getGame().stopMode();
+                if(e.getKeyCode() == KeyEvent.VK_ESCAPE && getPresent().getGame_status() == 5) {
+                    getGame().stopMode();
+                    runServerFinder();
+                }
 
                 if(e.getKeyCode() == KeyEvent.VK_SHIFT) movements[4] = true;
                 if(e.getKeyCode() == KeyEvent.VK_TAB) movements[5] = true;

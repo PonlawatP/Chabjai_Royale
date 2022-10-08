@@ -44,7 +44,7 @@ public class Utils {
                     try {
                         sleep(500);
                         NetworkDevices.updateHost();
-                        sleep(500);
+//                        sleep(500);
                     } catch (InterruptedException ex) {
                         throw new RuntimeException(ex);
                     }

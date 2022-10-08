@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class NetworkDevices {
@@ -176,7 +177,9 @@ public class NetworkDevices {
     }
 
     public static void updateHost(){
-        for (String s : fipList.keySet()){
+        Iterator<String> ss = fipList.keySet().iterator();
+        while (ss.hasNext()){
+            String s = ss.next();
             if(!tflp.containsKey(s)){
                 if(!counthost.containsKey(s)){
                     counthost.put(s, 1);
@@ -186,8 +189,9 @@ public class NetworkDevices {
                     System.out.println("cannot ping to " + s + " ["+counthost.get(s)+"]");
                     if(counthost.get(s) >= 2){
                         System.out.println("remove " + s);
-                        fipList.remove(s);
+//                        fipList.remove(s);
                         counthost.remove(s);
+                        ss.remove();
                     }
                 }
             }
