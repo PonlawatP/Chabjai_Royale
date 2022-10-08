@@ -8,13 +8,13 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 
-public class Main {
+public class Main_1 {
 
     public static void main(String[] args) {
         try {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(Main.class.getClassLoader().getResource("imgs/Kanit-Light.ttf").getPath())));
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(Main.class.getClassLoader().getResource("imgs/Kanit-Bold.ttf").getPath())));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(Main_1.class.getClassLoader().getResource("imgs/Kanit-Light.ttf").getPath())));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(Main_1.class.getClassLoader().getResource("imgs/Kanit-Bold.ttf").getPath())));
         } catch (IOException|FontFormatException e) {
             //Handle exception
         }
@@ -22,6 +22,13 @@ public class Main {
         JTextField user = new JTextField();
         user.setFont(new Font("Kanit Light", Font.PLAIN, 16));
         user.setText("Default_Player");
+
+        try{
+            new StartMenu(user.getText(), true);
+            return;
+        }catch (IOException ex){
+            System.out.println("File Missing?");
+        }
 
         JFrame f = new JFrame("Insert Username");
         f.setLayout(new BorderLayout());
