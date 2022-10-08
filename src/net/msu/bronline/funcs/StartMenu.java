@@ -174,7 +174,7 @@ class Canv extends Canvas {
                 if(ps.getGame_status() < 5) return;
                 if(e.getButton() == MouseEvent.BUTTON1) {
                     movements[6] = false;
-                    getGame().getPlayerOwn().setFireTrigger(false);
+//                    getGame().getPlayerOwn().setFireTrigger(false);
                 }
                 if(e.getButton() == MouseEvent.BUTTON3) movements[7] = false;
             }

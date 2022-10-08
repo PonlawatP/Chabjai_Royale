@@ -45,6 +45,10 @@ public class CientProgram extends Thread implements Runnable{
         }
     }
 
+    public Cli_write getCwrite() {
+        return cw;
+    }
+
     public void exitGame(){
         quit = true;
         getPresent().setGame_status(2);

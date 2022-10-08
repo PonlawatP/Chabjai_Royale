@@ -1,5 +1,6 @@
 package net.msu.bronline.guis;
 
+import net.msu.bronline.comps.Ammo;
 import net.msu.bronline.comps.Player;
 import net.msu.bronline.comps.Scene;
 import net.msu.bronline.network.CientProgram;
@@ -126,6 +127,10 @@ public class Game extends JPanel {
         return ip;
     }
 
+    public CientProgram getClientProgram() {
+        return cp;
+    }
+
     public void startMode(){
         if(hosting){
             sp = new ServerProgram(scene, this);
@@ -237,6 +242,7 @@ public class Game extends JPanel {
 
 //            draw ammo
             drawAmmo(g, p);
+//            System.out.println(p.getUsername() + " : " + p.getAmmo().size());
 
             g.drawImage(p.getPlayerImage(), p.getPosX(), p.getPosY(), p.getPosBoundX(), p.getPosBoundY(),(64*i1)+1,(64*a1)+1,(64*(i1+1))-1, (64*(a1+1))-1,this);
         }
@@ -245,11 +251,36 @@ public class Game extends JPanel {
     public void drawAmmo(Graphics2D g, Player p){
         double posmx = ((double) m_x-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
         double posmy = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
+        int mpalx = (int)((posmx*15*scene.getSize()));
+        int mpaly = (int)((posmy*15*scene.getSize()));
 
         int calc_cenx = p.getPosX()+(64/2)-(p.getPosX()+(64/2)-p.getMouseX());
         int calc_ceny = p.getPosY()+42-(p.getPosY()+42-p.getMouseY());
-        calc_cenx -= (int)((posmx*15*scene.getSize()));
-        calc_ceny -= (int)((posmy*15*scene.getSize()));
+        calc_cenx -= mpalx;
+        calc_ceny -= mpaly;
+
+        Iterator<Ammo> ams = new ArrayList<>(p.getAmmo()).iterator();
+        g.setColor(Color.ORANGE);
+        while (ams.hasNext()){
+            Ammo a = ams.next();
+            double posax = ((double) m_x-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
+            double posay = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
+
+            int ax = a.getDimStart()[0]+(64/2), ay = a.getDimStart()[1]+42;
+            int adx = a.getDimStop()[0], ady = a.getDimStop()[1];
+            ax -= mpalx;
+            ay -= mpaly;
+            adx -= mpalx;
+            ady -= mpaly;
+
+            if(dev){
+                g.drawLine(ax, ay, adx, ady);
+                g.drawString("x: "+a.getDimStart()[0] + " y: " + a.getDimStart()[1], ax+15, ay);
+                g.drawString("dx: "+a.getDimStop()[0] + " dy: " + a.getDimStop()[1], ax+15, ay+20);
+                g.drawString("px: "+posax + " py: " + posay, ax+15, ay+40);
+            }
+            g.fillOval(ax-5, ay-5, 10, 10);
+        }
 
         if(dev){
             g.setColor(Color.BLACK);
@@ -293,7 +324,7 @@ public class Game extends JPanel {
 
         g.setColor(Color.white);
         g.setFont(new Font("Kanit Light", Font.PLAIN, 50));
-        g.drawString("20",1115,cFrame.getHeight()-100);
+        g.drawString(getPlayerOwn().getAmmoRemain()+"",1115,cFrame.getHeight()-100);
         g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
         g.drawString("120",1163,cFrame.getHeight()-80);
 //        g.setColor(Color.white);
@@ -314,6 +345,8 @@ public class Game extends JPanel {
     }
     int m_x = 0, m_y = 0;
     double v_speed = 1;
+    public void runFunction(){
+    }
     public void run(int m_x, int m_y) {
         if(getGame_status() == 2){
             if(movements[0]) p_own.moveUp(-1*v_speed);
@@ -322,7 +355,12 @@ public class Game extends JPanel {
             if(movements[3]) p_own.moveForward(1*v_speed);
             if(movements[4]) v_speed = 7; else v_speed = 5;
             if(movements[6]) {
-
+                p_own.shoot();
+            } else {
+                if(p_own.isFireTrigger()){
+                    p_own.shoot();
+                    p_own.setFireTrigger(false);
+                }
             }
             if(movements[6]) {
 

@@ -42,7 +42,7 @@ public class Utils {
                 while (getPresent().getGame_status() == 2){
                     NetworkDevices.getNetworkDevices();
                     try {
-//                        sleep(500);
+                        sleep(500);
                         NetworkDevices.updateHost();
                         sleep(500);
                     } catch (InterruptedException ex) {
