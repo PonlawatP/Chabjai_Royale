@@ -11,6 +11,8 @@ import java.util.EmptyStackException;
 import java.util.Iterator;
 import java.util.Stack;
 
+import static net.msu.bronline.guis.Game.getGame;
+
 public class Sv_write extends Thread implements Runnable{
     DataOutputStream dos;
     ClientHandler ch;
@@ -57,12 +59,14 @@ public class Sv_write extends Thread implements Runnable{
         while (!ch.quit){
 
             try {
-                Iterator<Player> pls = new ArrayList<>(Player.getPlayers()).iterator();
+                if(getGame().getGame_status() != 0){
+                    Iterator<Player> pls = new ArrayList<>(Player.getPlayers()).iterator();
 
-                while (pls.hasNext()){
-                    Player p = pls.next();
-                    if(p.getUsername() == ch.getClientUser()) continue;
-                    sendMessage(p.getUsername() + ":" + p.getPacket());
+                    while (pls.hasNext()){
+                        Player p = pls.next();
+                        if(p.getUsername() == ch.getClientUser()) continue;
+                        sendMessage(p.getUsername() + ":" + p.getPacket());
+                    }
                 }
 
                 sendMessageToServer();

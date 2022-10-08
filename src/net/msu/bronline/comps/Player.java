@@ -176,28 +176,30 @@ public class Player {
         return amms;
     }
 
-    public boolean shoot(int x, int y, int m_x, int m_y){
+    public boolean shoot(int x, int y, int m_x, int m_y, boolean senddata) {
+        Ammo am = new Ammo(this, x, y, m_x, m_y);
+        getAmmo().add(am);
+
+        if(!senddata) return true;
+
+        if (getGame().isHosting()) {
+            ClientHandler.broadcastMessage(getUsername() + ":shoot:" + x + ":" + y + ":" + m_x + ":" + m_y);
+        } else {
+            getGame().getClientProgram().getCwrite().sendMessage(getUsername() + ":shoot:" + x + ":" + y + ":" + m_x + ":" + m_y);
+        }
+        return true;
+    }
+    public boolean shoot(){
         if(ammo > 0){
             if(ammo_cld < ammo_cld_lim){
                 ammo_cld++;
             } else {
                 ammo_cld = 0;
                 ammo--;
-                Ammo am = new Ammo(this, x, y, m_x, m_y);
-                getAmmo().add(am);
-
-//                if(getGame().isHosting()) {
-//                    ClientHandler.broadcastMessage(getUsername()+":shoot:"+x+":"+y+":"+m_x+":"+m_y);
-//                } else {
-//                    getGame().getClientProgram().getCwrite().sendMessage(getUsername()+":shoot:"+x+":"+y+":"+m_x+":"+m_y);
-//                }
+                return shoot(x, y, m_x, m_y, true);
             }
-            return true;
         }
         return false;
-    }
-    public boolean shoot(){
-        return shoot(x, y, m_x, m_y);
     }
 
     public static Player getPlayer(String name){

@@ -5,6 +5,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.EmptyStackException;
 import java.util.Stack;
 
 import static net.msu.bronline.guis.Game.getGame;
@@ -34,17 +35,17 @@ public class Cli_write extends Thread implements Runnable{
         if (st.empty()) return;
 
         while (!st.empty()){
-            String mess = st.pop();
-
-            for (String Mdata : mess.split("::ln::")){
-                String[] data = Mdata.split(":");
-                if (!data[1].equalsIgnoreCase("player")) System.out.println("[s] " + Mdata);
-            }
-
             try {
+                String mess = st.pop();
+
+                for (String Mdata : mess.split("::ln::")){
+                    String[] data = Mdata.split(":");
+                    if (!data[1].equalsIgnoreCase("player")) System.out.println("[s] " + Mdata);
+                }
+
                 dos.writeUTF(mess);
                 dos.flush();
-            } catch (EOFException ex){
+            } catch (EOFException | EmptyStackException ex){
 //                ex.printStackTrace();
             }
             catch (SocketException es){
