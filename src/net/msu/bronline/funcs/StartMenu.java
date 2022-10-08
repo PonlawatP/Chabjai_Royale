@@ -71,7 +71,7 @@ class Canv extends Canvas {
     }
     public Canv(JFrame frame, String username, boolean host) throws IOException {
         cFrame = frame;
-        ps = new Present(cFrame, this, username);
+        ps = new Present(cFrame, this, username, movements);
         new Game(cFrame, this, movements, username, host);
 
         ps.setGame_status(1);
@@ -109,6 +109,54 @@ class Canv extends Canvas {
                                 getGame().startMode();
                             }
                             if (cl == 1) { //join
+                                if(movements[4]){
+                                    movements[4] = false;
+                                    JTextField ip = new JTextField();
+                                    ip.setFont(new Font("Kanit Light", Font.PLAIN, 16));
+                                    ip.setText("localhost");
+
+                                    JFrame f = new JFrame("Insert IP");
+                                    f.setLayout(new BorderLayout());
+                                    f.setSize(300, 100);
+                                    JButton st = new JButton("Join");
+                                    st.setFont(new Font("Kanit Light", Font.PLAIN, 14));
+                                    f.add(ip,BorderLayout.CENTER);
+                                    f.add(st,BorderLayout.SOUTH);
+                                    f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                                    f.setLocationRelativeTo(null);
+                                    f.setResizable(false);
+                                    f.setVisible(true);
+
+                                    ip.addMouseListener(new MouseAdapter() {
+                                        @Override
+                                        public void mouseClicked(MouseEvent e) {
+                                            if(ip.getText().equals("localhost")){
+                                                ip.setText("");
+                                            }
+                                        }
+                                    });
+
+                                    st.addActionListener(new ActionListener() {
+                                        @Override
+                                        public void actionPerformed(ActionEvent e) {
+                                            f.setVisible(false);
+
+                                            String[] data = NetworkDevices.getCustomHost(ip.getText());
+                                            if(data != null){
+                                                ps.setGame_status(4);
+                                                getGame().setHosting(false);
+                                                System.out.println("server ip: " + ip.getText());
+                                                getGame().setIp(ip.getText());
+                                                getGame().updateRoom(data);
+
+                                                getGame().startMode();
+                                            }
+                                        }
+                                    });
+
+                                    return;
+                                }
+//
                                 ps.setGame_status(4);
                                 getGame().setHosting(false);
                                 String ip = NetworkDevices.getHostIP(ps.getI_click());
@@ -124,7 +172,7 @@ class Canv extends Canvas {
 
                             if(cl == 3){ // server
                                 int hn = ps.checkHostNumber(e.getX(), e.getY());
-                                ps.setI_click(hn);
+                                if(ps.getI_click() == hn) ps.setI_click(-1); else ps.setI_click(hn);
                             }
                         } else if (ps.getGame_status() == 3) { //host page
                             if (cl == 0) { //back
@@ -146,7 +194,7 @@ class Canv extends Canvas {
                         }
                     } else {
                         if(ps.getGame_status() == 2){
-                            ps.setI_click(-1);
+//                            ps.setI_click(-1);
                         }
                     }
                 } else {
@@ -225,25 +273,25 @@ class Canv extends Canvas {
                 if(e.getKeyCode() == KeyEvent.VK_F12) dev = !dev;
                 if(e.getKeyCode() == KeyEvent.VK_ESCAPE && getPresent().getGame_status() == 5) getGame().stopMode();
 
+                if(e.getKeyCode() == KeyEvent.VK_SHIFT) movements[4] = true;
+                if(e.getKeyCode() == KeyEvent.VK_TAB) movements[5] = true;
                 if(ps.getGame_status() < 5) return;
                 if(e.getKeyCode() == KeyEvent.VK_W) movements[0] = true;
                 if(e.getKeyCode() == KeyEvent.VK_A) movements[1] = true;
                 if(e.getKeyCode() == KeyEvent.VK_S) movements[2] = true;
                 if(e.getKeyCode() == KeyEvent.VK_D) movements[3] = true;
-                if(e.getKeyCode() == KeyEvent.VK_SHIFT) movements[4] = true;
-                if(e.getKeyCode() == KeyEvent.VK_TAB) movements[5] = true;
                 if(e.getKeyCode() == KeyEvent.VK_C) movements[8] = true;
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_SHIFT) movements[4] = false;
+                if(e.getKeyCode() == KeyEvent.VK_TAB) movements[5] = false;
                 if(ps.getGame_status() < 5) return;
                 if(e.getKeyCode() == KeyEvent.VK_W) movements[0] = false;
                 if(e.getKeyCode() == KeyEvent.VK_A) movements[1] = false;
                 if(e.getKeyCode() == KeyEvent.VK_S) movements[2] = false;
                 if(e.getKeyCode() == KeyEvent.VK_D) movements[3] = false;
-                if(e.getKeyCode() == KeyEvent.VK_SHIFT) movements[4] = false;
-                if(e.getKeyCode() == KeyEvent.VK_TAB) movements[5] = false;
                 if(e.getKeyCode() == KeyEvent.VK_C) movements[8] = false;
             }
         });

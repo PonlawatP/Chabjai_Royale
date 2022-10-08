@@ -27,11 +27,13 @@ public class Present extends JPanel {
     Canvas cCanv;
     Scene scene;
     String username;
-    public Present(JFrame cFrame, Canvas canv, String username) throws IOException {
+    boolean[] movements;
+    public Present(JFrame cFrame, Canvas canv, String username, boolean[] movements) throws IOException {
         ps = this;
         this.cFrame = cFrame;
         this.cCanv = canv;
         this.username = username;
+        this.movements = movements;
         scene = new Scene(cFrame, cCanv);
         setSize(cFrame.getSize());
         setPreferredSize(cFrame.getPreferredSize());
@@ -386,7 +388,8 @@ public class Present extends JPanel {
             if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 0;
         } else if(game_status == 2) {
             if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 0;
-            if((x >= b2_cen_x && x <= b2_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy) && (i_click != -1 && i_click < NetworkDevices.getHostsIP().size())) return 1;
+            if((x >= b2_cen_x && x <= b2_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy) && ((i_click != -1 && i_click < NetworkDevices.getHostsIP().size()) || movements[4])) return 1;
+//            if((x >= b2_cen_x && x <= b2_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy) && (i_click != -1 && i_click < NetworkDevices.getHostsIP().size())) return 1;
             if((x >= btn_back_px && x <= btn_back_px+btn_back_sx) && (y >= btn_back_py && y <= btn_back_py+btn_back_sy)) return 2;
             int hn = checkHostNumber(x, y);
             i_hover = hn;

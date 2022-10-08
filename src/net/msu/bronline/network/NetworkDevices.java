@@ -88,6 +88,7 @@ public class NetworkDevices {
                     int r = 0;
                     @Override
                     public void run() {
+                        int r = 0;
                         while (!socket.isClosed()) {
                             try {
                                 if (dis.available() != 0) {
@@ -97,6 +98,9 @@ public class NetworkDevices {
 
                                     socket.close();
                                     break;
+                                } else {
+                                    r++;
+                                    if(r >= 2) break;
                                 }
                                 Thread.sleep(100);
                             } catch (IOException e) {
@@ -116,6 +120,57 @@ public class NetworkDevices {
 //        System.out.println("Ended lookup-ip process");
 //        System.out.println("------------------------");
         return fipList;
+    }
+
+    public static String[] getCustomHost(String host){
+        String[] temp = {};
+        boolean found = false;
+
+        try {
+            Socket socket = new Socket();
+            try {
+                socket.connect(new InetSocketAddress(host, port), 500);
+            } catch (ConnectException | SocketTimeoutException ex) {
+                    System.out.println("\tSOCKET ERROR - " + ex.getMessage());
+                return null;
+            }
+
+            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+            dos.writeUTF("ping");
+            dos.flush();
+
+            DataInputStream dis = new DataInputStream(socket.getInputStream());
+
+            int r = 0;
+            while (!socket.isClosed()) {
+                try {
+                    if (dis.available() != 0) {
+                        String s = dis.readUTF();
+//                                tflp.put(host, s.split(":"));
+                        temp = s.split(":");
+//                                    System.out.println(s);
+                        System.out.println("Found socket for: " + host);
+                        found = true;
+
+                        dis.close();
+                        socket.close();
+                        break;
+                    } else {
+                        r++;
+                        if(r >= 2) break;
+                    }
+                    Thread.sleep(100);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        if(!found) System.out.println("Socket " + host + " not found...");
+        return temp;
     }
 
     public static void updateHost(){
