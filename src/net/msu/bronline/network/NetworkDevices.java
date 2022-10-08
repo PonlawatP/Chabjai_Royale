@@ -11,6 +11,7 @@ public class NetworkDevices {
 
     static HashMap<String, String[]>  fipList = new HashMap<>();
     static HashMap<String, String[]> tflp = new HashMap<>();
+    static HashMap<String, Integer> counthost = new HashMap<>();
     public static HashMap<String, String[]> getHostsIP(){
         return fipList;
     }
@@ -93,6 +94,7 @@ public class NetworkDevices {
                             try {
                                 if (dis.available() != 0) {
                                     String s = dis.readUTF();
+                                    fipList.put(tip[0], s.split(":"));
                                     tflp.put(tip[0], s.split(":"));
 //                                    System.out.println(s);
 
@@ -174,6 +176,22 @@ public class NetworkDevices {
     }
 
     public static void updateHost(){
-        fipList = tflp;
+        for (String s : fipList.keySet()){
+            if(!tflp.containsKey(s)){
+                if(!counthost.containsKey(s)){
+                    counthost.put(s, 1);
+                    System.out.println("cannot ping to " + s + " [1]");
+                } else {
+                    counthost.replace(s, counthost.get(s)+1);
+                    System.out.println("cannot ping to " + s + " ["+counthost.get(s)+"]");
+                    if(counthost.get(s) >= 2){
+                        System.out.println("remove " + s);
+                        fipList.remove(s);
+                        counthost.remove(s);
+                    }
+                }
+            }
+        }
+//        fipList = tflp;
     }
 }
