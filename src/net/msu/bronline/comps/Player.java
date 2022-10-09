@@ -21,7 +21,7 @@ public class Player {
     }
 
     int m_x = 0, m_y = 0;
-    int x = 150, y = 150;
+    int x = 150, y = 150, ox = 150, oy = 150;
     int hp = 100;
     int armor = 50;
     int armor_type = 1;
@@ -143,6 +143,62 @@ public class Player {
         double atan = Math.atan2(ty,tx);
         double deg = Math.toDegrees(atan);
         return deg;
+    }
+    int i = 0, i1 = 0, a1 = 11, a1_lim = 8;
+    int sprte_pattern = 0;
+    public void updateAnimation(){
+        i++;
+
+        if(ox < x || (ox < x && oy != y)){
+            a1 = 11;
+            a1_lim = 8;
+        } else if(ox > x || (ox > x && oy != y)){
+            a1 = 9;
+            a1_lim = 8;
+        } else if(oy < y){
+            a1 = 10;
+            a1_lim = 8;
+        } else if(oy > y){
+            a1 = 8;
+            a1_lim = 8;
+        }
+
+        if(i >= 2) {
+            i = 0;
+
+//            System.out.println(getAngle());
+//            if(getAngle() <= -135 || getAngle() >= 135){
+//                a1 = 8;
+//                a1_lim = 8;
+//            } else if(getAngle() <= -45){
+//                a1 = 11;
+//                a1_lim = 8;
+//            } else if(getAngle() >= 45){
+//                a1 = 10;
+//                a1_lim = 8;
+//            }
+
+            if(ox == x && oy == y){
+                i1 = 0;
+            } else {
+                i1++;
+                if(i1 > a1_lim) i1 = 0;
+            }
+        }
+        ox = x;
+        oy = y;
+    }
+    public int getSpriteX(){
+        return (64*i1)+1;
+    }
+    public int getSpriteY(){
+        return (64*a1)+1;
+    }
+    public int getSpriteDX(){
+        return (64*(i1+1))-1;
+    }
+    public int getSpriteDY(){
+        return (64*(a1+1))-1;
     }
 
     public String getPacket(){

@@ -59,7 +59,7 @@ class Canv extends Canvas {
     JFrame cFrame;
     Present ps;
     int m_x = 0, m_y = 0;
-    //w,a,s,d,shift,tab,lClick,rClick,c
+    //w,a,s,d,shift,tab,lClick,rClick,ctrl
     boolean[] movements = {false,false,false,false,false,false,false,false,false};
 
     int cCur = Cursor.DEFAULT_CURSOR;
@@ -286,24 +286,24 @@ class Canv extends Canvas {
 
                 if(e.getKeyCode() == KeyEvent.VK_SHIFT) movements[4] = true;
                 if(e.getKeyCode() == KeyEvent.VK_TAB) movements[5] = true;
+                if(e.getKeyCode() == KeyEvent.VK_CONTROL) movements[8] = true;
                 if(ps.getGame_status() < 5) return;
                 if(e.getKeyCode() == KeyEvent.VK_W) movements[0] = true;
                 if(e.getKeyCode() == KeyEvent.VK_A) movements[1] = true;
                 if(e.getKeyCode() == KeyEvent.VK_S) movements[2] = true;
                 if(e.getKeyCode() == KeyEvent.VK_D) movements[3] = true;
-                if(e.getKeyCode() == KeyEvent.VK_C) movements[8] = true;
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
                 if(e.getKeyCode() == KeyEvent.VK_SHIFT) movements[4] = false;
                 if(e.getKeyCode() == KeyEvent.VK_TAB) movements[5] = false;
+                if(e.getKeyCode() == KeyEvent.VK_CONTROL) movements[8] = false;
                 if(ps.getGame_status() < 5) return;
                 if(e.getKeyCode() == KeyEvent.VK_W) movements[0] = false;
                 if(e.getKeyCode() == KeyEvent.VK_A) movements[1] = false;
                 if(e.getKeyCode() == KeyEvent.VK_S) movements[2] = false;
                 if(e.getKeyCode() == KeyEvent.VK_D) movements[3] = false;
-                if(e.getKeyCode() == KeyEvent.VK_C) movements[8] = false;
             }
         });
     }
@@ -402,8 +402,6 @@ class Canv extends Canvas {
         funcThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Game.delta = System.currentTimeMillis() - Game.lastLoopTime;
-                Game.lastLoopTime = System.currentTimeMillis();
                 long now = getCurrentTime();
                 long gameTime = getCurrentTime();
 

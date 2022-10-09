@@ -22,7 +22,6 @@ import static net.msu.bronline.guis.Present.getPresent;
 public class Game extends JPanel {
     public static Game g;
 
-    public static long delta, lastLoopTime;
     JFrame cFrame;
     Canvas cCanv;
     Scene scene;
@@ -191,7 +190,6 @@ public class Game extends JPanel {
     }
 
     int b_cen_x = 0, b_cen_y = 0;
-    int i = 0, i1 = 0;
     public void draw(Graphics ge)  {
         Graphics2D g = (Graphics2D) ge;
         g.drawImage(
@@ -215,13 +213,6 @@ public class Game extends JPanel {
 
     public void drawPlayer(Graphics2D g){
         Iterator<Player> ps = new ArrayList<>(Player.getPlayers()).iterator();
-        i++;
-        if(i >= 2) {
-            i = 0;
-            i1++;
-            if(i1 > 8) i1 = 0;
-        }
-        int a1 = 11;
 
         g.setFont(new Font("Kanit Light", Font.PLAIN, 14));
 
@@ -246,8 +237,8 @@ public class Game extends JPanel {
 //            draw ammo
             drawAmmo(g, p);
 //            System.out.println(p.getUsername() + " : " + p.getAmmo().size());
-
-            g.drawImage(p.getPlayerImage(), p.getPosX(), p.getPosY(), p.getPosBoundX(), p.getPosBoundY(),(64*i1)+1,(64*a1)+1,(64*(i1+1))-1, (64*(a1+1))-1,this);
+            g.drawImage(p.getPlayerImage(), p.getPosX(), p.getPosY(), p.getPosBoundX(), p.getPosBoundY(), p.getSpriteX(),p.getSpriteY(),p.getSpriteDX(),p.getSpriteDY(),this);
+            p.updateAnimation();
         }
     }
 
@@ -376,9 +367,6 @@ public class Game extends JPanel {
                     p_own.shoot();
                     p_own.setFireTrigger(false);
                 }
-            }
-            if(movements[6]) {
-
             }
             if(movements[8]) v_speed = v_speed/2;
 
