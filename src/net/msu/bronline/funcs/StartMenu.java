@@ -214,10 +214,16 @@ class Canv extends Canvas {
                     } else {
                         if (getGame().getGame_status() == 2) {
                             if(e.getButton() == MouseEvent.BUTTON1) {
+                                if(movements[8]){
+                                    getGame().getPlayerOwn().addMarker();
+                                }
                                 movements[6] = true;
                                 getGame().getPlayerOwn().setFireTrigger(true);
                             }
                             if(e.getButton() == MouseEvent.BUTTON3) {
+                                if(movements[8]){
+                                    getGame().getPlayerOwn().getMarker().clear();
+                                }
                                 movements[7] = true;
                             }
                         }

@@ -37,7 +37,14 @@ public class Ammo {
         x += val_x;
         y += val_y;
 
+        if(x < -100 || x > 2100 || y < -100 || y > 2100){
+            remove();
+        }
+
         return false;
     }
 
+    public void remove(){
+        shooter.getAmmo().remove(this);
+    }
 }

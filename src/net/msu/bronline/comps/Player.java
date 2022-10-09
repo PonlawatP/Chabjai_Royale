@@ -1,11 +1,9 @@
 package net.msu.bronline.comps;
 
 import net.msu.bronline.network.ClientHandler;
-import net.msu.bronline.network.NetworkDevices;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -199,6 +197,16 @@ public class Player {
     }
     public int getSpriteDY(){
         return (64*(a1+1))-1;
+    }
+
+    ArrayList<int[]> marker = new ArrayList<int[]>();
+
+    public ArrayList<int[]> getMarker() {
+        return marker;
+    }
+    public void addMarker(){
+        int[] m = {m_x, m_y};
+        marker.add(m);
     }
 
     public String getPacket(){

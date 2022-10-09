@@ -280,6 +280,8 @@ public class Game extends JPanel {
             g.setColor(Color.BLACK);
             g.drawLine(p.getPosX()+(64/2), p.getPosY()+42, calc_cenx, calc_ceny);
             g.drawOval(p.getPosX()-(64/2), p.getPosY()-(64-42), 64*2, (64*2));
+            g.drawString("scene_x:" + (scene.getRawX()+m_x) + " scene_y: " + (scene.getRawY()+m_y), p.getPosX(), p.getPosY()-35);
+
             g.drawString("x:" + (p.getPosX()+(64/2)) + " y: " + (p.getPosY()+42) + " [" + (p.getPosX()+(64/2)+p.getMouseX()) + ":" + (p.getPosY()+42+p.getMouseY()) + "]", p.getPosX(), p.getPosY()+75);
             g.drawString("x:" + p.getMouseX() + " y:" + p.getMouseY(), p.getPosX(), p.getPosY()+95);
             g.drawString("x:" + calc_cenx + " y:" + calc_ceny + " | x:" + ((p.getPosX()+(64/2))-calc_cenx) + " y:" + ((p.getPosY()+42)-calc_ceny), p.getPosX(), p.getPosY()+115);
@@ -335,6 +337,22 @@ public class Game extends JPanel {
         g.drawString("120",1163,cFrame.getHeight()-80);
 //        g.setColor(Color.white);
 //        g.drawString("120",1113,cFrame.getHeight()-80);
+
+        if(dev){
+            g.setFont(new Font("Kanit Light", Font.PLAIN, 12));
+            int x = 0;
+            for (int[] i : getPlayerOwn().getMarker()){
+                g.setColor(Color.BLACK);
+                g.drawString("x: " + i[0], i[0]+10, i[1]+15);
+                g.drawString("y: " + i[1], i[0]+10, i[1]+35);
+
+                if(x>0){
+                    g.setColor(Color.RED);
+                    g.drawLine(getPlayerOwn().getMarker().get(x-1)[0],getPlayerOwn().getMarker().get(x-1)[1], i[0], i[1]);
+                }
+                x++;
+            }
+        }
 
     }
 

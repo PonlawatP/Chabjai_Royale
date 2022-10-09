@@ -82,30 +82,36 @@ public class Scene {
         return (1280f-16f)/(cCanv.getWidth());
     }
 
+    public double getRawX(){
+        return x;
+    }
+    public double getRawY(){
+        return y;
+    }
     public int getX(){
-//        return (int)x;
-        int p = (int)(x-(cCanv.getWidth()-(cCanv.getWidth()*getSize())));
-        double posmx = ((double) m_x-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
-        return ingame ? (int)(p + (posmx*15*getSize())) : (int)x;
+        return (int)x; ///TODO: mouse paralax
+//        int p = (int)(x-(cCanv.getWidth()-(cCanv.getWidth()*getSize())));
+//        double posmx = ((double) m_x-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
+//        return ingame ? (int)(p + (posmx*15*getSize())) : (int)x;
     }
     public int getY(){
-//        return (int)y;
-        int p = (int)(y-(cCanv.getHeight()-(cCanv.getHeight()*getSize())));
-        double posmy = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
-        return ingame ? (int)(p + (posmy*15*getSize())) : (int)y;
+        return (int)y; ///TODO: mouse paralax
+//        int p = (int)(y-(cCanv.getHeight()-(cCanv.getHeight()*getSize())));
+//        double posmy = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
+//        return ingame ? (int)(p + (posmy*15*getSize())) : (int)y;
     }
     public int getBoundX(){
-        double p = x+(cCanv.getWidth()-((cCanv.getWidth()*getSize())-cCanv.getWidth()));
-        double posmx = ((double) m_x-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
-        return ingame ? (int)(p + (posmx*15*getSize())) : (int)x+cCanv.getWidth();
-//        return (int)(p*getZoomCanvas());
+        double p = x+(cCanv.getWidth()-((cCanv.getWidth()*getSize())-cCanv.getWidth())); ///TODO: mouse paralax
+//        double posmx = ((double) m_x-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
+//        return ingame ? (int)(p + (posmx*15*getSize())) : (int)x+cCanv.getWidth();
+        return (int)(p*getZoomCanvas());
     }
     public int getBoundY(){
-        double a = (cCanv.getHeight()*(getSize()*-1+2));
+        double a = (cCanv.getHeight()*(getSize()*-1+2)); ///TODO: mouse paralax
         double p = y+a;
-        double posmy = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
-        return ingame ? (int)(p + (posmy*15*getSize())) : (int)y+cCanv.getHeight();
-//        return (int)(p*getZoomCanvas());
+//        double posmy = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
+//        return ingame ? (int)(p + (posmy*15*getSize())) : (int)y+cCanv.getHeight();
+        return (int)(p*getZoomCanvas());
     }
 
     public int getSize_x() {
