@@ -262,6 +262,10 @@ public class Game extends JPanel {
 
             int ax = a.getDimStart()[0]+(64/2)-5, ay = a.getDimStart()[1]+42-5;
             int adx = a.getDimStop()[0], ady = a.getDimStop()[1];
+            ax += (scene.getX()*-1);
+            ay += (scene.getY()*-1);
+            adx += (scene.getX()*-1);
+            ady += (scene.getY()*-1);
             ax -= mpalx;
             ay -= mpaly;
             adx -= mpalx;
@@ -286,17 +290,7 @@ public class Game extends JPanel {
             g.drawString("x:" + p.getMouseX() + " y:" + p.getMouseY(), p.getPosX(), p.getPosY()+95);
             g.drawString("x:" + calc_cenx + " y:" + calc_ceny + " | x:" + ((p.getPosX()+(64/2))-calc_cenx) + " y:" + ((p.getPosY()+42)-calc_ceny), p.getPosX(), p.getPosY()+115);
 
-            double tx = calc_cenx-(p.getPosX()+(64/2));
-            double ty = calc_ceny-(p.getPosY()+42);
-            double atan = Math.atan2(ty,tx);
-            double deg = Math.toDegrees(atan);
-            double rad = Math.toRadians(deg);
-
-            double val_x = Math.cos(rad);
-            double val_y = Math.sin(rad);
-            g.drawString("tx: " + tx + " ty: " + ty + " atan: " + atan + " deg: " + deg + " p_deg: " + getPlayerOwn().getAngle(), p.getPosX(), p.getPosY()+135);
-            g.drawString("vx: " + val_x + " vy: " + val_y, p.getPosX(), p.getPosY()+155);
-            g.drawString("rad: " + rad + " -> sin: " + Math.sin(rad) + " cos: " + Math.cos(rad), p.getPosX(), p.getPosY()+175);
+            g.drawString("deg: " + getPlayerOwn().getAngle(), p.getPosX(), p.getPosY()+135);
         }
     }
 
@@ -343,16 +337,16 @@ public class Game extends JPanel {
             int x = 0;
             for (int[] i : getPlayerOwn().getMarker()){
                 g.setColor(Color.BLACK);
-                g.drawString("x: " + i[0], i[0]+10, i[1]+15);
-                g.drawString("y: " + i[1], i[0]+10, i[1]+35);
+//                g.drawString("x: " + scene.getX() + " " + (i[0]+10), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+//                g.drawString("y: " + scene.getY() + " " + (i[1]+35), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+                g.drawString("x: " + i[0], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+                g.drawString("y: " + i[1], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
 
                 if(x>0){
-                    g.drawString("M: " + getMathM(getPlayerOwn().getMarker().get(x-1), i), i[0]+10, i[1]+55);
-                    int[] mm = {m_x, m_y};
-                    g.drawString("MCur: " + getMathM(getPlayerOwn().getMarker().get(x-1), mm), i[0]+10, i[1]+75);
-                    g.drawString("LinEq: " + geMathLinEq(getPlayerOwn().getMarker().get(x-1), i, mm), i[0]+10, i[1]+95);
+                    int[] mm = {getPlayerOwn().getX()+20, getPlayerOwn().getY()};
+                    g.drawString("LinEq: " + geMathLinEq(getPlayerOwn().getMarker().get(x-1), i, mm), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+55);
                     g.setColor(Color.RED);
-                    g.drawLine(getPlayerOwn().getMarker().get(x-1)[0],getPlayerOwn().getMarker().get(x-1)[1], i[0], i[1]);
+                    g.drawLine((scene.getX()*-1)+getPlayerOwn().getMarker().get(x-1)[0],(scene.getY()*-1)+getPlayerOwn().getMarker().get(x-1)[1], (scene.getX()*-1)+i[0], (scene.getY()*-1)+i[1]);
                 }
                 x++;
             }
@@ -406,6 +400,7 @@ public class Game extends JPanel {
             }
 
             scene.updateMouse(m_x, m_y);
+            scene.updatePosition(getPlayerOwn().getX(), getPlayerOwn().getY());
         }
 
 //        if(scene.getX() < 0 || scene.getBoundX() > scene.getSize_x()){

@@ -8,13 +8,15 @@ public class Ammo {
 
     double tx, ty, atan, deg, rad;
     Player shooter;
-    float dv = 15.9f;
+    float dv = 18f;
     public Ammo(Player shooter, int x, int y, int dx, int dy){
         this.shooter = shooter;
         this.x = x;
         this.y = y;
         this.dx = dx;
         this.dy = dy;
+//          (getGame().getScene().getX()*-1)+
+//          (getGame().getScene().getY()*-1)+
 
         tx = dx-x-(64/2);
         ty = dy-y-42;

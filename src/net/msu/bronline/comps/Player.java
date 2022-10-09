@@ -205,7 +205,7 @@ public class Player {
         return marker;
     }
     public void addMarker(){
-        int[] m = {m_x, m_y};
+        int[] m = {scene.getX()+m_x, scene.getY()+m_y};
         marker.add(m);
     }
 

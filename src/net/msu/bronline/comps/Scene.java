@@ -31,6 +31,10 @@ public class Scene {
         m_x = x;
         m_y = y;
     }
+    public void updatePosition(int x, int y){
+        this.x = (x+32)-(cCanv.getWidth()/2);
+        this.y = (y+42)-(cCanv.getHeight()/2);
+    } ///TODO: ทำ Raw x,y ของ scene แยก
 
     double x = 0, y = 0;
     double size = 1;
