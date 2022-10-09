@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import static net.msu.bronline.funcs.Utils.dev;
+import static net.msu.bronline.funcs.Utils.*;
 import static net.msu.bronline.guis.Present.getPresent;
 
 public class Game extends JPanel {
@@ -347,6 +347,10 @@ public class Game extends JPanel {
                 g.drawString("y: " + i[1], i[0]+10, i[1]+35);
 
                 if(x>0){
+                    g.drawString("M: " + getMathM(getPlayerOwn().getMarker().get(x-1), i), i[0]+10, i[1]+55);
+                    int[] mm = {m_x, m_y};
+                    g.drawString("MCur: " + getMathM(getPlayerOwn().getMarker().get(x-1), mm), i[0]+10, i[1]+75);
+                    g.drawString("LinEq: " + geMathLinEq(getPlayerOwn().getMarker().get(x-1), i, mm), i[0]+10, i[1]+95);
                     g.setColor(Color.RED);
                     g.drawLine(getPlayerOwn().getMarker().get(x-1)[0],getPlayerOwn().getMarker().get(x-1)[1], i[0], i[1]);
                 }

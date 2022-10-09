@@ -53,5 +53,36 @@ public class Utils {
         }).start();
     }
 
+    public static double getMathM(double[] xy1, double[] xy2){
+        return (xy2[1] - xy1[1])/(xy2[0] - xy1[0]);
+    }
+
+    public static double getMathM(int[] xy1, int[] xy2){
+        return ((double) xy2[1] - xy1[1])/((double)xy2[0] - xy1[0]);
+    }
+
+    public static double geMathLinEq(int[] xy1, int[] xy2, int[] xy3){
+        /*
+            y1-y2 = m(x1-x2)
+            my = (xy2[1] - xy1[1])
+            mx = (xx2[0] - xx1[0])
+
+            y1-y2 = my * (x1-x2)
+                    mx
+
+            (mx*y1)-(mx*y2) = (my*x1)+(my*x2)
+
+            ((my*-1)*x1)+(mx*y1)-((my*x2)-(mx*y2))
+         */
+        int x1 = xy1[0], x2 = xy2[0];
+        int y1 = xy1[1], y2 = xy2[1];
+        int my = (xy2[1] - xy1[1]);
+        int mx = (xy2[0] - xy1[0]);
+        int x = xy3[0], y = xy3[1];
+
+        double res = (my*x)-((my*x2)-(mx*y2))-(mx*y);
+        return res;
+    }
+
     public static boolean dev = false;
 }
