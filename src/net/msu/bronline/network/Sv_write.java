@@ -33,31 +33,32 @@ public class Sv_write extends Thread implements Runnable{
     public void sendMessageToServer(){
         if (st.empty()) return;
 
-        while (!st.empty()){
-            String mess = st.pop();
-            for (String Mdata : mess.split("::ln::")){
-                String[] data = Mdata.split(":");
-                if (!data[1].equalsIgnoreCase("player")) System.out.println("[s] " + Mdata);
+        try {
+            while (!st.empty()) {
+                String mess = st.pop();
+                for (String Mdata : mess.split("::ln::")) {
+                    String[] data = Mdata.split(":");
+                    if (!data[1].equalsIgnoreCase("player")) System.out.println("[s] " + Mdata);
 //                System.out.println("[s] " + Mdata);
-            }
+                }
 
-            try {
-                dos.writeUTF(mess);
-                dos.flush();
-            } catch (EOFException ex){
-                ex.printStackTrace();
+                try {
+                    dos.writeUTF(mess);
+                    dos.flush();
+                } catch (EOFException ex) {
+                    ex.printStackTrace();
+                } catch (SocketException es) {
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
-            catch (SocketException es){
-            }
-            catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        } catch (EmptyStackException ex){
+
         }
     }
     @Override
     public void run() {
         while (!ch.quit){
-
             try {
                 if(getGame().getGame_status() != 0){
                     Iterator<Player> pls = new ArrayList<>(Player.getPlayers()).iterator();

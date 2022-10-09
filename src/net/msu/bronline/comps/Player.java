@@ -137,6 +137,13 @@ public class Player {
         m_x = x;
         m_y = y;
     }
+    public double getAngle(){
+        double tx = m_x-(getPosX()+(64/2));
+        double ty = m_y-(getPosY()+42);
+        double atan = Math.atan2(ty,tx);
+        double deg = Math.toDegrees(atan);
+        return deg;
+    }
 
     public String getPacket(){
 //        username:player:skin:x:y:mouse_x:mouse_y:hp:armor:armor_type:fireTrigger

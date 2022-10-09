@@ -1,19 +1,14 @@
 package net.msu.bronline.comps;
 
-import net.msu.bronline.network.ClientHandler;
-import net.msu.bronline.network.NetworkDevices;
-
-import java.awt.*;
-
-import static net.msu.bronline.guis.Game.getGame;
-import static net.msu.bronline.guis.Present.getPresent;
+import net.msu.bronline.guis.Game;
 
 public class Ammo {
     private double x,y,dx,dy;
-    private int v = 1, h = 1;
-    private double valo_v = 1, valo_h = 1;
+    private double val_x,val_y;
+
+    double tx, ty, atan, deg, rad;
     Player shooter;
-    float dir = 5.35f;
+    float dv = 15.9f;
     public Ammo(Player shooter, int x, int y, int dx, int dy){
         this.shooter = shooter;
         this.x = x;
@@ -21,16 +16,14 @@ public class Ammo {
         this.dx = dx;
         this.dy = dy;
 
-        if(dx < x) h = -1;
-        if(dy < y) v = -1;
-//        valo_h = Math.sqrt((Math.abs((dx-x == 0 ? 1 : dx-x))^2));
-//        valo_v = Math.sqrt((Math.abs((dy-y == 0 ? 1 : dy-y))^2));
-//        valo_h = Math.sqrt((Math.abs((dx-x+(64/2) == 0 ? 1 : dx-x+(64/2)))^2))*h;
-//        valo_v = Math.sqrt((Math.abs((dy-y+42 == 0 ? 1 : dy-y+42))^2))*v;
-        valo_h = Math.sqrt((Math.pow(Math.abs(dx-x), 2)));
-        valo_v = Math.sqrt((Math.pow(Math.abs(dy-y), 2)));
+        tx = dx-x-(64/2);
+        ty = dy-y-42;
+        atan = Math.atan2(ty,tx);
+        deg = Math.toDegrees(atan);
+        rad = Math.toRadians(deg);
 
-        System.out.println("rx: "+valo_h + " ry: " +valo_v);
+        val_x = dv * Math.cos(rad);
+        val_y = dv * Math.sin(rad);
     }
 
     public int[] getDimStart() {
@@ -41,10 +34,9 @@ public class Ammo {
     }
 
     public boolean runProjectile(){
-//        System.out.println(mpalx + " : " + mpaly);
+        x += val_x;
+        y += val_y;
 
-        x+=((valo_h/dir)*h);
-        y+=((valo_v/dir)*v);
         return false;
     }
 

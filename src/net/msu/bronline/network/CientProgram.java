@@ -49,11 +49,11 @@ public class CientProgram extends Thread implements Runnable{
         return cw;
     }
 
-    public void exitGame(){
-        quit = true;
-        getPresent().setGame_status(2);
-        getGame().resetGame();
-        runServerFinder();
+    public void exitGame() {
+            quit = true;
+            getPresent().setGame_status(2);
+            getGame().resetGame();
+            runServerFinder();
     }
 
     public String getUsername() {

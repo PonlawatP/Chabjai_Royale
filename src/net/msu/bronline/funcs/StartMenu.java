@@ -165,7 +165,7 @@ class Canv extends Canvas {
                                 System.out.println("serverip: " + ip);
 
                                 String[] data = NetworkDevices.getCustomHost(ip);
-                                if(data.length > 0){
+                                if(data != null && data.length > 0){
                                     ps.setGame_status(4);
                                     getGame().setHosting(false);
                                     getGame().setIp(ip);

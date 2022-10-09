@@ -68,7 +68,8 @@ public class Game extends JPanel {
             Player.getPlayers().clear();
             new Game(cFrame, cCanv, movements, user, hosting);
         } catch (IOException e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+//            e.printStackTrace();
         }
     }
     public void updateRoom(String[] data){
@@ -208,7 +209,7 @@ public class Game extends JPanel {
         try {
             drawUI(g);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
 
@@ -287,10 +288,22 @@ public class Game extends JPanel {
         if(dev){
             g.setColor(Color.BLACK);
             g.drawLine(p.getPosX()+(64/2), p.getPosY()+42, calc_cenx, calc_ceny);
+            g.drawOval(p.getPosX()-(64/2), p.getPosY()-(64-42), 64*2, (64*2));
             g.drawString("x:" + (p.getPosX()+(64/2)) + " y: " + (p.getPosY()+42) + " [" + (p.getPosX()+(64/2)+p.getMouseX()) + ":" + (p.getPosY()+42+p.getMouseY()) + "]", p.getPosX(), p.getPosY()+75);
             g.drawString("x:" + p.getMouseX() + " y:" + p.getMouseY(), p.getPosX(), p.getPosY()+95);
-            g.drawString("x:" + calc_cenx + " y:" + calc_ceny, p.getPosX(), p.getPosY()+115);
-            g.drawString("fire: " + p.isFireTrigger(), p.getPosX(), p.getPosY()+135);
+            g.drawString("x:" + calc_cenx + " y:" + calc_ceny + " | x:" + ((p.getPosX()+(64/2))-calc_cenx) + " y:" + ((p.getPosY()+42)-calc_ceny), p.getPosX(), p.getPosY()+115);
+
+            double tx = calc_cenx-(p.getPosX()+(64/2));
+            double ty = calc_ceny-(p.getPosY()+42);
+            double atan = Math.atan2(ty,tx);
+            double deg = Math.toDegrees(atan);
+            double rad = Math.toRadians(deg);
+
+            double val_x = Math.cos(rad);
+            double val_y = Math.sin(rad);
+            g.drawString("tx: " + tx + " ty: " + ty + " atan: " + atan + " deg: " + deg + " p_deg: " + getPlayerOwn().getAngle(), p.getPosX(), p.getPosY()+135);
+            g.drawString("vx: " + val_x + " vy: " + val_y, p.getPosX(), p.getPosY()+155);
+            g.drawString("rad: " + rad + " -> sin: " + Math.sin(rad) + " cos: " + Math.cos(rad), p.getPosX(), p.getPosY()+175);
         }
     }
 
@@ -417,15 +430,28 @@ public class Game extends JPanel {
     public void startGame() {
         ClientHandler.broadcastMessage("host:act:pre_start");
         setGame_status(1);
-        try {
-            for(int i = 5; i >= 0; i--){
-                ClientHandler.broadcastMessage("host:desc:Starting in " + i);
-                setStatus_desc("Starting in " + i);
-                Thread.sleep(1000);
-            }
-        } catch (InterruptedException ex){
-            ex.printStackTrace();
+        if (!movements[4]) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        for (int i = 5; i >= 0; i--) {
+                            ClientHandler.broadcastMessage("host:desc:Starting in " + i);
+                            setStatus_desc("Starting in " + i);
+                            Thread.sleep(1000);
+                        }
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    ClientHandler.broadcastMessage("host:act:start");
+                    setGame_status(2);
+                    getPresent().setGame_status(5);
+                }
+            }).start();
+            return;
         }
+
         ClientHandler.broadcastMessage("host:act:start");
         setGame_status(2);
         getPresent().setGame_status(5);
