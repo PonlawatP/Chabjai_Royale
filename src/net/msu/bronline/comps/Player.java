@@ -27,7 +27,7 @@ public class Player {
     BufferedImage cimg;
     Scene scene;
     String username = "Player";
-    int c_r = new Random().nextInt(1, 8);
+    int c_r = (int) (1 + 8*Math.random());
 
     public int getCharacterID() {
         return c_r;

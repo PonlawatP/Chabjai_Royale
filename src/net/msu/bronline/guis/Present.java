@@ -330,7 +330,7 @@ public class Present extends JPanel {
 
 //    ตัวแปรทิศทาง ความเร็วของฉาก
     int s_x = Math.random()>=0.5?-1:1, s_y = Math.random()>=0.5?-1:1;
-    double s_vx = 0.5 + new Random().nextDouble(0.7), s_vy = 0.5 + new Random().nextDouble(0.7);
+    double s_vx = 0.5 + (new Random().nextDouble()*0.7), s_vy = 0.5 + (new Random().nextDouble()*0.7);
 
     public void run() {
         if(frameTime >= 120){
