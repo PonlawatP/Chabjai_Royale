@@ -39,7 +39,11 @@ public class ServerProgram implements Runnable{
 //                        System.out.println("pinging: client => server...");
                         DataOutputStream dos = new DataOutputStream(soc.getOutputStream());
 //                        username:conf:name:amount:max:pr_status:game_status
-                        dos.writeUTF(getGame().getPlayerOwn().getUsername()+":conf:"+getGame().getRoomName()+":"+ Player.getPlayers().size()+":"+getGame().getMaxPlayer()+":"+getPresent().getGame_status()+":"+getGame().getGame_status());
+                        dos.writeUTF(getGame().getPlayerOwn().getUsername()+":conf:"
+                                +getGame().getRoomName()+":"+ Player.getPlayers().size()+
+                                ":"+getGame().getMaxPlayer()+
+                                ":"+getPresent().getGame_status()+
+                                ":"+getGame().getGame_status());
                         dos.flush();
 //                        soc.close();
                         continue;
