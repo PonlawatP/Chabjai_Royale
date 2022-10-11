@@ -294,37 +294,40 @@ public class Game extends JPanel {
         Graphics2D g = (Graphics2D) ge;
         //ui-code here
 
+        int _3 = getInsidePosition(0, cCanv.getWidth(), 3);
+        int _97 = getInsidePosition(0, cCanv.getWidth(), 97);
         BufferedImage Fimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/F.png"));
-        g.drawImage(Fimg,33,cFrame.getHeight()-150,this);
+        g.drawImage(Fimg,_3,cFrame.getHeight()-150,this);
 
         g.setColor(Color.BLACK);
-        g.fillRect(180,cFrame.getHeight()-90, 240,13);
+        g.fillRect(_3+147,cFrame.getHeight()-90, 240,13);
         g.setColor(Color.white);
-        g.fillRect(180,cFrame.getHeight()-90, (int) (240*p_own.getHpPercent()),13);
+        g.fillRect(_3+147,cFrame.getHeight()-90, (int) (240*p_own.getHpPercent()),13);
 
         g.setColor(Color.BLACK);
-        g.fillRect(180,cFrame.getHeight()-100,220,8);
+        g.fillRect(_3+147,cFrame.getHeight()-100,220,8);
         g.setColor(new Color(0xC5C5CE));
-        g.fillRect(180,cFrame.getHeight()-100, (int) (220*p_own.getArmorPercent()),8);
+        g.fillRect(_3+147,cFrame.getHeight()-100, (int) (220*p_own.getArmorPercent()),8);
 
         Player p = getGame().getPlayerOwn();
         g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
         g.setColor(Color.WHITE);
-        g.drawString(p.getUsername(),180,cFrame.getHeight()-115);
+        g.drawString(p.getUsername(),_3+147,cFrame.getHeight()-115);
 
 //        g.setColor(new Color(0,0,0,70));
 //        g.fillRect(913,cFrame.getHeight()-180,320,110);
         BufferedImage FGimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/F.png"));
-        g.drawImage(FGimg,813,cFrame.getHeight()-150,this);
+        g.drawImage(FGimg,_97-427,cFrame.getHeight()-150,this);
 
         BufferedImage Gimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/G.png"));
-        g.drawImage(Gimg,883,cFrame.getHeight()-140,200,70,this);
+        g.drawImage(Gimg,_97-360,cFrame.getHeight()-140,200,70,this);
 
         g.setColor(Color.white);
         g.setFont(new Font("Kanit Light", Font.PLAIN, 50));
-        g.drawString(getPlayerOwn().getAmmoRemain()+"",1115,cFrame.getHeight()-100);
+        String amm = getPlayerOwn().getAmmoRemain()+"";
+        g.drawString(amm+"",_97-((amm.length()*50)/2)-80,cFrame.getHeight()-100);
         g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
-        g.drawString("120",1163,cFrame.getHeight()-80);
+        g.drawString("=-=",_97-80,cFrame.getHeight()-80);
 //        g.setColor(Color.white);
 //        g.drawString("120",1113,cFrame.getHeight()-80);
 

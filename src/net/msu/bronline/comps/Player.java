@@ -23,12 +23,17 @@ public class Player {
     int hp = 100;
     int armor = 50;
     int armor_type = 1;
+    int score = 0;
 
     BufferedImage cimg;
     Scene scene;
     String username = "Player";
     boolean dead = false;
     int c_r = (int) (1 + 8*Math.random());
+
+    public void setScore(int score) {
+        this.score = score;
+    }
 
     public int getCharacterID() {
         return c_r;
@@ -180,7 +185,7 @@ public class Player {
         double deg = Math.toDegrees(atan);
         return deg;
     }
-    public void hurt(int dmg){
+    public void hurt(int dmg, String name){
         if(dead) return;
         if(armor > 0){
             armor-=dmg;
@@ -193,14 +198,21 @@ public class Player {
             hp -= (dmg*1.3);
 
             if(hp <= 0) {
-                playerDead();
+                playerDead(name);
             }
         }
     }
-    public void playerDead(){
+    public void playerDead(String name){
         hp = 0;
         dead = true;
         i1 = 0;
+        Iterator<Player> ps = new ArrayList<>(Player.getPlayers()).iterator();
+        while (ps.hasNext()){
+            Player p = ps.next();
+            if(p.getUsername().equals(name)){
+                p.setScore(p.getScore()+1);
+            }
+        }
     }
     int i = 0, i1 = 0, a1 = 11, a1_lim = 8;
     public void updateAnimation(){
@@ -283,13 +295,17 @@ public class Player {
         marker.add(m);
     }
 
+    public int getScore() {
+        return score;
+    }
+
     public String getPacket(){
 //        username:player:skin:x:y:mouse_x:mouse_y:hp:armor:armor_type:fireTrigger
-        return "player:"+c_r+ ":" + getX() + ":" + getY() + ":" + getAngle() + ":" + getHp() + ":" + getArmor() + ":" + getArmor_type() + ":" + isDead();
+        return "player:"+c_r+ ":" + getX() + ":" + getY() + ":" + getAngle() + ":" + getHp() + ":" + getArmor() + ":" + getArmor_type() + ":" + isDead() + ":" + getScore();
     }
     public String getPacket(String type){
 //        username:player:skin:x:y:mouse_x:mouse_y:hp:armor:armor_type:fireTrigger
-        return type+":"+c_r+ ":" + getX() + ":" + getY() + ":" + getAngle() + ":" + getHp() + ":" + getArmor() + ":" + getArmor_type() + ":" + isDead();
+        return type+":"+c_r+ ":" + getX() + ":" + getY() + ":" + getAngle() + ":" + getHp() + ":" + getArmor() + ":" + getArmor_type() + ":" + isDead() + ":" + getScore();
     }
     public void updateFromPacket(String[] data){
 //        System.out.println("'"+username + "' : " + "'"+data[0]+"'");
@@ -301,6 +317,7 @@ public class Player {
         armor = Integer.parseInt(data[7]);
         armor_type = Integer.parseInt(data[8]);
         dead = data[9].equalsIgnoreCase("true");
+        score = Integer.parseInt(data[10]);
     }
 
     public static void removePlayer(String name){

@@ -81,7 +81,7 @@ public class Cli_read extends Thread implements Runnable{
                             Player p = ps.next();
 
                             if(data[2].equalsIgnoreCase(p.getUsername())){
-                                p.hurt(dmg);
+                                p.hurt(dmg, data[0]);
                                 break;
                             }
                         }

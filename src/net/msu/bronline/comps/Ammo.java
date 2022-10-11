@@ -82,7 +82,7 @@ public class Ammo {
                 if(getGame().isHosting()){ // ทำงานถ้าเป็น host
                     ClientHandler.broadcastMessage(shooter.getUsername() + ":atk:" + p.getUsername() + ":" + dmg);
 //                    if(p.getUsername().equals(getGame().getPlayerOwn().getUsername()))
-                    p.hurt(dmg);
+                    p.hurt(dmg, shooter.getUsername());
                     break;
                 }
                 return true;
