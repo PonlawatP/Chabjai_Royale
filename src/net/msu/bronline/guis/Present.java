@@ -192,7 +192,8 @@ public class Present extends JPanel {
 
             g.setColor(getColor(p.getCharacterID()));
             String pname = p.getUsername();
-            g.drawRect(getInsidePosition(0, cCanv.getWidth(), 5),getInsidePosition(0, cCanv.getHeight(), 25)+(70*i)+(5*i)-(90/2),70, 70);
+            int px = getInsidePosition(0, cCanv.getWidth(), 5), py = getInsidePosition(0, cCanv.getHeight(), 25)+(70*i)+(5*i)-(90/2);
+            g.drawImage(p.getPlayerImage(), px, py,px+70, py+70, p.getSpriteX(),p.getSpriteY(),p.getSpriteDX(),p.getSpriteDY(), this);
             g.drawString(pname, getInsidePosition(0, cCanv.getWidth(), 5)+70+25, getInsidePosition(0, cCanv.getHeight(), 25)+(70*i)+(5*i));
             i++;
         }

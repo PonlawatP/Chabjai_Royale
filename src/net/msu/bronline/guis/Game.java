@@ -331,6 +331,34 @@ public class Game extends JPanel {
 //        g.setColor(Color.white);
 //        g.drawString("120",1113,cFrame.getHeight()-80);
 
+        int cenplx = getInsidePosition(0, cCanv.getWidth(), 50) - (70/2) - (70*(Player.getPlayers().size()-1)) - (5*(Player.getPlayers().size()-1));
+        int cenply = getInsidePosition(0, cCanv.getHeight(), 2);
+
+        Iterator<Player> ps = new ArrayList<>(Player.getPlayers()).iterator();
+
+        g.setFont(new Font("Kanit Light", Font.BOLD, 16));
+        int ia = 0;
+        while (ps.hasNext()) {
+            if(ia != 0){
+                cenplx += 70 + 5;
+            }
+            Player pl = ps.next();
+            g.drawImage(pl.getPlayerImage(), cenplx, cenply,cenplx+70, cenply+70, pl.getSpriteX()+17,pl.getSpriteY()+11,pl.getSpriteDX()-17,pl.getSpriteDY()-23, this);
+
+            g.setColor(new Color(0xE21E1D1D, true));
+            g.fillRect(cenplx, cenply+70,70, 22);
+            g.setColor(Color.WHITE);
+            String s = pl.getScore()+"";
+            g.drawString(s, cenplx+(70/2)-((s.length()*14)/2), cenply+70+18);
+            g.setColor(getColor(pl.getCharacterID()));
+            g.setStroke(new BasicStroke(3.0f));
+            g.drawRect(cenplx, cenply+70,70, 22);
+            g.setStroke(new BasicStroke(3.0f));
+            g.drawRect(cenplx, cenply,70, 70);
+            ia++;
+        }
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Kanit Light", Font.PLAIN, 14));
         if(dev){
             g.setFont(new Font("Kanit Light", Font.PLAIN, 12));
             int x = 0;
