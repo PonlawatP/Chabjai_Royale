@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+import static net.msu.bronline.funcs.Utils.*;
 import static net.msu.bronline.guis.Game.getGame;
 
 public class Player {
@@ -104,6 +105,31 @@ public class Player {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public boolean isColl(int x, int y){
+        boolean co = false;
+        for (int[][] data : colld_data){
+            boolean t_co = false;
+            for (int i = 0; i < data.length; i++){
+                double v;
+                int[] xy = {x, y};
+
+                if(i+1 == data.length)
+                    v = geMathLinEq(data[i], data[0], xy);
+                else
+                    v = geMathLinEq(data[i], data[i+1], xy);
+
+                if (v < 0) {
+                    t_co = true;
+                }
+            }
+            if(!t_co) {
+                co = true;
+                break;
+            }
+        }
+        return co;
     }
 
     public void moveForward(double x){

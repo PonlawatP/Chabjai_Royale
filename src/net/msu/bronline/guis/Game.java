@@ -371,17 +371,24 @@ public class Game extends JPanel {
     }
     public void run(int m_x, int m_y) {
         if(getGame_status() == 2){
-            if(movements[0]) p_own.moveUp(-1*v_speed);
-            if(movements[1]) p_own.moveForward(-1*v_speed);
-            if(movements[2]) p_own.moveUp(1*v_speed);
-            if(movements[3]) p_own.moveForward(1*v_speed);
-            if(movements[4]) v_speed = 7; else v_speed = 5;
-            if(movements[6]) {
-                p_own.shoot();
-            } else {
-                if(p_own.isFireTrigger()){
-                    p_own.shoot();
-                    p_own.setFireTrigger(false);
+            if(!p_own.isDead()){
+                if(movements[0] && !p_own.isColl(p_own.getX()-14, p_own.getY()+27+((int)(-1*v_speed)))) p_own.moveUp(-1*v_speed);
+                if(movements[1] && !p_own.isColl(p_own.getX()-14+((int)(-1*v_speed)), p_own.getY()+27)) p_own.moveForward(-1*v_speed);
+                if(movements[2] && !p_own.isColl(p_own.getX(), p_own.getY()+27+((int)(1*v_speed)))) p_own.moveUp(1*v_speed);
+                if(movements[3] && !p_own.isColl(p_own.getX()+14+((int)(1*v_speed)), p_own.getY()+27)) p_own.moveForward(1*v_speed);
+                if(movements[4]) v_speed = 7; else v_speed = 5;
+
+
+
+                if(!p_own.isAmmo_reloading()){
+                    if(movements[6]) {
+                        p_own.shoot();
+                    } else {
+                        if(p_own.isFireTrigger()){
+                            p_own.shoot();
+                            p_own.setFireTrigger(false);
+                        }
+                    }
                 }
             }
             if(movements[8]) v_speed = v_speed/2;

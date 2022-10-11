@@ -84,7 +84,23 @@ public class Utils {
         return res;
     }
 
-    public int[][][] colld_data = {
+    public static boolean isColl(int [][] data, int x, int y){
+        int[] xy = {x, y};
+        for (int i = 0; i < data.length; i++){
+            double v;
+
+            if(i+1 == data.length)
+                v = geMathLinEq(data[i], data[0], xy);
+            else
+                v = geMathLinEq(data[i], data[i+1], xy);
+
+            if (v < 0) return true;
+        }
+        return false;
+    }
+
+
+    public static int[][][] colld_data = {
 //            แบ่งเป็นก้อน ค่าจะเก็บเรียงจาก ซ้ายบน->ซ้ายล่าง->ขวาล่าง->ขวาบน
 //
 //            mark จุดเปิด F12 แล้วกด Ctrl+คลิกซ้าย
