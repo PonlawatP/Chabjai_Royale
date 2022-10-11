@@ -389,7 +389,10 @@ public class Game extends JPanel {
                 }
 
                 if(movements[8]) v_speed = v_speed/2;
-                if(movements[9] || p_own.isAmmo_reloading() || p_own.getAmmoRemain() == 0) p_own.reloadAmmo();
+                if(movements[9] || p_own.isAmmo_reloading() || p_own.getAmmoRemain() == 0) {
+                    p_own.setAmmo(0);
+                    p_own.reloadAmmo();
+                }
             }
 
             this.m_x = m_x;

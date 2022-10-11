@@ -34,6 +34,21 @@ public class Scene {
     public void updatePosition(int x, int y){
         this.x = (x+32)-(cCanv.getWidth()/2);
         this.y = (y+42)-(cCanv.getHeight()/2);
+        double posmx = ((double) m_x-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
+        double posmy = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
+
+        if(this.x+(posmx*15*getSize()) < 0){
+            this.x = 0-(posmx*15*getSize());
+        }
+        if(this.y+(posmy*15*getSize()) < 0){
+            this.y = 0-(posmy*15*getSize());
+        }
+        if(this.x+cCanv.getWidth()+(posmx*15*getSize()) > 2000){
+            this.x = 2000-cCanv.getWidth()-(posmx*15*getSize());
+        }
+        if(this.y+cCanv.getHeight()+(posmy*15*getSize()) > 2000){
+            this.y = 2000-cCanv.getHeight()-(posmy*15*getSize());
+        }
     } ///TODO: ทำ Raw x,y ของ scene แยก
 
     double x = 0, y = 0;

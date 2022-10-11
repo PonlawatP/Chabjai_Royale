@@ -139,10 +139,14 @@ public class Player {
     }
 
     public void moveForward(double x){
-        this.x+=x;
+        if(this.x+14+x >= 0 && this.x+64-14+x <= 2000){
+            this.x+=x;
+        }
     }
     public void moveUp(double y){
-        this.y+=y;
+        if(this.y+20+y >= 0 && this.y+64-2+y <= 2000){
+            this.y+=y;
+        }
     }
 
     public boolean isDead() {
@@ -185,6 +189,11 @@ public class Player {
         double deg = Math.toDegrees(atan);
         return deg;
     }
+
+    public void setAmmo(int ammo) {
+        this.ammo = ammo;
+    }
+
     public void hurt(int dmg, String name){
         if(dead) return;
         if(armor > 0){
@@ -217,6 +226,7 @@ public class Player {
     int i = 0, i1 = 0, a1 = 11, a1_lim = 8;
     public void updateAnimation(){
         i++;
+        boolean back = false;
 
         if(dead){
             a1 = 20;
@@ -230,42 +240,54 @@ public class Player {
             }
             return;
         } else {
-            if(ox < x || (ox < x && oy != y)){
-                a1 = 11;
-                a1_lim = 8;
-            } else if(ox > x || (ox > x && oy != y)){
-                a1 = 9;
-                a1_lim = 8;
-            } else if(oy < y){
+//            if(ox < x || (ox < x && oy != y)){
+//                a1 = 11;
+//                a1_lim = 8;
+//            } else if(ox > x || (ox > x && oy != y)){
+//                a1 = 9;
+//                a1_lim = 8;
+//            } else if(oy < y){
+//                a1 = 10;
+//                a1_lim = 8;
+//            } else if(oy > y){
+//                a1 = 8;
+//                a1_lim = 8;
+//            }
+            if (getAngle() >= 45 && getAngle() < 135 ) { //f
+                if(oy > y) back = true;
+
                 a1 = 10;
-                a1_lim = 8;
-            } else if(oy > y){
+            } else if((getAngle() < 180 && getAngle() >= 135 || getAngle() >= -180 && getAngle() < -135)) { //l
+                if(ox < x || (ox < x && oy != y)) back = true;
+
+                a1 = 9;
+            } else if(getAngle() >= -135 && getAngle() < -45 ) { //b
+                if(oy < y) back = true;
+
                 a1 = 8;
-                a1_lim = 8;
+            } else { //r
+                if(ox > x || (ox > x && oy != y)) back = true;
+
+                a1 = 11;
             }
         }
 
         if(i >= 2) {
             i = 0;
 
-//            System.out.println(getAngle());
-//            if(getAngle() <= -135 || getAngle() >= 135){
-//                a1 = 8;
-//                a1_lim = 8;
-//            } else if(getAngle() <= -45){
-//                a1 = 11;
-//                a1_lim = 8;
-//            } else if(getAngle() >= 45){
-//                a1 = 10;
-//                a1_lim = 8;
-//            }
-
             if(ox == x && oy == y){
                 i1 = 0;
             } else {
-                i1++;
-                if(i1 > a1_lim) {
-                    i1 = 0;
+                if(back){
+                    i1--;
+                    if(i1 < 0) {
+                        i1 = a1_lim;
+                    }
+                } else {
+                    i1++;
+                    if(i1 > a1_lim) {
+                        i1 = 0;
+                    }
                 }
             }
         }

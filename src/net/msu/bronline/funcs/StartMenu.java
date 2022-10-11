@@ -82,18 +82,18 @@ class Canv extends Canvas {
         ps.setFrameTime(120);
         ps.getScene().setOpacity(40);
 
-        addMouseWheelListener(new MouseWheelListener() {
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent e) {
-                if(ps.getGame_status() >= 5)
-                    getGame().getScene().setSize((float) (getGame().getScene().getSize()+((e.getWheelRotation()*-1)*.05)));
-                else{
-                    if(ps.getGame_status() == 2){
-                        ps.setScroll(ps.getScroll()+e.getWheelRotation());
-                    }
-                }
-            }
-        });
+//        addMouseWheelListener(new MouseWheelListener() {
+//            @Override
+//            public void mouseWheelMoved(MouseWheelEvent e) {
+//                if(ps.getGame_status() >= 5)
+//                    getGame().getScene().setSize((float) (getGame().getScene().getSize()+((e.getWheelRotation()*-1)*.05)));
+//                else{
+//                    if(ps.getGame_status() == 2){
+//                        ps.setScroll(ps.getScroll()+e.getWheelRotation());
+//                    }
+//                }
+//            }
+//        });
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
