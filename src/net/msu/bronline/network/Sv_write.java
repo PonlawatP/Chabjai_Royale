@@ -24,10 +24,10 @@ public class Sv_write extends Thread implements Runnable{
     }
 
     public void sendMessage(String mess) {
-        if (st.empty()){
-            st.add(0, mess);
-        } else {
+        try {
             st.add(0, st.pop()+"::ln::"+mess);
+        } catch (EmptyStackException e){
+            st.add(0, mess);
         }
     }
     public void sendMessageToServer(){

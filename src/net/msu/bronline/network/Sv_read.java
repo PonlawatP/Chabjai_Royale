@@ -37,8 +37,9 @@ public class Sv_read extends Thread implements Runnable{
                         while (ps.hasNext()) {
                             Player p = ps.next();
                             if(data[0].equalsIgnoreCase(p.getUsername())){
-                                int x = Integer.parseInt(data[2]), y = Integer.parseInt(data[3]), dx = Integer.parseInt(data[4]), dy = Integer.parseInt(data[5]);
-                                p.shoot(x,y,dx,dy, false);
+                                int x = Integer.parseInt(data[2]), y = Integer.parseInt(data[3]);
+                                double ang = Double.parseDouble(data[4]);
+                                p.shoot(x,y,ang, false);
                                 break;
                             }
                         }

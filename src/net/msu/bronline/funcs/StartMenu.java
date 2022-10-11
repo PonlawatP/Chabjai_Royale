@@ -59,8 +59,8 @@ class Canv extends Canvas {
     JFrame cFrame;
     Present ps;
     int m_x = 0, m_y = 0;
-    //w,a,s,d,shift,tab,lClick,rClick,ctrl
-    boolean[] movements = {false,false,false,false,false,false,false,false,false};
+    //w,a,s,d,shift,tab,lClick,rClick,ctrl,r
+    boolean[] movements = {false,false,false,false,false,false,false,false,false,false};
 
     int cCur = Cursor.DEFAULT_CURSOR;
 
@@ -298,6 +298,7 @@ class Canv extends Canvas {
                 if(e.getKeyCode() == KeyEvent.VK_A) movements[1] = true;
                 if(e.getKeyCode() == KeyEvent.VK_S) movements[2] = true;
                 if(e.getKeyCode() == KeyEvent.VK_D) movements[3] = true;
+                if(e.getKeyCode() == KeyEvent.VK_R) movements[9] = true;
             }
 
             @Override
@@ -310,6 +311,7 @@ class Canv extends Canvas {
                 if(e.getKeyCode() == KeyEvent.VK_A) movements[1] = false;
                 if(e.getKeyCode() == KeyEvent.VK_S) movements[2] = false;
                 if(e.getKeyCode() == KeyEvent.VK_D) movements[3] = false;
+                if(e.getKeyCode() == KeyEvent.VK_R) movements[9] = false;
             }
         });
     }
