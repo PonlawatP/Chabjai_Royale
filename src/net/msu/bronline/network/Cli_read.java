@@ -40,18 +40,6 @@ public class Cli_read extends Thread implements Runnable{
                             Player p = ps.next();
                             p.updateFromPacket(data);
                         }
-                    } else if (data[1].equalsIgnoreCase("shoot")){
-                        Iterator<Player> ps = Player.getPlayers().iterator();
-                        while (ps.hasNext()) {
-                            Player p = ps.next();
-                            if(data[0].equalsIgnoreCase(getGame().getPlayerOwn().getUsername())) continue;
-
-                            if(data[0].equalsIgnoreCase(p.getUsername())){
-                                int x = Integer.parseInt(data[2]), y = Integer.parseInt(data[3]), dx = Integer.parseInt(data[4]), dy = Integer.parseInt(data[5]);
-                                p.shoot(x,y,dx,dy, false);
-                                break;
-                            }
-                        }
                     } else if (data[1].equalsIgnoreCase("load")){
                         Player p = new Player(getGame().getScene(), data[0], Integer.parseInt(data[2]));
                         p.updateFromPacket(data);
@@ -86,6 +74,30 @@ public class Cli_read extends Thread implements Runnable{
                         if(!data[0].equals("host")) continue;
                         cp.closeEverything();
                         cp.exitGame();
+                    } else if (data[1].equalsIgnoreCase("atk")) {
+                        int dmg = Integer.parseInt(data[3]);
+                        Iterator<Player> ps = Player.getPlayers().iterator();
+                        while (ps.hasNext()) {
+                            Player p = ps.next();
+
+                            if(data[2].equalsIgnoreCase(p.getUsername())){
+                                p.hurt(dmg, data[0]);
+                                break;
+                            }
+                        }
+                    } else if (data[1].equalsIgnoreCase("shoot")){
+                        Iterator<Player> ps = Player.getPlayers().iterator();
+                        while (ps.hasNext()) {
+                            Player p = ps.next();
+                            if(data[0].equalsIgnoreCase(getGame().getPlayerOwn().getUsername())) continue;
+
+                            if(data[0].equalsIgnoreCase(p.getUsername())){
+                                int x = Integer.parseInt(data[2]), y = Integer.parseInt(data[3]);
+                                double ang = Double.parseDouble(data[4]);
+                                p.shoot(x,y,ang, false);
+                                break;
+                            }
+                        }
                     }
                 }
 

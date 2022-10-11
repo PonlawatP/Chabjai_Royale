@@ -223,11 +223,11 @@ public class Game extends JPanel {
             g.setColor(Color.BLACK);
             g.fillRoundRect(p.getPosX(),p.getPosY()+4, 64, 3, 2, 2);
             g.setColor(new Color(0xC5C5CE));
-            g.fillRoundRect(p.getPosX(),p.getPosY()+4, 64, 3, 2, 2);
+            g.fillRoundRect(p.getPosX(),p.getPosY()+4, (int) (64*p.getArmorPercent()), 3, 2, 2);
             g.setColor(Color.BLACK);
             g.fillRoundRect(p.getPosX(),p.getPosY()+7, 64, 3, 2, 2);
             g.setColor(new Color(0xA11414));
-            g.fillRoundRect(p.getPosX(),p.getPosY()+7, 64, 3, 2, 2);
+            g.fillRoundRect(p.getPosX(),p.getPosY()+7, (int) (64*p.getHpPercent()), 3, 2, 2);
 
             g.setColor(Color.BLACK);
             g.drawString(p.getUsername(), p.getPosX()+(64/2)-(((14*p.getUsername().length())/2)/2)+1, p.getPosY()+1);
@@ -250,44 +250,40 @@ public class Game extends JPanel {
 
         int calc_cenx = p.getPosX()+(64/2)-(p.getPosX()+(64/2)-p.getMouseX());
         int calc_ceny = p.getPosY()+42-(p.getPosY()+42-p.getMouseY());
-        calc_cenx -= mpalx;
-        calc_ceny -= mpaly;
+        calc_cenx += mpalx;
+        calc_ceny += mpaly;
 
         Iterator<Ammo> ams = new ArrayList<>(p.getAmmo()).iterator();
-        g.setColor(Color.ORANGE);
         while (ams.hasNext()){
             Ammo a = ams.next();
+            g.setColor(a.getColor());
             double posax = ((double) m_x-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
             double posay = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
 
             int ax = a.getDimStart()[0]+(64/2)-5, ay = a.getDimStart()[1]+42-5;
-            int adx = a.getDimStop()[0], ady = a.getDimStop()[1];
             ax += (scene.getX()*-1);
             ay += (scene.getY()*-1);
-            adx += (scene.getX()*-1);
-            ady += (scene.getY()*-1);
-            ax -= mpalx;
-            ay -= mpaly;
-            adx -= mpalx;
-            ady -= mpaly;
+//            ax -= mpalx;
+//            ay -= mpaly;
+            double rx = 65 * Math.cos(Math.toRadians(a.getAngle())), ry = 65 * Math.sin(Math.toRadians(a.getAngle()));
 
             if(dev){
-                g.drawLine(ax+5, ay+5, adx, ady);
+                g.drawLine(ax+5, ay+5, (int) (ax+5+rx), (int) (ay+5+ry));
                 g.drawString("x: "+a.getDimStart()[0] + " y: " + a.getDimStart()[1], ax+15, ay);
-                g.drawString("dx: "+a.getDimStop()[0] + " dy: " + a.getDimStop()[1], ax+15, ay+20);
-                g.drawString("px: "+posax + " py: " + posay, ax+15, ay+40);
+                g.drawString("px: "+posax + " py: " + posay, ax+15, ay+20);
             }
             g.fillOval(ax, ay, 10, 10);
         }
 
         if(dev){
             g.setColor(Color.BLACK);
-            g.drawLine(p.getPosX()+(64/2), p.getPosY()+42, calc_cenx, calc_ceny);
+            double rx = 65 * Math.cos(Math.toRadians(p.getAngle())), ry = 65 * Math.sin(Math.toRadians(p.getAngle()));
+            g.drawLine(p.getPosX()+(64/2), p.getPosY()+42, (int) (p.getPosX()+(64/2)+rx), (int) (p.getPosY()+42+ry));
             g.drawOval(p.getPosX()-(64/2), p.getPosY()-(64-42), 64*2, (64*2));
             g.drawString("scene_x:" + (scene.getRawX()+m_x) + " scene_y: " + (scene.getRawY()+m_y), p.getPosX(), p.getPosY()-35);
 
             g.drawString("x:" + (p.getPosX()+(64/2)) + " y: " + (p.getPosY()+42) + " [" + (p.getPosX()+(64/2)+p.getMouseX()) + ":" + (p.getPosY()+42+p.getMouseY()) + "]", p.getPosX(), p.getPosY()+75);
-            g.drawString("x:" + p.getMouseX() + " y:" + p.getMouseY(), p.getPosX(), p.getPosY()+95);
+            g.drawString("x:" + p.getMouseX() + " y:" + p.getMouseY() + " | " + rx + " : " + ry, p.getPosX(), p.getPosY()+95);
             g.drawString("x:" + calc_cenx + " y:" + calc_ceny + " | x:" + ((p.getPosX()+(64/2))-calc_cenx) + " y:" + ((p.getPosY()+42)-calc_ceny), p.getPosX(), p.getPosY()+115);
 
             g.drawString("deg: " + getPlayerOwn().getAngle(), p.getPosX(), p.getPosY()+135);
@@ -298,37 +294,40 @@ public class Game extends JPanel {
         Graphics2D g = (Graphics2D) ge;
         //ui-code here
 
+        int _3 = getInsidePosition(0, cCanv.getWidth(), 3);
+        int _97 = getInsidePosition(0, cCanv.getWidth(), 97);
         BufferedImage Fimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/F.png"));
-        g.drawImage(Fimg,33,cFrame.getHeight()-150,this);
+        g.drawImage(Fimg,_3,cFrame.getHeight()-150,this);
 
         g.setColor(Color.BLACK);
-        g.fillRect(180,cFrame.getHeight()-90,240,13);
+        g.fillRect(_3+147,cFrame.getHeight()-90, 240,13);
         g.setColor(Color.white);
-        g.fillRect(180,cFrame.getHeight()-90,240,13);
+        g.fillRect(_3+147,cFrame.getHeight()-90, (int) (240*p_own.getHpPercent()),13);
 
         g.setColor(Color.BLACK);
-        g.fillRect(180,cFrame.getHeight()-100,220,8);
+        g.fillRect(_3+147,cFrame.getHeight()-100,220,8);
         g.setColor(new Color(0xC5C5CE));
-        g.fillRect(180,cFrame.getHeight()-100,220,8);
+        g.fillRect(_3+147,cFrame.getHeight()-100, (int) (220*p_own.getArmorPercent()),8);
 
         Player p = getGame().getPlayerOwn();
         g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
         g.setColor(Color.WHITE);
-        g.drawString(p.getUsername(),180,cFrame.getHeight()-115);
+        g.drawString(p.getUsername(),_3+147,cFrame.getHeight()-115);
 
 //        g.setColor(new Color(0,0,0,70));
 //        g.fillRect(913,cFrame.getHeight()-180,320,110);
         BufferedImage FGimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/F.png"));
-        g.drawImage(FGimg,813,cFrame.getHeight()-150,this);
+        g.drawImage(FGimg,_97-427,cFrame.getHeight()-150,this);
 
         BufferedImage Gimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/G.png"));
-        g.drawImage(Gimg,883,cFrame.getHeight()-140,200,70,this);
+        g.drawImage(Gimg,_97-360,cFrame.getHeight()-140,200,70,this);
 
         g.setColor(Color.white);
         g.setFont(new Font("Kanit Light", Font.PLAIN, 50));
-        g.drawString(getPlayerOwn().getAmmoRemain()+"",1115,cFrame.getHeight()-100);
+        String amm = getPlayerOwn().getAmmoRemain()+"";
+        g.drawString(amm+"",_97-((amm.length()*50)/2)-80,cFrame.getHeight()-100);
         g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
-        g.drawString("120",1163,cFrame.getHeight()-80);
+        g.drawString("=-=",_97-80,cFrame.getHeight()-80);
 //        g.setColor(Color.white);
 //        g.drawString("120",1113,cFrame.getHeight()-80);
 
@@ -378,8 +377,6 @@ public class Game extends JPanel {
                 if(movements[3] && !p_own.isColl(p_own.getX()+14+((int)(1*v_speed)), p_own.getY()+27)) p_own.moveForward(1*v_speed);
                 if(movements[4]) v_speed = 7; else v_speed = 5;
 
-
-
                 if(!p_own.isAmmo_reloading()){
                     if(movements[6]) {
                         p_own.shoot();
@@ -390,8 +387,10 @@ public class Game extends JPanel {
                         }
                     }
                 }
+
+                if(movements[8]) v_speed = v_speed/2;
+                if(movements[9] || p_own.isAmmo_reloading() || p_own.getAmmoRemain() == 0) p_own.reloadAmmo();
             }
-            if(movements[8]) v_speed = v_speed/2;
 
             this.m_x = m_x;
             this.m_y = m_y;
@@ -432,9 +431,10 @@ public class Game extends JPanel {
     public int isMouseOnStart(int x, int y){
         if(game_status == 0){
             if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 0;
-        } else if(game_status == 2){
-
         }
+//        else if(game_status == 2){
+//
+//        }
 
         return -1;
     }

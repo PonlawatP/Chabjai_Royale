@@ -24,11 +24,17 @@ public class Player {
     int hp = 100;
     int armor = 50;
     int armor_type = 1;
+    int score = 0;
 
     BufferedImage cimg;
     Scene scene;
     String username = "Player";
+    boolean dead = false;
     int c_r = (int) (1 + 8*Math.random());
+
+    public void setScore(int score) {
+        this.score = score;
+    }
 
     public int getCharacterID() {
         return c_r;
@@ -57,12 +63,32 @@ public class Player {
     }
 
     int ammo = 37;
+    boolean ammo_reloading = false;
+    int ammo_re_thr = 0;
+    int ammo_re_lim = 100;
     int ammo_cld = 0;
     int re_ammo_cld = 0;
     int ammo_cld_lim = 5;
 
     public int getAmmoRemain(){
         return ammo;
+    }
+
+    public boolean isAmmo_reloading() {
+        return ammo_reloading;
+    }
+
+    public boolean reloadAmmo(){
+        ammo_reloading = true;
+        if(ammo_re_thr < ammo_re_lim){
+            ammo_re_thr++;
+            return false;
+        }
+        ammo_re_thr = 0;
+        ammo = 37;
+        ammo_reloading = false;
+
+        return true;
     }
 
     public BufferedImage getPlayerImage(){
@@ -82,6 +108,9 @@ public class Player {
     public void setHp(int hp) {
         this.hp = hp;
     }
+    public double getHpPercent() {
+        return hp/100f;
+    }
 
     public int getArmor() {
         return armor;
@@ -89,6 +118,9 @@ public class Player {
 
     public int getArmor_type() {
         return armor_type;
+    }
+    public double getArmorPercent(){
+        return (getArmor()/(getArmor_type() == 1 ? 50f : 100f));
     }
 
     public void setArmor(int armor) {
@@ -138,6 +170,15 @@ public class Player {
     public void moveUp(double y){
         this.y+=y;
     }
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    public void setDead(boolean dead) {
+        this.dead = dead;
+    }
+
     public int getPosX(){
         return (int)(((scene.getX()*-1))+x);
     }
@@ -161,30 +202,73 @@ public class Player {
         m_x = x;
         m_y = y;
     }
+    double ang = -999;
     public double getAngle(){
+        if(ang != -999) return ang;
         double tx = m_x-(getPosX()+(64/2));
         double ty = m_y-(getPosY()+42);
         double atan = Math.atan2(ty,tx);
         double deg = Math.toDegrees(atan);
         return deg;
     }
+    public void hurt(int dmg, String name){
+        if(dead) return;
+        if(armor > 0){
+            armor-=dmg;
+
+            if(armor < 0){
+                hp += (armor*1.3);
+                armor = 0;
+            }
+        } else {
+            hp -= (dmg*1.3);
+
+            if(hp <= 0) {
+                playerDead(name);
+            }
+        }
+    }
+    public void playerDead(String name){
+        hp = 0;
+        dead = true;
+        i1 = 0;
+        Iterator<Player> ps = new ArrayList<>(Player.getPlayers()).iterator();
+        while (ps.hasNext()){
+            Player p = ps.next();
+            if(p.getUsername().equals(name)){
+                p.setScore(p.getScore()+1);
+            }
+        }
+    }
     int i = 0, i1 = 0, a1 = 11, a1_lim = 8;
-    int sprte_pattern = 0;
     public void updateAnimation(){
         i++;
 
-        if(ox < x || (ox < x && oy != y)){
-            a1 = 11;
-            a1_lim = 8;
-        } else if(ox > x || (ox > x && oy != y)){
-            a1 = 9;
-            a1_lim = 8;
-        } else if(oy < y){
-            a1 = 10;
-            a1_lim = 8;
-        } else if(oy > y){
-            a1 = 8;
-            a1_lim = 8;
+        if(dead){
+            a1 = 20;
+            a1_lim = 5;
+            if(i >= 2) {
+                i = 0;
+                i1++;
+                if (i1 > a1_lim) {
+                    i1 = a1_lim;
+                }
+            }
+            return;
+        } else {
+            if(ox < x || (ox < x && oy != y)){
+                a1 = 11;
+                a1_lim = 8;
+            } else if(ox > x || (ox > x && oy != y)){
+                a1 = 9;
+                a1_lim = 8;
+            } else if(oy < y){
+                a1 = 10;
+                a1_lim = 8;
+            } else if(oy > y){
+                a1 = 8;
+                a1_lim = 8;
+            }
         }
 
         if(i >= 2) {
@@ -206,7 +290,9 @@ public class Player {
                 i1 = 0;
             } else {
                 i1++;
-                if(i1 > a1_lim) i1 = 0;
+                if(i1 > a1_lim) {
+                    i1 = 0;
+                }
             }
         }
         ox = x;
@@ -235,25 +321,29 @@ public class Player {
         marker.add(m);
     }
 
+    public int getScore() {
+        return score;
+    }
+
     public String getPacket(){
 //        username:player:skin:x:y:mouse_x:mouse_y:hp:armor:armor_type:fireTrigger
-        return "player:"+c_r+ ":" + getX() + ":" + getY() + ":" + getMouseX() + ":" + getMouseY() + ":" + getHp() + ":" + getArmor() + ":" + getArmor_type() + ":" + isFireTrigger();
+        return "player:"+c_r+ ":" + getX() + ":" + getY() + ":" + getAngle() + ":" + getHp() + ":" + getArmor() + ":" + getArmor_type() + ":" + isDead() + ":" + getScore();
     }
     public String getPacket(String type){
 //        username:player:skin:x:y:mouse_x:mouse_y:hp:armor:armor_type:fireTrigger
-        return type+":"+c_r+ ":" + getX() + ":" + getY() + ":" + getMouseX() + ":" + getMouseY() + ":" + getHp() + ":" + getArmor() + ":" + getArmor_type() + ":" + isFireTrigger();
+        return type+":"+c_r+ ":" + getX() + ":" + getY() + ":" + getAngle() + ":" + getHp() + ":" + getArmor() + ":" + getArmor_type() + ":" + isDead() + ":" + getScore();
     }
     public void updateFromPacket(String[] data){
 //        System.out.println("'"+username + "' : " + "'"+data[0]+"'");
         if(!(data[0].equalsIgnoreCase(username) && data[1].equalsIgnoreCase("player"))) return;
         x = Integer.parseInt(data[3]);
         y = Integer.parseInt(data[4]);
-        m_x = Integer.parseInt(data[5]);
-        m_y = Integer.parseInt(data[6]);
-        hp = Integer.parseInt(data[7]);
-        armor = Integer.parseInt(data[8]);
-        armor_type = Integer.parseInt(data[9]);
-        fireTrigger = data[10].equalsIgnoreCase("true");
+        ang = Double.parseDouble(data[5]);
+        hp = Integer.parseInt(data[6]);
+        armor = Integer.parseInt(data[7]);
+        armor_type = Integer.parseInt(data[8]);
+        dead = data[9].equalsIgnoreCase("true");
+        score = Integer.parseInt(data[10]);
     }
 
     public static void removePlayer(String name){
@@ -273,16 +363,16 @@ public class Player {
         return amms;
     }
 
-    public boolean shoot(int x, int y, int m_x, int m_y, boolean senddata) {
-        Ammo am = new Ammo(this, x, y, m_x, m_y);
+    public boolean shoot(int x, int y, double angle, boolean senddata) {
+        Ammo am = new Ammo(this, x, y, angle);
         getAmmo().add(am);
 
         if(!senddata) return true;
 
         if (getGame().isHosting()) {
-            ClientHandler.broadcastMessage(getUsername() + ":shoot:" + x + ":" + y + ":" + m_x + ":" + m_y);
+            ClientHandler.broadcastMessage(getUsername() + ":shoot:" + x + ":" + y + ":" + getAngle());
         } else {
-            getGame().getClientProgram().getCwrite().sendMessage(getUsername() + ":shoot:" + x + ":" + y + ":" + m_x + ":" + m_y);
+            getGame().getClientProgram().getCwrite().sendMessage(getUsername() + ":shoot:" + x + ":" + y + ":" + getAngle());
         }
         return true;
     }
@@ -293,7 +383,7 @@ public class Player {
             } else {
                 ammo_cld = 0;
                 ammo--;
-                return shoot(x, y, m_x, m_y, true);
+                return shoot(x, y, getAngle(), true);
             }
         }
         return false;
