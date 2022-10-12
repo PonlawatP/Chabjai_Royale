@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import static net.msu.bronline.guis.Game.getGame;
@@ -31,6 +32,20 @@ public class Player {
     String username = "Player";
     boolean dead = false;
     int c_r = (int) (1 + 8*Math.random());
+    public List<Integer> c_r_t = new ArrayList<>();
+    public int randomCharID(){
+        c_r = (int) (1 + 8*Math.random());
+        for (int i : c_r_t){
+            if(i == c_r) return randomCharID();
+        }
+        try {
+            cimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/cha/chars_"+c_r+".png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return c_r;
+    }
 
     public void setScore(int score) {
         this.score = score;
@@ -53,6 +68,9 @@ public class Player {
     public Player(Scene scene) throws IOException {
         this.scene = scene;
         cimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/cha/chars_"+c_r+".png"));
+
+        x = 64+(int) (Math.random()*(2000-128));
+        y = 64+(int) (Math.random()*(2000-128));
     }
 
     public Player(Scene scene, String username, int chr) throws IOException {
@@ -223,7 +241,7 @@ public class Player {
             if(p.getUsername().equalsIgnoreCase(name)){
                 p.setScore(p.getScore()+1);
 
-                scene.setPlayerTarget(p);
+                if(getGame().getPlayerOwn().getUsername().equals(p.getUsername())) scene.setPlayerTarget(p);
                 if(p.getScore() >= 6){
                     getGame().getScene().winnerScene(p);
                     ClientHandler.broadcastMessage(p.getUsername() + ":act:ended");

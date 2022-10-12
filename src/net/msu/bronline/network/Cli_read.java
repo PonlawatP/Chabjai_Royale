@@ -43,10 +43,12 @@ public class Cli_read extends Thread implements Runnable{
                     } else if (data[1].equalsIgnoreCase("load")){
                         Player p = new Player(getGame().getScene(), data[0], Integer.parseInt(data[2]));
                         p.updateFromPacket(data);
+
                         Player.getPlayers().add(cnt, p);
+                        getGame().getPlayerOwn().randomCharID();
                         cnt++;
                     } else if (data[1].equalsIgnoreCase("join")){
-                            if(data[0].equals(cp.getUsername())) continue;
+                            if(data[0].equals(getGame().getPlayerOwn().getUsername())) continue;
                             Player p = new Player(getGame().getScene(), data[0], Integer.parseInt(data[2]));
                             p.updateFromPacket(data);
                             Player.getPlayers().add(Player.getPlayers().size(), p);

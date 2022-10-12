@@ -39,7 +39,7 @@ public class Game extends JPanel {
     int frameTime = 0;
     boolean start = false;
     String roomName;
-    int p_amount = 16;
+    int p_amount = 8;
     int game_status = 0;
     String hostUser = "";
 
