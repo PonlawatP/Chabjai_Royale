@@ -150,18 +150,16 @@ public class Scene {
         getGame().setGame_status(3);
         targ_p = p;
 
-        if(getGame().isHosting()){
+        if(getGame().isHosting()) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    while (true){
-                        try {
-                            Thread.sleep(10000);
-                            ClientHandler.broadcastMessage("host:shutdown");
-                            getGame().stopMode();
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
+                    try {
+                        Thread.sleep(10000);
+//                            ClientHandler.broadcastMessage("host:shutdown");
+                        getGame().stopMode();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
                     }
                 }
             }).start();

@@ -264,11 +264,14 @@ public class Player {
             if(p.getUsername().equalsIgnoreCase(name)){
                 p.setScore(p.getScore()+1);
 
-                if(getGame().getPlayerOwn().getUsername().equals(p.getUsername())) scene.setPlayerTarget(p);
-                if(p.getScore() >= 6){
+//                System.out.println(p.getUsername() + " : " + getGame().getPlayerOwn().getUsername() + " : " + !p.getUsername().equalsIgnoreCase(getGame().getPlayerOwn().getUsername()));
+                if(!p.getUsername().equalsIgnoreCase(getGame().getPlayerOwn().getUsername())) scene.setPlayerTarget(p);
+                if(p.getScore() >= 2){
                     getGame().getScene().winnerScene(p);
-                    ClientHandler.broadcastMessage(p.getUsername() + ":act:ended");
-                    ClientHandler.broadcastMessage(p.getUsername() + ":winner");
+                    if(getGame().isHosting()){
+                        ClientHandler.broadcastMessage(p.getUsername() + ":act:ended");
+                        ClientHandler.broadcastMessage(p.getUsername() + ":winner");
+                    }
                 }
                 return;
             }

@@ -23,10 +23,13 @@ public class Sv_write extends Thread implements Runnable{
     }
 
     public void sendMessage(String mess) {
-        if (st.empty()) {
+        try {
+            if (!st.empty())
+                st.add(0, st.pop()+"::ln::"+mess);
+            else
+                st.add(0, mess);
+        } catch (EmptyStackException ee){
             st.add(0, mess);
-        } else {
-            st.add(0, st.pop()+"::ln::"+mess);
         }
     }
     public void sendMessageToServer() {
@@ -70,7 +73,7 @@ public class Sv_write extends Thread implements Runnable{
                 }
 
                 sendMessageToServer();
-                sleep(2);
+                sleep(10);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

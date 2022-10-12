@@ -114,13 +114,14 @@ class Canv extends Canvas {
                                 getGame().startMode();
                             }
                             if (cl == 1) { //join
-                                try {
-                                    ps.is_btn_load = true;
-                                    getGame().resetGame();
-                                } catch (NullPointerException ex){
-                                    ps.is_btn_load = false;
-                                    return;
-                                }
+                                ps.is_btn_load = true;
+//                                try {
+//                                    ps.is_btn_load = true;
+//                                    getGame().resetGame();
+//                                } catch (NullPointerException ex){
+//                                    ps.is_btn_load = false;
+//                                    return;
+//                                }
                                 if(movements[4]){
                                     movements[4] = false;
                                     JTextField ip = new JTextField();

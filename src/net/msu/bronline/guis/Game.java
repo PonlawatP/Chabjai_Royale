@@ -455,6 +455,7 @@ public class Game extends JPanel {
             }
 
             scene.updateMouse(m_x, m_y);
+//            System.out.println((scene.getPlayerTarget() == null) + " : " + ((scene.getPlayerTarget() != null) ? scene.getPlayerTarget().getUsername().equals(getPlayerOwn().getUsername()) : ""));
             if(scene.getPlayerTarget() == null || scene.getPlayerTarget().getUsername().equals(getPlayerOwn().getUsername()))
                 scene.updatePosition(getPlayerOwn().getX(), getPlayerOwn().getY());
             else
@@ -498,8 +499,13 @@ public class Game extends JPanel {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    boolean f = false;
                     try {
                         for (int i = 5; i >= 0; i--) {
+                            if(getGame() == null || getGame().getGame_status() != 1) {
+                                f = true;
+                                break;
+                            }
                             ClientHandler.broadcastMessage("host:desc:Starting in " + i);
                             setStatus_desc("Starting in " + i);
                             Thread.sleep(1000);
@@ -507,7 +513,7 @@ public class Game extends JPanel {
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
-
+                    if(f) return;
                     ClientHandler.broadcastMessage("host:act:start");
                     setGame_status(2);
                     getPresent().setGame_status(5);
