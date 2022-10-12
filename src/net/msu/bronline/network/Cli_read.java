@@ -98,6 +98,26 @@ public class Cli_read extends Thread implements Runnable{
                                 break;
                             }
                         }
+                    } else if (data[1].equalsIgnoreCase("respawn")){
+                        if(getGame().getGame_status() == 3) continue;
+                        Iterator<Player> ps = Player.getPlayers().iterator();
+                        while (ps.hasNext()) {
+                            Player p = ps.next();
+                            if(data[0].equalsIgnoreCase(p.getUsername())){
+                                int x = Integer.parseInt(data[2]), y = Integer.parseInt(data[3]);
+                                p.respawn(x,y);
+                                break;
+                            }
+                        }
+                    } else if (data[1].equalsIgnoreCase("winner")){
+                        Iterator<Player> ps = Player.getPlayers().iterator();
+                        while (ps.hasNext()) {
+                            Player p = ps.next();
+                            if(data[0].equalsIgnoreCase(p.getUsername())){
+                                getGame().getScene().winnerScene(p);
+                                break;
+                            }
+                        }
                     }
                 }
 

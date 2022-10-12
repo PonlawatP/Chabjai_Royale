@@ -292,6 +292,14 @@ public class Game extends JPanel {
 
     public void drawUI(Graphics ge) throws IOException{
         Graphics2D g = (Graphics2D) ge;
+        //win
+        if(getGame_status() == 3){
+            int _10 = getInsidePosition(0, cCanv.getHeight(), 10);
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, cCanv.getWidth(), _10);
+            g.fillRect(0, cCanv.getHeight()-_10, cCanv.getWidth(), _10);
+            return;
+        }
         //ui-code here
 
         int _3 = getInsidePosition(0, cCanv.getWidth(), 3);
@@ -378,7 +386,6 @@ public class Game extends JPanel {
                 x++;
             }
         }
-
     }
 
     public int getGame_status() {
@@ -397,27 +404,28 @@ public class Game extends JPanel {
     public void runFunction(){
     }
     public void run(int m_x, int m_y) {
-        if(getGame_status() == 2){
-            if(!p_own.isDead()){
-                if(movements[0]) p_own.moveUp(-1*v_speed);
-                if(movements[1]) p_own.moveForward(-1*v_speed);
-                if(movements[2]) p_own.moveUp(1*v_speed);
-                if(movements[3]) p_own.moveForward(1*v_speed);
-                if(movements[4]) v_speed = 7; else v_speed = 5;
+        if(getGame_status() == 2 || getGame_status() == 3) {
+            if (!p_own.isDead()) {
+                if (movements[0]) p_own.moveUp(-1 * v_speed);
+                if (movements[1]) p_own.moveForward(-1 * v_speed);
+                if (movements[2]) p_own.moveUp(1 * v_speed);
+                if (movements[3]) p_own.moveForward(1 * v_speed);
+                if (movements[4]) v_speed = 7;
+                else v_speed = 5;
 
-                if(!p_own.isAmmo_reloading()){
-                    if(movements[6]) {
+                if (!p_own.isAmmo_reloading()) {
+                    if (movements[6]) {
                         p_own.shoot();
                     } else {
-                        if(p_own.isFireTrigger()){
+                        if (p_own.isFireTrigger()) {
                             p_own.shoot();
                             p_own.setFireTrigger(false);
                         }
                     }
                 }
 
-                if(movements[8]) v_speed = v_speed/2;
-                if(movements[9] || p_own.isAmmo_reloading() || p_own.getAmmoRemain() == 0) {
+                if (movements[8]) v_speed = v_speed / 2;
+                if (movements[9] || p_own.isAmmo_reloading() || p_own.getAmmoRemain() == 0) {
                     p_own.setAmmo(0);
                     p_own.reloadAmmo();
                 }

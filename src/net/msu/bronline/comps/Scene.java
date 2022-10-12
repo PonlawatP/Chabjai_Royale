@@ -7,6 +7,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import static net.msu.bronline.guis.Game.getGame;
+
 public class Scene {
     JFrame cFrame;
     Canvas cCanv;
@@ -131,6 +133,12 @@ public class Scene {
         double posmy = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
         return ingame ? (int)(p + (posmy*15*getSize())) : (int)y+cCanv.getHeight();
 //        return (int)(p*getZoomCanvas());
+    }
+    Player targ_p;
+
+    public void winnerScene(Player p){
+        getGame().setGame_status(3);
+        targ_p = p;
     }
 
     public int getSize_x() {

@@ -1,6 +1,7 @@
 package net.msu.bronline.comps;
 
 import net.msu.bronline.network.ClientHandler;
+import net.msu.bronline.network.NetworkDevices;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -68,6 +69,7 @@ public class Player {
     int ammo_cld = 0;
     int re_ammo_cld = 0;
     int ammo_cld_lim = 5;
+    int dead_del = 0;
 
     public int getAmmoRemain(){
         return ammo;
@@ -218,8 +220,14 @@ public class Player {
         Iterator<Player> ps = new ArrayList<>(Player.getPlayers()).iterator();
         while (ps.hasNext()){
             Player p = ps.next();
-            if(p.getUsername().equals(name)){
+            if(p.getUsername().equalsIgnoreCase(name)){
                 p.setScore(p.getScore()+1);
+                if(p.getScore() >= 6){
+                    getGame().getScene().winnerScene(p);
+                    ClientHandler.broadcastMessage(p.getUsername() + ":act:ended");
+                    ClientHandler.broadcastMessage(p.getUsername() + ":winner");
+                }
+                return;
             }
         }
     }
@@ -236,6 +244,11 @@ public class Player {
                 i1++;
                 if (i1 > a1_lim) {
                     i1 = a1_lim;
+                }
+                dead_del++;
+                if(dead_del > 90){
+                    dead_del = 0;
+                    respawn();
                 }
             }
             return;
@@ -293,6 +306,24 @@ public class Player {
         }
         ox = x;
         oy = y;
+    }
+    public void respawn(){
+        if(!getGame().isHosting()) return;
+        if(getGame().getGame_status() == 3) return;
+        int x = 64+(int) (Math.random()*(2000-128));
+        int y = 64+(int) (Math.random()*(2000-128));
+        respawn(x, y);
+    }
+    public void respawn(int x, int y){
+        if(getGame().getGame_status() == 3) return;
+        hp = 100;
+        armor = 50;
+        armor_type = 1;
+        ammo = 30;
+
+        dead = false;
+        this.x = x; this.y = y;
+        ClientHandler.broadcastMessage(getUsername() + ":respawn:" + x + ":" + y);
     }
     public int getSpriteX(){
         return (64*i1)+1;
