@@ -1,5 +1,7 @@
 package net.msu.bronline.comps;
 
+import net.msu.bronline.network.ClientHandler;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -136,9 +138,34 @@ public class Scene {
     }
     Player targ_p;
 
+    public Player getPlayerTarget(){
+        return targ_p;
+    }
+
+    public void setPlayerTarget(Player p){
+        targ_p = p;
+    }
+
     public void winnerScene(Player p){
         getGame().setGame_status(3);
         targ_p = p;
+
+        if(getGame().isHosting()){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true){
+                        try {
+                            Thread.sleep(10000);
+                            getGame().stopMode();
+                            ClientHandler.broadcastMessage("host:shutdown");
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            }).start();
+        }
     }
 
     public int getSize_x() {

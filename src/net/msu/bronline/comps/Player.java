@@ -222,6 +222,8 @@ public class Player {
             Player p = ps.next();
             if(p.getUsername().equalsIgnoreCase(name)){
                 p.setScore(p.getScore()+1);
+
+                scene.setPlayerTarget(p);
                 if(p.getScore() >= 6){
                     getGame().getScene().winnerScene(p);
                     ClientHandler.broadcastMessage(p.getUsername() + ":act:ended");
@@ -319,7 +321,8 @@ public class Player {
         hp = 100;
         armor = 50;
         armor_type = 1;
-        ammo = 30;
+        ammo = 37;
+        scene.setPlayerTarget(null);
 
         dead = false;
         this.x = x; this.y = y;

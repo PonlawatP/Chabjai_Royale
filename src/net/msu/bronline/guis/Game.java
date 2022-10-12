@@ -220,14 +220,16 @@ public class Game extends JPanel {
             Player p = ps.next();
 //            System.out.println(p.getPacket());
 
-            g.setColor(Color.BLACK);
-            g.fillRoundRect(p.getPosX(),p.getPosY()+4, 64, 3, 2, 2);
-            g.setColor(new Color(0xC5C5CE));
-            g.fillRoundRect(p.getPosX(),p.getPosY()+4, (int) (64*p.getArmorPercent()), 3, 2, 2);
-            g.setColor(Color.BLACK);
-            g.fillRoundRect(p.getPosX(),p.getPosY()+7, 64, 3, 2, 2);
-            g.setColor(new Color(0xA11414));
-            g.fillRoundRect(p.getPosX(),p.getPosY()+7, (int) (64*p.getHpPercent()), 3, 2, 2);
+            if(!p.isDead()){
+                g.setColor(Color.BLACK);
+                g.fillRoundRect(p.getPosX(),p.getPosY()+4, 64, 3, 2, 2);
+                g.setColor(new Color(0xC5C5CE));
+                g.fillRoundRect(p.getPosX(),p.getPosY()+4, (int) (64*p.getArmorPercent()), 3, 2, 2);
+                g.setColor(Color.BLACK);
+                g.fillRoundRect(p.getPosX(),p.getPosY()+7, 64, 3, 2, 2);
+                g.setColor(new Color(0xA11414));
+                g.fillRoundRect(p.getPosX(),p.getPosY()+7, (int) (64*p.getHpPercent()), 3, 2, 2);
+            }
 
             g.setColor(Color.BLACK);
             g.drawString(p.getUsername(), p.getPosX()+(64/2)-(((14*p.getUsername().length())/2)/2)+1, p.getPosY()+1);
@@ -238,7 +240,6 @@ public class Game extends JPanel {
             drawAmmo(g, p);
 //            System.out.println(p.getUsername() + " : " + p.getAmmo().size());
             g.drawImage(p.getPlayerImage(), p.getPosX(), p.getPosY(), p.getPosBoundX(), p.getPosBoundY(), p.getSpriteX(),p.getSpriteY(),p.getSpriteDX(),p.getSpriteDY(),this);
-            p.updateAnimation();
         }
     }
 
@@ -257,17 +258,17 @@ public class Game extends JPanel {
         while (ams.hasNext()){
             Ammo a = ams.next();
             g.setColor(a.getColor());
-            double posax = ((double) m_x-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
-            double posay = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
 
             int ax = a.getDimStart()[0]+(64/2)-5, ay = a.getDimStart()[1]+42-5;
             ax += (scene.getX()*-1);
             ay += (scene.getY()*-1);
+            if(dev){
+                double posax = ((double) m_x-(cCanv.getWidth()/2))/(cCanv.getWidth()/2);
+                double posay = ((double) m_y-(cCanv.getHeight()/2))/(cCanv.getHeight()/2);
 //            ax -= mpalx;
 //            ay -= mpaly;
-            double rx = 65 * Math.cos(Math.toRadians(a.getAngle())), ry = 65 * Math.sin(Math.toRadians(a.getAngle()));
+                double rx = 65 * Math.cos(Math.toRadians(a.getAngle())), ry = 65 * Math.sin(Math.toRadians(a.getAngle()));
 
-            if(dev){
                 g.drawLine(ax+5, ay+5, (int) (ax+5+rx), (int) (ay+5+ry));
                 g.drawString("x: "+a.getDimStart()[0] + " y: " + a.getDimStart()[1], ax+15, ay);
                 g.drawString("px: "+posax + " py: " + posay, ax+15, ay+20);
@@ -290,52 +291,60 @@ public class Game extends JPanel {
         }
     }
 
+
     public void drawUI(Graphics ge) throws IOException{
         Graphics2D g = (Graphics2D) ge;
         //win
         if(getGame_status() == 3){
+            BufferedImage Chmimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/champion.png"));
             int _10 = getInsidePosition(0, cCanv.getHeight(), 10);
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, cCanv.getWidth(), _10);
             g.fillRect(0, cCanv.getHeight()-_10, cCanv.getWidth(), _10);
+            double size = 0.7;
+            int cnt = (int) (getInsidePosition(0, cCanv.getWidth(), 50)-((680*size)/2));
+            int cb = (int) (getInsidePosition(0, cCanv.getHeight(), 98)-(215*size));
+            g.drawImage(Chmimg, cnt, cb, (int) (cnt+(680*size)), (int) (cb+(215*size)), 0, 0, 680, 215, this);
             return;
         }
         //ui-code here
 
-        int _3 = getInsidePosition(0, cCanv.getWidth(), 3);
-        int _97 = getInsidePosition(0, cCanv.getWidth(), 97);
-        BufferedImage Fimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/F.png"));
-        g.drawImage(Fimg,_3,cFrame.getHeight()-150,this);
-
-        g.setColor(Color.BLACK);
-        g.fillRect(_3+147,cFrame.getHeight()-90, 240,13);
-        g.setColor(Color.white);
-        g.fillRect(_3+147,cFrame.getHeight()-90, (int) (240*p_own.getHpPercent()),13);
-
-        g.setColor(Color.BLACK);
-        g.fillRect(_3+147,cFrame.getHeight()-100,220,8);
-        g.setColor(new Color(0xC5C5CE));
-        g.fillRect(_3+147,cFrame.getHeight()-100, (int) (220*p_own.getArmorPercent()),8);
-
         Player p = getGame().getPlayerOwn();
-        g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
-        g.setColor(Color.WHITE);
-        g.drawString(p.getUsername(),_3+147,cFrame.getHeight()-115);
+        if(!p.isDead()){
+            int _3 = getInsidePosition(0, cCanv.getWidth(), 3);
+            int _97 = getInsidePosition(0, cCanv.getWidth(), 97);
+            BufferedImage Fimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/F.png"));
+            g.drawImage(Fimg,_3,cFrame.getHeight()-150,this);
+
+            g.setColor(Color.BLACK);
+            g.fillRect(_3+147,cFrame.getHeight()-90, 240,13);
+            g.setColor(Color.white);
+            g.fillRect(_3+147,cFrame.getHeight()-90, (int) (240*p_own.getHpPercent()),13);
+            g.drawImage(p.getPlayerImage(), _3+65, cFrame.getHeight()-70-70,_3+65+70, cFrame.getHeight()-90+20, p.getSpriteX()+17,p.getSpriteY()+11,p.getSpriteDX()-17,p.getSpriteDY()-23, this);
+
+            g.setColor(Color.BLACK);
+            g.fillRect(_3+147,cFrame.getHeight()-100,220,8);
+            g.setColor(new Color(0xC5C5CE));
+            g.fillRect(_3+147,cFrame.getHeight()-100, (int) (220*p_own.getArmorPercent()),8);
+
+            g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
+            g.setColor(Color.WHITE);
+            g.drawString(p.getUsername(),_3+147,cFrame.getHeight()-115);
 
 //        g.setColor(new Color(0,0,0,70));
 //        g.fillRect(913,cFrame.getHeight()-180,320,110);
-        BufferedImage FGimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/F.png"));
-        g.drawImage(FGimg,_97-427,cFrame.getHeight()-150,this);
+            g.drawImage(Fimg,_97-427,cFrame.getHeight()-150,this);
 
-        BufferedImage Gimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/G.png"));
-        g.drawImage(Gimg,_97-360,cFrame.getHeight()-140,200,70,this);
+            BufferedImage Gimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/G.png"));
+            g.drawImage(Gimg,_97-360,cFrame.getHeight()-140,200,70,this);
 
-        g.setColor(Color.white);
-        g.setFont(new Font("Kanit Light", Font.PLAIN, 50));
-        String amm = getPlayerOwn().getAmmoRemain()+"";
-        g.drawString(amm+"",_97-((amm.length()*50)/2)-80,cFrame.getHeight()-100);
-        g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
-        g.drawString("=-=",_97-80,cFrame.getHeight()-80);
+            g.setColor(Color.white);
+            g.setFont(new Font("Kanit Light", Font.PLAIN, 50));
+            String amm = getPlayerOwn().getAmmoRemain()+"";
+            g.drawString(amm+"",_97-((amm.length()*50)/2)-80,cFrame.getHeight()-100);
+            g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
+            g.drawString("=-=",_97-80,cFrame.getHeight()-80);
+        }
 //        g.setColor(Color.white);
 //        g.drawString("120",1113,cFrame.getHeight()-80);
 
@@ -437,6 +446,7 @@ public class Game extends JPanel {
             Iterator<Player> ps = new ArrayList<>(Player.getPlayers()).iterator();
             while (ps.hasNext()) {
                 Player p = ps.next();
+                p.updateAnimation();
                 Iterator<Ammo> ams = new ArrayList<>(p.getAmmo()).iterator();
                 while (ams.hasNext()) {
                     Ammo a = ams.next();
@@ -445,7 +455,10 @@ public class Game extends JPanel {
             }
 
             scene.updateMouse(m_x, m_y);
-            scene.updatePosition(getPlayerOwn().getX(), getPlayerOwn().getY());
+            if(scene.getPlayerTarget() == null)
+                scene.updatePosition(getPlayerOwn().getX(), getPlayerOwn().getY());
+            else
+                scene.updatePosition(scene.getPlayerTarget().getX(), scene.getPlayerTarget().getY());
         }
 
 //        if(scene.getX() < 0 || scene.getBoundX() > scene.getSize_x()){
