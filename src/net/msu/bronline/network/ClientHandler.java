@@ -8,6 +8,8 @@ import java.io.*;
 import java.net.Socket;
 import java.util.*;
 
+import static net.msu.bronline.guis.Game.getGame;
+
 public class ClientHandler implements Runnable{
     public static ArrayList<ClientHandler> clientHandler = new ArrayList<>();
     private Socket soc;
@@ -51,6 +53,8 @@ public class ClientHandler implements Runnable{
 
             Player p = new Player(scene, clientUser, Integer.parseInt(data[2]));
             cPlayer = p;
+            cPlayer.c_r_t.add(Integer.parseInt(data[2]));
+            cPlayer.randomCharID();
             Player.getPlayers().add(p);
 
             cw = new Sv_write(dos, this);

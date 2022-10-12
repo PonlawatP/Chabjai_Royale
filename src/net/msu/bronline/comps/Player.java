@@ -34,17 +34,40 @@ public class Player {
     int c_r = (int) (1 + 8*Math.random());
     public List<Integer> c_r_t = new ArrayList<>();
     public int randomCharID(){
-        c_r = (int) (1 + 8*Math.random());
+        if(c_r_t.size() >= 8) return c_r;
         for (int i : c_r_t){
-            if(i == c_r) return randomCharID();
+            if(i == c_r) {
+                c_r = (int) (1 + 8*Math.random());
+//                ClientHandler.broadcastMessage(getUsername()+":skin:"+c_r);
+                try {
+                    cimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/cha/chars_"+c_r+".png"));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                return randomCharID();
+            }
         }
+
+        return c_r;
+    }
+
+    public void setCharactorID(int i){
+        c_r = i;
         try {
             cimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/cha/chars_"+c_r+".png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
 
-        return c_r;
+
+    public void updateSkin(int i){
+        c_r = i;
+        try {
+            cimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/cha/chars_"+c_r+".png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void setScore(int score) {

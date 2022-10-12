@@ -114,8 +114,13 @@ class Canv extends Canvas {
                                 getGame().startMode();
                             }
                             if (cl == 1) { //join
-                                getGame().resetGame();
-                                if(getGame().getPlayerOwn()==null) return;
+                                try {
+                                    ps.is_btn_load = true;
+                                    getGame().resetGame();
+                                } catch (NullPointerException ex){
+                                    ps.is_btn_load = false;
+                                    return;
+                                }
                                 if(movements[4]){
                                     movements[4] = false;
                                     JTextField ip = new JTextField();
@@ -161,6 +166,7 @@ class Canv extends Canvas {
                                         }
                                     });
 
+                                    ps.is_btn_load = false;
                                     return;
                                 }
 //
@@ -176,6 +182,7 @@ class Canv extends Canvas {
 
                                     getGame().startMode();
                                 }
+                                ps.is_btn_load = false;
                             }
                             if (cl == 2) {
                                 ps.setGame_status(1);

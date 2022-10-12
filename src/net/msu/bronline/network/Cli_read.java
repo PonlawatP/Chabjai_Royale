@@ -45,10 +45,12 @@ public class Cli_read extends Thread implements Runnable{
                         p.updateFromPacket(data);
 
                         Player.getPlayers().add(cnt, p);
-                        getGame().getPlayerOwn().randomCharID();
                         cnt++;
                     } else if (data[1].equalsIgnoreCase("join")){
-                            if(data[0].equals(getGame().getPlayerOwn().getUsername())) continue;
+                            if(data[0].equals(getGame().getPlayerOwn().getUsername())) {
+                                getGame().getPlayerOwn().setCharactorID(Integer.parseInt(data[2]));
+                                continue;
+                            }
                             Player p = new Player(getGame().getScene(), data[0], Integer.parseInt(data[2]));
                             p.updateFromPacket(data);
                             Player.getPlayers().add(Player.getPlayers().size(), p);
@@ -117,6 +119,16 @@ public class Cli_read extends Thread implements Runnable{
                             Player p = ps.next();
                             if(data[0].equalsIgnoreCase(p.getUsername())){
                                 getGame().getScene().winnerScene(p);
+                                break;
+                            }
+                        }
+                    } else if (data[1].equalsIgnoreCase("skin")){
+                        Iterator<Player> ps = Player.getPlayers().iterator();
+                        while (ps.hasNext()) {
+                            Player p = ps.next();
+                            if(data[0].equalsIgnoreCase(p.getUsername())){
+                                int i = Integer.parseInt(data[2]);
+                                p.updateSkin(i);
                                 break;
                             }
                         }

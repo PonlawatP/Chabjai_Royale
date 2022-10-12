@@ -131,7 +131,7 @@ public class Present extends JPanel {
                 drawJoinPlayerBoxes(g);
 
                 g.drawImage(btn_host, b_cen_x,btn_py, b_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
-                g.drawImage((i_click != -1 && i_click < NetworkDevices.getHostsIP().size() ? btn_join : btn_join_den), b2_cen_x,btn_py, b2_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
+                g.drawImage((i_click != -1 && i_click < NetworkDevices.getHostsIP().size() ? (!is_btn_load) ? btn_join : btn_join_den : btn_join_den), b2_cen_x,btn_py, b2_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
             }
             else if(game_status == 3){
                 btn_back_px = 15;
@@ -384,13 +384,18 @@ public class Present extends JPanel {
         }
     }
 
+    public boolean is_btn_load = false;
     // ------------- ฟังก์ชันเช็คว่าเมาส์อยู่ในปุ่มมั้ย
     public int isMouseOnStart(int x, int y){
         if(game_status == 1){
             if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 0;
         } else if(game_status == 2) {
             if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 0;
-            if((x >= b2_cen_x && x <= b2_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy) && ((i_click != -1 && i_click < NetworkDevices.getHostsIP().size()) || movements[4])) return 1;
+            if((x >= b2_cen_x && x <= b2_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) {
+                if(is_btn_load) return -1;
+                if((i_click != -1 && i_click < NetworkDevices.getHostsIP().size()) || movements[4])
+                    return 1;
+            }
 //            if((x >= b2_cen_x && x <= b2_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy) && (i_click != -1 && i_click < NetworkDevices.getHostsIP().size())) return 1;
             if((x >= btn_back_px && x <= btn_back_px+btn_back_sx) && (y >= btn_back_py && y <= btn_back_py+btn_back_sy)) return 2;
             int hn = checkHostNumber(x, y);

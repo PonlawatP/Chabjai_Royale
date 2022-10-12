@@ -43,6 +43,16 @@ public class Sv_read extends Thread implements Runnable{
                                 break;
                             }
                         }
+                    } else if (data[1].equalsIgnoreCase("skin")){
+                        Iterator<Player> ps = Player.getPlayers().iterator();
+                        while (ps.hasNext()) {
+                            Player p = ps.next();
+                            if(data[0].equalsIgnoreCase(p.getUsername())){
+                                int i = Integer.parseInt(data[2]);
+                                p.updateSkin(i);
+                                break;
+                            }
+                        }
                     }
 
 
