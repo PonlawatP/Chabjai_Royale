@@ -108,12 +108,14 @@ class Canv extends Canvas {
                             }
                         } else if (ps.getGame_status() == 2) {
                             if (cl == 0) { //host
+                                if(getGame().getPlayerOwn()==null) return;
                                 ps.setGame_status(3);
                                 getGame().setHosting(true);
                                 getGame().startMode();
                             }
                             if (cl == 1) { //join
                                 getGame().resetGame();
+                                if(getGame().getPlayerOwn()==null) return;
                                 if(movements[4]){
                                     movements[4] = false;
                                     JTextField ip = new JTextField();
@@ -185,8 +187,8 @@ class Canv extends Canvas {
                             }
                         } else if (ps.getGame_status() == 3) { //host page
                             if (cl == 0) { //back
-                                ps.setGame_status(2);
                                 getGame().stopMode();
+                                ps.setGame_status(2);
                                 runServerFinder();
                             }
                             if (cl == 1) {
@@ -196,8 +198,8 @@ class Canv extends Canvas {
                             }
                         } else if (ps.getGame_status() == 4) {
                             if (cl == 0) {
-                                ps.setGame_status(2);
                                 getGame().stopMode();
+                                ps.setGame_status(2);
                                 runServerFinder();
                             }
                         }
