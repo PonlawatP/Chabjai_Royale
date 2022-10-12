@@ -13,8 +13,7 @@ import static net.msu.bronline.guis.Game.getGame;
 public class Cli_write extends Thread implements Runnable{
     DataOutputStream dos;
     CientProgram cp;
-//    Stack<String> st = new Stack<>();
-    String st = "";
+    Stack<String> st = new Stack<>();
     Socket soc;
 
     public Cli_write(DataOutputStream dos, CientProgram cp, Socket soc){
@@ -25,32 +24,33 @@ public class Cli_write extends Thread implements Runnable{
     }
 
     public void sendMessage(String mess) {
-        if(st.length() > 0){
-            st = st + "::ln::" + mess;
+        if (st.empty()) {
+            st.add(0, mess);
         } else {
-            st = mess;
+            st.add(0, st.pop()+"::ln::"+mess);
         }
     }
 
     public void sendMessageToServer() {
-        if (st.length() == 0) return;
+        if (st.empty()) return;
 
-        try {
+        while (!st.empty()) {
+            try {
+                String mess = st.pop();
+                for (String Mdata : mess.split("::ln::")) {
+                    String[] data = Mdata.split(":");
+                    if (!data[1].equalsIgnoreCase("player")) System.out.println("[s] " + Mdata);
+                }
 
-            for (String Mdata : st.split("::ln::")) {
-                String[] data = Mdata.split(":");
-                if (!data[1].equalsIgnoreCase("player")) System.out.println("[s] " + Mdata);
-            }
-
-            dos.writeUTF(st);
-            dos.flush();
-            st = "";
-        } catch (EOFException | EmptyStackException ex) {
+                dos.writeUTF(mess);
+                dos.flush();
+            } catch (EOFException | EmptyStackException ex) {
 //                ex.printStackTrace();
-        } catch (SocketException es) {
+            } catch (SocketException es) {
 //                es.printStackTrace();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
     @Override

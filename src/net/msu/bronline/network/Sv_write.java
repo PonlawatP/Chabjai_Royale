@@ -16,42 +16,43 @@ import static net.msu.bronline.guis.Game.getGame;
 public class Sv_write extends Thread implements Runnable{
     DataOutputStream dos;
     ClientHandler ch;
-//    Stack<String> st = new Stack<>();
-    String st = "";
+    Stack<String> st = new Stack<>();
     public Sv_write(DataOutputStream dos, ClientHandler ch){
         this.dos = dos;
         this.ch = ch;
     }
 
     public void sendMessage(String mess) {
-        if(!st.equalsIgnoreCase("")){
-            st = st + "::ln::" + mess;
+        if (st.empty()) {
+            st.add(0, mess);
         } else {
-            st = mess;
+            st.add(0, st.pop()+"::ln::"+mess);
         }
     }
     public void sendMessageToServer() {
-        if (st.length() == 0) return;
+        if (st.empty()) return;
 
-        try {
-            for (String Mdata : st.split("::ln::")) {
-                String[] data = Mdata.split(":");
-                if (!data[1].equalsIgnoreCase("player")) System.out.println("[s] " + Mdata);
-//                System.out.println("[s] " + Mdata);
-            }
-
+        while (!st.empty()) {
             try {
-                dos.writeUTF(st);
-                dos.flush();
-                st = "";
-            } catch (EOFException ex) {
-                ex.printStackTrace();
-            } catch (SocketException es) {
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } catch (EmptyStackException ex) {
+                String mess = st.pop();
+                for (String Mdata : mess.split("::ln::")) {
+                    String[] data = Mdata.split(":");
+                    if (!data[1].equalsIgnoreCase("player")) System.out.println("[s] " + Mdata);
+//                System.out.println("[s] " + Mdata);
+                }
 
+                try {
+                    dos.writeUTF(mess);
+                    dos.flush();
+                } catch (EOFException ex) {
+                    ex.printStackTrace();
+                } catch (SocketException es) {
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } catch (EmptyStackException ex) {
+
+            }
         }
     }
     @Override
