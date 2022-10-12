@@ -30,29 +30,27 @@ public class Sv_write extends Thread implements Runnable{
             st = mess;
         }
     }
-    public void sendMessageToServer(){
-        if (st.equalsIgnoreCase("")) return;
+    public void sendMessageToServer() {
+        if (st.length() == 0) return;
 
         try {
-            while (!st.equalsIgnoreCase("")) {
-                for (String Mdata : st.split("::ln::")) {
-                    String[] data = Mdata.split(":");
-                    if (!data[1].equalsIgnoreCase("player")) System.out.println("[s] " + Mdata);
+            for (String Mdata : st.split("::ln::")) {
+                String[] data = Mdata.split(":");
+                if (!data[1].equalsIgnoreCase("player")) System.out.println("[s] " + Mdata);
 //                System.out.println("[s] " + Mdata);
-                }
-
-                try {
-                    dos.writeUTF(st);
-                    dos.flush();
-                    st = "";
-                } catch (EOFException ex) {
-                    ex.printStackTrace();
-                } catch (SocketException es) {
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
             }
-        } catch (EmptyStackException ex){
+
+            try {
+                dos.writeUTF(st);
+                dos.flush();
+                st = "";
+            } catch (EOFException ex) {
+                ex.printStackTrace();
+            } catch (SocketException es) {
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (EmptyStackException ex) {
 
         }
     }

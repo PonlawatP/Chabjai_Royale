@@ -25,37 +25,32 @@ public class Cli_write extends Thread implements Runnable{
     }
 
     public void sendMessage(String mess) {
-        if(!st.equalsIgnoreCase("")){
+        if(st.length() > 0){
             st = st + "::ln::" + mess;
         } else {
             st = mess;
         }
     }
 
-    public void sendMessageToServer(){
-        System.out.println(st.length()+"");
-        if (st.equalsIgnoreCase("")) return;
+    public void sendMessageToServer() {
+        if (st.length() == 0) return;
 
-        while (!st.equalsIgnoreCase("")) {
-            try {
+        try {
 
-                for (String Mdata : st.split("::ln::")){
-                    String[] data = Mdata.split(":");
-                    if (!data[1].equalsIgnoreCase("player")) System.out.println("[s] " + Mdata);
-                }
+            for (String Mdata : st.split("::ln::")) {
+                String[] data = Mdata.split(":");
+                if (!data[1].equalsIgnoreCase("player")) System.out.println("[s] " + Mdata);
+            }
 
-                dos.writeUTF(st);
-                dos.flush();
-                st = "";
-            } catch (EOFException | EmptyStackException ex){
+            dos.writeUTF(st);
+            dos.flush();
+            st = "";
+        } catch (EOFException | EmptyStackException ex) {
 //                ex.printStackTrace();
-            }
-            catch (SocketException es){
+        } catch (SocketException es) {
 //                es.printStackTrace();
-            }
-            catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
     @Override
