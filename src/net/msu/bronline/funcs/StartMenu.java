@@ -113,6 +113,7 @@ class Canv extends Canvas {
                                 getGame().startMode();
                             }
                             if (cl == 1) { //join
+                                getGame().resetGame();
                                 if(movements[4]){
                                     movements[4] = false;
                                     JTextField ip = new JTextField();

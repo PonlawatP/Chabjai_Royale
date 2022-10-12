@@ -53,6 +53,7 @@ public class Player {
     public Player(Scene scene) throws IOException {
         this.scene = scene;
         cimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/cha/chars_"+c_r+".png"));
+
     }
 
     public Player(Scene scene, String username, int chr) throws IOException {
