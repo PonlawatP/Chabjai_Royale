@@ -170,7 +170,13 @@ class Canv extends Canvas {
                                     return;
                                 }
 //
-                                String ip = NetworkDevices.getHostIP(ps.getI_click());
+                                String ip;
+                                try {
+                                    ip = NetworkDevices.getHostIP(ps.getI_click());
+                                } catch (Exception exx) {
+                                    ps.is_btn_load = false;
+                                    return;
+                                }
                                 System.out.println("serverip: " + ip);
 
                                 String[] data = NetworkDevices.getCustomHost(ip);
