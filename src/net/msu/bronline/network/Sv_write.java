@@ -16,35 +16,35 @@ import static net.msu.bronline.guis.Game.getGame;
 public class Sv_write extends Thread implements Runnable{
     DataOutputStream dos;
     ClientHandler ch;
-    Stack<String> st = new Stack<>();
-
+//    Stack<String> st = new Stack<>();
+    String st = "";
     public Sv_write(DataOutputStream dos, ClientHandler ch){
         this.dos = dos;
         this.ch = ch;
     }
 
     public void sendMessage(String mess) {
-        try {
-            st.add(0, st.pop()+"::ln::"+mess);
-        } catch (EmptyStackException e){
-            st.add(0, mess);
+        if(!st.equalsIgnoreCase("")){
+            st = st + "::ln::" + mess;
+        } else {
+            st = mess;
         }
     }
     public void sendMessageToServer(){
-        if (st.empty()) return;
+        if (st.equalsIgnoreCase("")) return;
 
         try {
-            while (!st.empty()) {
-                String mess = st.pop();
-                for (String Mdata : mess.split("::ln::")) {
+            while (!st.equalsIgnoreCase("")) {
+                for (String Mdata : st.split("::ln::")) {
                     String[] data = Mdata.split(":");
                     if (!data[1].equalsIgnoreCase("player")) System.out.println("[s] " + Mdata);
 //                System.out.println("[s] " + Mdata);
                 }
 
                 try {
-                    dos.writeUTF(mess);
+                    dos.writeUTF(st);
                     dos.flush();
+                    st = "";
                 } catch (EOFException ex) {
                     ex.printStackTrace();
                 } catch (SocketException es) {

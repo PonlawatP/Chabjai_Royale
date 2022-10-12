@@ -13,7 +13,8 @@ import static net.msu.bronline.guis.Game.getGame;
 public class Cli_write extends Thread implements Runnable{
     DataOutputStream dos;
     CientProgram cp;
-    Stack<String> st = new Stack<>();
+//    Stack<String> st = new Stack<>();
+    String st = "";
     Socket soc;
 
     public Cli_write(DataOutputStream dos, CientProgram cp, Socket soc){
@@ -24,27 +25,28 @@ public class Cli_write extends Thread implements Runnable{
     }
 
     public void sendMessage(String mess) {
-        if (st.empty()){
-            st.add(0, mess);
+        if(!st.equalsIgnoreCase("")){
+            st = st + "::ln::" + mess;
         } else {
-            st.add(0, st.pop()+"::ln::"+mess);
+            st = mess;
         }
     }
 
     public void sendMessageToServer(){
-        if (st.empty()) return;
+        System.out.println(st.length()+"");
+        if (st.equalsIgnoreCase("")) return;
 
-        while (!st.empty()){
+        while (!st.equalsIgnoreCase("")) {
             try {
-                String mess = st.pop();
 
-                for (String Mdata : mess.split("::ln::")){
+                for (String Mdata : st.split("::ln::")){
                     String[] data = Mdata.split(":");
                     if (!data[1].equalsIgnoreCase("player")) System.out.println("[s] " + Mdata);
                 }
 
-                dos.writeUTF(mess);
+                dos.writeUTF(st);
                 dos.flush();
+                st = "";
             } catch (EOFException | EmptyStackException ex){
 //                ex.printStackTrace();
             }
