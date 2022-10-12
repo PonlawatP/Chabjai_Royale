@@ -223,7 +223,7 @@ public class Present extends JPanel {
     public void drawJoinPlayerBoxes(Graphics ge){
         Graphics2D g = (Graphics2D) ge;
 
-        BufferedImage bg = new BufferedImage(cCanv.getWidth(), getInsidePosition(0, cCanv.getHeight(), 65), BufferedImage.TYPE_INT_ARGB_PRE);
+        BufferedImage bg = new BufferedImage(cCanv.getWidth(), getInsidePosition(0, cCanv.getHeight(), 65), BufferedImage.TYPE_INT_ARGB);
         Graphics2D gg = bg.createGraphics();
 
         RenderingHints rh = new RenderingHints(

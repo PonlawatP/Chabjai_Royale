@@ -455,7 +455,7 @@ public class Game extends JPanel {
             }
 
             scene.updateMouse(m_x, m_y);
-            if(scene.getPlayerTarget() == null)
+            if(scene.getPlayerTarget() == null || scene.getPlayerTarget().getUsername().equals(getPlayerOwn().getUsername()))
                 scene.updatePosition(getPlayerOwn().getX(), getPlayerOwn().getY());
             else
                 scene.updatePosition(scene.getPlayerTarget().getX(), scene.getPlayerTarget().getY());
