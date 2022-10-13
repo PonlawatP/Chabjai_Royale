@@ -7,6 +7,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static net.msu.bronline.funcs.Utils.colld_data;
+import static net.msu.bronline.funcs.Utils.geMathLinEq;
 import static net.msu.bronline.guis.Game.getGame;
 
 public class Ammo {
@@ -62,11 +64,12 @@ public class Ammo {
     }
 
     public boolean runProjectile(){
-        x += val_x;
-        y += val_y;
+        double x = this.x + val_x;
+        double y = this.y + val_y;
 
         if(x < -100 || x > 2100 || y < -100 || y > 2100){
             remove();
+            return false;
         }
 
         Iterator<Player> ps = new ArrayList<>(Player.getPlayers()).iterator();
@@ -88,6 +91,47 @@ public class Ammo {
                 return true;
             }
         }
+
+        int yx = 28, yy = 70;
+        for (int[][] ii : colld_data) {
+            boolean coll = true;
+            for (int a = 0; a < ii.length; a++) {
+                int[] i = ii[a];
+                int[] mm = {(int) x, (int) y-27};
+                if (a > 0) {
+                    int x1 = ii[a - 1][0];
+                    int y1 = ii[a - 1][1];
+                    int[] xy1 = {x1-yx, y1-yy};
+                    int x2 = i[0];
+                    int y2 = i[1];
+                    int[] xy2 = {x2-yx, y2-yy};
+                    if (geMathLinEq(xy1, xy2, mm) < 1){
+                        coll = false;
+                        break;
+                    }
+
+                    if (a == ii.length - 1) {
+                        int x3 = ii[a][0];
+                        int y3 = ii[a][1];
+                        int[] xy3 = {x3-yx, y3-yy};
+                        int x4 = ii[0][0];
+                        int y4 = ii[0][1];
+                        int[] xy4 = {x4-yx, y4-yy};
+                        if (geMathLinEq(xy3, xy4, mm) < 1) {
+                            coll = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            if(coll){
+                remove();
+                return true;
+            }
+        }
+
+        this.x = x;
+        this.y = y;
 
         return false;
     }

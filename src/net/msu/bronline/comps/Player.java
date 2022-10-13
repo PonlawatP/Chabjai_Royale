@@ -393,6 +393,13 @@ public class Player {
     public void addMarker(){
         int[] m = {scene.getX()+m_x, scene.getY()+m_y};
         marker.add(m);
+        System.out.print("{");
+        int a = 0;
+        for(int[] is : marker){
+            System.out.print((a>0?",{":"{")+is[0]+","+is[1]+"}");
+            a++;
+        }
+        System.out.print("},\n---------\n");
     }
 
     public int getScore() {

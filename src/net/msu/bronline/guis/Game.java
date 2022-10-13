@@ -394,6 +394,59 @@ public class Game extends JPanel {
                 }
                 x++;
             }
+            for (int[][] ii : colld_data){
+                for(int a = 0; a < ii.length; a++){
+                    g.setColor(Color.BLACK);
+                    int[] i = ii[a];
+//                g.drawString("x: " + scene.getX() + " " + (i[0]+10), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+//                g.drawString("y: " + scene.getY() + " " + (i[1]+35), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+//                    g.drawString("x: " + i[0], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+//                    g.drawString("y: " + i[1], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+
+                    int[] mm = {getPlayerOwn().getX()+20, getPlayerOwn().getY()+15};
+                    g.drawOval((scene.getX()*-1)+mm[0]-2, (scene.getY()*-1)+mm[1]-2, 4, 4);
+                    if(a>0){
+                        if(geMathLinEq(ii[a-1], i, mm) < 1)
+                            g.drawString("L: " + geMathLinEq(ii[a-1], i, mm), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+
+                        g.setColor(Color.RED);
+                        g.drawLine((scene.getX()*-1)+ii[a-1][0],(scene.getY()*-1)+ii[a-1][1], (scene.getX()*-1)+i[0], (scene.getY()*-1)+i[1]);
+                        if(a == ii.length-1) {
+                            g.drawLine((scene.getX()*-1)+ii[a][0],(scene.getY()*-1)+ii[a][1], (scene.getX()*-1)+ii[0][0], (scene.getY()*-1)+ii[0][1]);
+                            if(geMathLinEq(ii[a], ii[0], mm) < 1) {
+                                g.setColor(Color.BLACK);
+                                g.drawString("L: " + geMathLinEq(ii[a], ii[0], mm), (scene.getX()*-1)+ii[0][0]+10, (scene.getY()*-1)+ii[0][1]+15);
+                            }
+                        }
+                    }
+                }
+
+                for(int a = 0; a < ii.length; a++){
+                    g.setColor(Color.BLACK);
+                    int[] i = ii[a];
+//                g.drawString("x: " + scene.getX() + " " + (i[0]+10), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+//                g.drawString("y: " + scene.getY() + " " + (i[1]+35), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+//                    g.drawString("x: " + i[0], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+//                    g.drawString("y: " + i[1], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+
+                    int[] mm = {getPlayerOwn().getX()+45, getPlayerOwn().getY()+15};
+                    g.drawOval((scene.getX()*-1)+mm[0]-2, (scene.getY()*-1)+mm[1]-2, 4, 4);
+                    if(a>0){
+                        if(geMathLinEq(ii[a-1], i, mm) < 1)
+                            g.drawString("L: " + geMathLinEq(ii[a-1], i, mm), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+
+                        g.setColor(Color.RED);
+                        g.drawLine((scene.getX()*-1)+ii[a-1][0],(scene.getY()*-1)+ii[a-1][1], (scene.getX()*-1)+i[0], (scene.getY()*-1)+i[1]);
+                        if(a == ii.length-1) {
+                            g.drawLine((scene.getX()*-1)+ii[a][0],(scene.getY()*-1)+ii[a][1], (scene.getX()*-1)+ii[0][0], (scene.getY()*-1)+ii[0][1]);
+                            if(geMathLinEq(ii[a], ii[0], mm) < 1) {
+                                g.setColor(Color.BLACK);
+                                g.drawString("L: " + geMathLinEq(ii[a], ii[0], mm), (scene.getX()*-1)+ii[0][0]+10, (scene.getY()*-1)+ii[0][1]+15);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
