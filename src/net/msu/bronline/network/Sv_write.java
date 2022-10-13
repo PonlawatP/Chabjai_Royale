@@ -73,7 +73,7 @@ public class Sv_write extends Thread implements Runnable{
                 }
 
                 sendMessageToServer();
-                sleep(10);
+                sleep(5);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

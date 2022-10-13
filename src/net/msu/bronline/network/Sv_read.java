@@ -57,7 +57,7 @@ public class Sv_read extends Thread implements Runnable{
 
 
                 }
-                sleep(10);
+                sleep(5);
             } catch (EOFException | SocketException ex){
 //                ex.printStackTrace();
                 ch.closeEverything();

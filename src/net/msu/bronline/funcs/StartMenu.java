@@ -431,7 +431,7 @@ class Canv extends Canvas {
                 long gameTime = getCurrentTime();
 
                 long lastFpsCount = getCurrentTime();
-                long updateRate = 1000 / 60; // Update 60 times per second
+                long updateRate = 1000 / 45; // Update 60 times per second
                 while (keepRendering.get()) {
                     now = getCurrentTime();
 //                        System.out.println("now: " + now + " update: " + updateRate + " = " + (now + updateRate) + " gameT: " + gameTime);

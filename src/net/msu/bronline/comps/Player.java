@@ -90,12 +90,33 @@ public class Player {
 
     boolean fireTrigger = false;
 
+    public boolean randomPosition(){
+        x = 64+(int) (Math.random()*(2000-128));
+        y = 64+(int) (Math.random()*(2000-128));
+
+        boolean coll = false;
+        for (int[][] ii : colld_data){
+            int x1 = colls(ii,(int) (x+14), y+20);
+            int x2 = colls(ii,(int) (x+64-14), y+20);
+            int x3 = colls(ii,(int) (x+14+x), y+64-2);
+            int x4 = colls(ii,(int) (x+64-14), y+64-2);
+            if(x1 == 0 || x2 == 0 || x3 == 0 || x4 == 0) {
+                coll = true;
+                break;
+            }
+        }
+
+        if(coll) {
+            return randomPosition();
+        }
+        return true;
+    }
+
     public Player(Scene scene) throws IOException {
         this.scene = scene;
         cimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/cha/chars_"+c_r+".png"));
 
-        x = 64+(int) (Math.random()*(2000-128));
-        y = 64+(int) (Math.random()*(2000-128));
+        randomPosition();
     }
 
     public Player(Scene scene, String username, int chr) throws IOException {
@@ -190,11 +211,11 @@ public class Player {
             int[] mm = {xx, yy};
             if(a>0){
                 if(geMathLinEq(ii[a-1], i, mm) < 1){
-                    s = (int) geMathLinEq(ii[a-1], i, mm);
+                    s++;
                 }
                 if(a == ii.length-1) {
                     if(geMathLinEq(ii[a], ii[0], mm) < 1) {
-                        s = (int) geMathLinEq(ii[a], ii[0], mm);
+                        s++;
                     }
                 }
             }
@@ -410,8 +431,7 @@ public class Player {
     public void respawn(){
         if(!getGame().isHosting()) return;
         if(getGame().getGame_status() == 3) return;
-        int x = 64+(int) (Math.random()*(2000-128));
-        int y = 64+(int) (Math.random()*(2000-128));
+        randomPosition();
         respawn(x, y);
     }
     public void respawn(int x, int y){

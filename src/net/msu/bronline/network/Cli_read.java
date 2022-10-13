@@ -135,7 +135,7 @@ public class Cli_read extends Thread implements Runnable{
                     }
                 }
 
-                sleep(10);
+                sleep(5);
             } catch (EOFException ex){
                 ex.printStackTrace();
             }
