@@ -190,11 +190,11 @@ public class Player {
             int[] mm = {xx, yy};
             if(a>0){
                 if(geMathLinEq(ii[a-1], i, mm) < 1){
-                    s++;
+                    s = (int) geMathLinEq(ii[a-1], i, mm);
                 }
                 if(a == ii.length-1) {
                     if(geMathLinEq(ii[a], ii[0], mm) < 1) {
-                        s++;
+                        s = (int) geMathLinEq(ii[a], ii[0], mm);
                     }
                 }
             }
@@ -213,6 +213,7 @@ public class Player {
                 int x4 = colls(ii,(int) (this.x+64-14+x), this.y+64-2);
                 if(x1 == 0 || x2 == 0 || x3 == 0 || x4 == 0) {
                     coll = true;
+                    break;
                 }
             }
 
@@ -231,7 +232,10 @@ public class Player {
                 int x2 = colls(ii,(this.x+64-14), (int) (this.y+20+y));
                 int x3 = colls(ii,(this.x+14), (int) (this.y+64-2+y));
                 int x4 = colls(ii,(this.x+64-14), (int) (this.y+64-2+y));
-                if(x1 == 0 || x2 == 0 || x3 == 0 || x4 == 0) coll = true;
+                if(x1 == 0 || x2 == 0 || x3 == 0 || x4 == 0) {
+                    coll = true;
+                    break;
+                }
             }
             if(!coll) {
                 this.y+=y;

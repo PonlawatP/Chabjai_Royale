@@ -294,11 +294,12 @@ public class Game extends JPanel {
     BufferedImage Fimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/F.png"));
     BufferedImage Gimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/G.png"));
 
+    BufferedImage Chmimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/champion.png"));
+
     public void drawUI(Graphics ge) throws IOException {
         Graphics2D g = (Graphics2D) ge;
         //win
         if (getGame_status() == 3) {
-            BufferedImage Chmimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/champion.png"));
             int _10 = getInsidePosition(0, cCanv.getHeight(), 10);
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, cCanv.getWidth(), _10);
@@ -351,9 +352,9 @@ public class Game extends JPanel {
         int cenplx = getInsidePosition(0, cCanv.getWidth(), 50) - (70 / 2) - (70 * (Player.getPlayers().size() - 1)) - (5 * (Player.getPlayers().size() - 1));
         int cenply = getInsidePosition(0, cCanv.getHeight(), 2);
 
-        Iterator<Player> ps = new ArrayList<>(Player.getPlayers()).iterator();
 
         g.setFont(new Font("Kanit Light", Font.BOLD, 16));
+        Iterator<Player> ps = Player.getPlayers().iterator();
         int ia = 0;
         while (ps.hasNext()) {
             if (ia != 0) {
@@ -534,8 +535,8 @@ public class Game extends JPanel {
                 if (movements[1]) p_own.moveForward(-1 * v_speed);
                 if (movements[2]) p_own.moveUp(1 * v_speed);
                 if (movements[3]) p_own.moveForward(1 * v_speed);
-                if (movements[4]) v_speed = 7;
-                else v_speed = 5;
+                if (movements[4]) v_speed = 8;
+                else v_speed = 4;
 
                 if (!p_own.isAmmo_reloading()) {
                     if (movements[6]) {
