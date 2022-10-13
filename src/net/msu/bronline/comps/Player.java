@@ -4,6 +4,7 @@ import net.msu.bronline.network.ClientHandler;
 import net.msu.bronline.network.NetworkDevices;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import static net.msu.bronline.funcs.Utils.*;
 import static net.msu.bronline.guis.Game.getGame;
 
 public class Player {
@@ -181,14 +183,61 @@ public class Player {
         this.username = username;
     }
 
+    private int colls(int[][] ii, int xx, int yy){
+        int s = 0;
+        for(int a = 0; a < ii.length; a++){
+            int[] i = ii[a];
+            int[] mm = {xx, yy};
+            if(a>0){
+                if(geMathLinEq(ii[a-1], i, mm) < 1){
+                    s++;
+                }
+                if(a == ii.length-1) {
+                    if(geMathLinEq(ii[a], ii[0], mm) < 1) {
+                        s++;
+                    }
+                }
+            }
+        }
+        return s;
+    }
+
     public void moveForward(double x){
         if(this.x+14+x >= 0 && this.x+64-14+x <= 2000){
-            this.x+=x;
+            boolean coll = false;
+            int back = 0;
+            for (int[][] ii : colld_data){
+                int x1 = colls(ii,(int) (this.x+14+x), this.y+20);
+                int x2 = colls(ii,(int) (this.x+64-14+x), this.y+20);
+                int x3 = colls(ii,(int) (this.x+14+x), this.y+64-2);
+                int x4 = colls(ii,(int) (this.x+64-14+x), this.y+64-2);
+                if(x1 == 0 || x2 == 0 || x3 == 0 || x4 == 0) {
+                    coll = true;
+                }
+            }
+
+            if(!coll) {
+                this.x+=x;
+            } else {
+//                this.y-=x;
+            }
         }
     }
     public void moveUp(double y){
         if(this.y+20+y >= 0 && this.y+64-2+y <= 2000){
-            this.y+=y;
+            boolean coll = false;
+            for (int[][] ii : colld_data){
+                int x1 = colls(ii,(this.x+14), (int) (this.y+20+y));
+                int x2 = colls(ii,(this.x+64-14), (int) (this.y+20+y));
+                int x3 = colls(ii,(this.x+14), (int) (this.y+64-2+y));
+                int x4 = colls(ii,(this.x+64-14), (int) (this.y+64-2+y));
+                if(x1 == 0 || x2 == 0 || x3 == 0 || x4 == 0) coll = true;
+            }
+            if(!coll) {
+                this.y+=y;
+            } else {
+//                this.x-=y;
+            }
         }
     }
 
@@ -312,15 +361,16 @@ public class Player {
 //                a1 = 8;
 //                a1_lim = 8;
 //            }
-            if (getAngle() >= 45 && getAngle() < 135 ) { //f
+            double ang = getAngle();
+            if (ang >= 45 && ang < 135 ) { //f
                 if(oy > y) back = true;
 
                 a1 = 10;
-            } else if((getAngle() < 180 && getAngle() >= 135 || getAngle() >= -180 && getAngle() < -135)) { //l
+            } else if((ang < 180 && ang >= 135 || ang >= -180 && ang < -135)) { //l
                 if(ox < x || (ox < x && oy != y)) back = true;
 
                 a1 = 9;
-            } else if(getAngle() >= -135 && getAngle() < -45 ) { //b
+            } else if(ang >= -135 && ang < -45 ) { //b
                 if(oy < y) back = true;
 
                 a1 = 8;

@@ -291,64 +291,64 @@ public class Game extends JPanel {
         }
     }
 
+    BufferedImage Fimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/F.png"));
+    BufferedImage Gimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/G.png"));
 
-    public void drawUI(Graphics ge) throws IOException{
+    public void drawUI(Graphics ge) throws IOException {
         Graphics2D g = (Graphics2D) ge;
         //win
-        if(getGame_status() == 3){
+        if (getGame_status() == 3) {
             BufferedImage Chmimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/champion.png"));
             int _10 = getInsidePosition(0, cCanv.getHeight(), 10);
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, cCanv.getWidth(), _10);
-            g.fillRect(0, cCanv.getHeight()-_10, cCanv.getWidth(), _10);
+            g.fillRect(0, cCanv.getHeight() - _10, cCanv.getWidth(), _10);
             double size = 0.7;
-            int cnt = (int) (getInsidePosition(0, cCanv.getWidth(), 50)-((680*size)/2));
-            int cb = (int) (getInsidePosition(0, cCanv.getHeight(), 98)-(215*size));
-            g.drawImage(Chmimg, cnt, cb, (int) (cnt+(680*size)), (int) (cb+(215*size)), 0, 0, 680, 215, this);
+            int cnt = (int) (getInsidePosition(0, cCanv.getWidth(), 50) - ((680 * size) / 2));
+            int cb = (int) (getInsidePosition(0, cCanv.getHeight(), 98) - (215 * size));
+            g.drawImage(Chmimg, cnt, cb, (int) (cnt + (680 * size)), (int) (cb + (215 * size)), 0, 0, 680, 215, this);
             return;
         }
         //ui-code here
 
         Player p = getGame().getPlayerOwn();
-        if(!p.isDead()){
+        if (!p.isDead()) {
             int _3 = getInsidePosition(0, cCanv.getWidth(), 3);
             int _97 = getInsidePosition(0, cCanv.getWidth(), 97);
-            BufferedImage Fimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/F.png"));
-            g.drawImage(Fimg,_3,cFrame.getHeight()-150,this);
+            g.drawImage(Fimg, _3, cFrame.getHeight() - 150, this);
 
             g.setColor(Color.BLACK);
-            g.fillRect(_3+147,cFrame.getHeight()-90, 240,13);
+            g.fillRect(_3 + 147, cFrame.getHeight() - 90, 240, 13);
             g.setColor(Color.white);
-            g.fillRect(_3+147,cFrame.getHeight()-90, (int) (240*p_own.getHpPercent()),13);
-            g.drawImage(p.getPlayerImage(), _3+65, cFrame.getHeight()-70-70,_3+65+70, cFrame.getHeight()-90+20, p.getSpriteX()+17,p.getSpriteY()+11,p.getSpriteDX()-17,p.getSpriteDY()-23, this);
+            g.fillRect(_3 + 147, cFrame.getHeight() - 90, (int) (240 * p_own.getHpPercent()), 13);
+            g.drawImage(p.getPlayerImage(), _3 + 65, cFrame.getHeight() - 70 - 70, _3 + 65 + 70, cFrame.getHeight() - 90 + 20, p.getSpriteX() + 17, p.getSpriteY() + 11, p.getSpriteDX() - 17, p.getSpriteDY() - 23, this);
 
             g.setColor(Color.BLACK);
-            g.fillRect(_3+147,cFrame.getHeight()-100,220,8);
+            g.fillRect(_3 + 147, cFrame.getHeight() - 100, 220, 8);
             g.setColor(new Color(0xC5C5CE));
-            g.fillRect(_3+147,cFrame.getHeight()-100, (int) (220*p_own.getArmorPercent()),8);
+            g.fillRect(_3 + 147, cFrame.getHeight() - 100, (int) (220 * p_own.getArmorPercent()), 8);
 
             g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
             g.setColor(Color.WHITE);
-            g.drawString(p.getUsername(),_3+147,cFrame.getHeight()-115);
+            g.drawString(p.getUsername(), _3 + 147, cFrame.getHeight() - 115);
 
 //        g.setColor(new Color(0,0,0,70));
 //        g.fillRect(913,cFrame.getHeight()-180,320,110);
-            g.drawImage(Fimg,_97-427,cFrame.getHeight()-150,this);
+            g.drawImage(Fimg, _97 - 427, cFrame.getHeight() - 150, this);
 
-            BufferedImage Gimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/G.png"));
-            g.drawImage(Gimg,_97-360,cFrame.getHeight()-140,200,70,this);
+            g.drawImage(Gimg, _97 - 360, cFrame.getHeight() - 140, 200, 70, this);
 
             g.setColor(Color.white);
             g.setFont(new Font("Kanit Light", Font.PLAIN, 50));
-            String amm = getPlayerOwn().getAmmoRemain()+"";
-            g.drawString(amm+"",_97-((amm.length()*50)/2)-80,cFrame.getHeight()-100);
+            String amm = getPlayerOwn().getAmmoRemain() + "";
+            g.drawString(amm + "", _97 - ((amm.length() * 50) / 2) - 80, cFrame.getHeight() - 100);
             g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
-            g.drawString("=-=",_97-80,cFrame.getHeight()-80);
+            g.drawString("=-=", _97 - 80, cFrame.getHeight() - 80);
         }
 //        g.setColor(Color.white);
 //        g.drawString("120",1113,cFrame.getHeight()-80);
 
-        int cenplx = getInsidePosition(0, cCanv.getWidth(), 50) - (70/2) - (70*(Player.getPlayers().size()-1)) - (5*(Player.getPlayers().size()-1));
+        int cenplx = getInsidePosition(0, cCanv.getWidth(), 50) - (70 / 2) - (70 * (Player.getPlayers().size() - 1)) - (5 * (Player.getPlayers().size() - 1));
         int cenply = getInsidePosition(0, cCanv.getHeight(), 2);
 
         Iterator<Player> ps = new ArrayList<>(Player.getPlayers()).iterator();
@@ -356,97 +356,154 @@ public class Game extends JPanel {
         g.setFont(new Font("Kanit Light", Font.BOLD, 16));
         int ia = 0;
         while (ps.hasNext()) {
-            if(ia != 0){
+            if (ia != 0) {
                 cenplx += 70 + 5;
             }
             Player pl = ps.next();
-            g.drawImage(pl.getPlayerImage(), cenplx, cenply,cenplx+70, cenply+70, pl.getSpriteX()+17,pl.getSpriteY()+11,pl.getSpriteDX()-17,pl.getSpriteDY()-23, this);
+            g.drawImage(pl.getPlayerImage(), cenplx, cenply, cenplx + 70, cenply + 70, pl.getSpriteX() + 17, pl.getSpriteY() + 11, pl.getSpriteDX() - 17, pl.getSpriteDY() - 23, this);
 
             g.setColor(new Color(0xE21E1D1D, true));
-            g.fillRect(cenplx, cenply+70,70, 22);
+            g.fillRect(cenplx, cenply + 70, 70, 22);
             g.setColor(Color.WHITE);
-            String s = pl.getScore()+"";
-            g.drawString(s, cenplx+(70/2)-((s.length()*14)/2), cenply+70+18);
+            String s = pl.getScore() + "";
+            g.drawString(s, cenplx + (70 / 2) - ((s.length() * 14) / 2), cenply + 70 + 18);
             g.setColor(getColor(pl.getCharacterID()));
             g.setStroke(new BasicStroke(3.0f));
-            g.drawRect(cenplx, cenply+70,70, 22);
+            g.drawRect(cenplx, cenply + 70, 70, 22);
             g.setStroke(new BasicStroke(3.0f));
-            g.drawRect(cenplx, cenply,70, 70);
+            g.drawRect(cenplx, cenply, 70, 70);
             ia++;
         }
         g.setColor(Color.WHITE);
         g.setFont(new Font("Kanit Light", Font.PLAIN, 14));
-        if(dev){
+        if (dev) {
             g.setFont(new Font("Kanit Light", Font.PLAIN, 12));
             int x = 0;
-            for (int[] i : getPlayerOwn().getMarker()){
+            for (int[] i : getPlayerOwn().getMarker()) {
                 g.setColor(Color.BLACK);
 //                g.drawString("x: " + scene.getX() + " " + (i[0]+10), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
 //                g.drawString("y: " + scene.getY() + " " + (i[1]+35), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
-                g.drawString("x: " + i[0], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
-                g.drawString("y: " + i[1], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+                g.drawString("x: " + i[0], (scene.getX() * -1) + i[0] + 10, (scene.getY() * -1) + i[1] + 15);
+                g.drawString("y: " + i[1], (scene.getX() * -1) + i[0] + 10, (scene.getY() * -1) + i[1] + 35);
 
-                if(x>0){
-                    int[] mm = {getPlayerOwn().getX()+20, getPlayerOwn().getY()};
-                    g.drawString("LinEq: " + geMathLinEq(getPlayerOwn().getMarker().get(x-1), i, mm), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+55);
+                if (x > 0) {
+                    int[] mm = {getPlayerOwn().getX() + 20, getPlayerOwn().getY()};
+                    g.drawString("LinEq: " + geMathLinEq(getPlayerOwn().getMarker().get(x - 1), i, mm), (scene.getX() * -1) + i[0] + 10, (scene.getY() * -1) + i[1] + 55);
                     g.setColor(Color.RED);
-                    g.drawLine((scene.getX()*-1)+getPlayerOwn().getMarker().get(x-1)[0],(scene.getY()*-1)+getPlayerOwn().getMarker().get(x-1)[1], (scene.getX()*-1)+i[0], (scene.getY()*-1)+i[1]);
+                    g.drawLine((scene.getX() * -1) + getPlayerOwn().getMarker().get(x - 1)[0], (scene.getY() * -1) + getPlayerOwn().getMarker().get(x - 1)[1], (scene.getX() * -1) + i[0], (scene.getY() * -1) + i[1]);
                 }
                 x++;
             }
-            for (int[][] ii : colld_data){
-                for(int a = 0; a < ii.length; a++){
-                    g.setColor(Color.BLACK);
-                    int[] i = ii[a];
-//                g.drawString("x: " + scene.getX() + " " + (i[0]+10), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
-//                g.drawString("y: " + scene.getY() + " " + (i[1]+35), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
-//                    g.drawString("x: " + i[0], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
-//                    g.drawString("y: " + i[1], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
-
-                    int[] mm = {getPlayerOwn().getX()+20, getPlayerOwn().getY()+15};
-                    g.drawOval((scene.getX()*-1)+mm[0]-2, (scene.getY()*-1)+mm[1]-2, 4, 4);
-                    if(a>0){
-                        if(geMathLinEq(ii[a-1], i, mm) < 1)
-                            g.drawString("L: " + geMathLinEq(ii[a-1], i, mm), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
-
-                        g.setColor(Color.RED);
-                        g.drawLine((scene.getX()*-1)+ii[a-1][0],(scene.getY()*-1)+ii[a-1][1], (scene.getX()*-1)+i[0], (scene.getY()*-1)+i[1]);
-                        if(a == ii.length-1) {
-                            g.drawLine((scene.getX()*-1)+ii[a][0],(scene.getY()*-1)+ii[a][1], (scene.getX()*-1)+ii[0][0], (scene.getY()*-1)+ii[0][1]);
-                            if(geMathLinEq(ii[a], ii[0], mm) < 1) {
-                                g.setColor(Color.BLACK);
-                                g.drawString("L: " + geMathLinEq(ii[a], ii[0], mm), (scene.getX()*-1)+ii[0][0]+10, (scene.getY()*-1)+ii[0][1]+15);
-                            }
-                        }
-                    }
-                }
-
-                for(int a = 0; a < ii.length; a++){
-                    g.setColor(Color.BLACK);
-                    int[] i = ii[a];
-//                g.drawString("x: " + scene.getX() + " " + (i[0]+10), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
-//                g.drawString("y: " + scene.getY() + " " + (i[1]+35), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
-//                    g.drawString("x: " + i[0], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
-//                    g.drawString("y: " + i[1], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
-
-                    int[] mm = {getPlayerOwn().getX()+45, getPlayerOwn().getY()+15};
-                    g.drawOval((scene.getX()*-1)+mm[0]-2, (scene.getY()*-1)+mm[1]-2, 4, 4);
-                    if(a>0){
-                        if(geMathLinEq(ii[a-1], i, mm) < 1)
-                            g.drawString("L: " + geMathLinEq(ii[a-1], i, mm), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
-
-                        g.setColor(Color.RED);
-                        g.drawLine((scene.getX()*-1)+ii[a-1][0],(scene.getY()*-1)+ii[a-1][1], (scene.getX()*-1)+i[0], (scene.getY()*-1)+i[1]);
-                        if(a == ii.length-1) {
-                            g.drawLine((scene.getX()*-1)+ii[a][0],(scene.getY()*-1)+ii[a][1], (scene.getX()*-1)+ii[0][0], (scene.getY()*-1)+ii[0][1]);
-                            if(geMathLinEq(ii[a], ii[0], mm) < 1) {
-                                g.setColor(Color.BLACK);
-                                g.drawString("L: " + geMathLinEq(ii[a], ii[0], mm), (scene.getX()*-1)+ii[0][0]+10, (scene.getY()*-1)+ii[0][1]+15);
-                            }
-                        }
-                    }
-                }
-            }
+            g.setColor(Color.BLACK);
+            g.drawOval((scene.getX() * -1) + getPlayerOwn().getX() + 20 - 2, (scene.getY() * -1) + getPlayerOwn().getY() + 15 - 2, 4, 4);
+            g.drawOval((scene.getX() * -1) + getPlayerOwn().getX() + 45 - 2, (scene.getY() * -1) + getPlayerOwn().getY() + 15 - 2, 4, 4);
+            g.drawOval((scene.getX() * -1) + getPlayerOwn().getX() + 20 - 2, (scene.getY() * -1) + getPlayerOwn().getY() + 63 - 2, 4, 4);
+            g.drawOval((scene.getX() * -1) + getPlayerOwn().getX() + 45 - 2, (scene.getY() * -1) + getPlayerOwn().getY() + 63 - 2, 4, 4);
+//            for (int[][] ii : colld_data){
+//                for(int a = 0; a < ii.length; a++){
+//                    g.setColor(Color.BLACK);
+//                    int[] i = ii[a];
+////                g.drawString("x: " + scene.getX() + " " + (i[0]+10), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+////                g.drawString("y: " + scene.getY() + " " + (i[1]+35), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+////                    g.drawString("x: " + i[0], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+////                    g.drawString("y: " + i[1], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+//
+//                    int[] mm = {getPlayerOwn().getX()+20, getPlayerOwn().getY()+15};
+//                    g.drawOval((scene.getX()*-1)+mm[0]-2, (scene.getY()*-1)+mm[1]-2, 4, 4);
+//                    if(a>0){
+//                        if(geMathLinEq(ii[a-1], i, mm) < 1)
+//                            g.drawString("L: " + geMathLinEq(ii[a-1], i, mm), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+//
+//                        g.setColor(Color.RED);
+//                        g.drawLine((scene.getX()*-1)+ii[a-1][0],(scene.getY()*-1)+ii[a-1][1], (scene.getX()*-1)+i[0], (scene.getY()*-1)+i[1]);
+//                        if(a == ii.length-1) {
+//                            g.drawLine((scene.getX()*-1)+ii[a][0],(scene.getY()*-1)+ii[a][1], (scene.getX()*-1)+ii[0][0], (scene.getY()*-1)+ii[0][1]);
+//                            if(geMathLinEq(ii[a], ii[0], mm) < 1) {
+//                                g.setColor(Color.BLACK);
+//                                g.drawString("L: " + geMathLinEq(ii[a], ii[0], mm), (scene.getX()*-1)+ii[0][0]+10, (scene.getY()*-1)+ii[0][1]+15);
+//                            }
+//                        }
+//                    }
+//                }
+//
+////                for(int a = 0; a < ii.length; a++){
+////                    g.setColor(Color.BLACK);
+////                    int[] i = ii[a];
+//////                g.drawString("x: " + scene.getX() + " " + (i[0]+10), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+//////                g.drawString("y: " + scene.getY() + " " + (i[1]+35), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+//////                    g.drawString("x: " + i[0], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+//////                    g.drawString("y: " + i[1], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+////
+////                    int[] mm = {getPlayerOwn().getX()+45, getPlayerOwn().getY()+15};
+////                    g.drawOval((scene.getX()*-1)+mm[0]-2, (scene.getY()*-1)+mm[1]-2, 4, 4);
+////                    if(a>0){
+////                        if(geMathLinEq(ii[a-1], i, mm) < 1)
+////                            g.drawString("L: " + geMathLinEq(ii[a-1], i, mm), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+////
+////                        g.setColor(Color.RED);
+////                        g.drawLine((scene.getX()*-1)+ii[a-1][0],(scene.getY()*-1)+ii[a-1][1], (scene.getX()*-1)+i[0], (scene.getY()*-1)+i[1]);
+////                        if(a == ii.length-1) {
+////                            g.drawLine((scene.getX()*-1)+ii[a][0],(scene.getY()*-1)+ii[a][1], (scene.getX()*-1)+ii[0][0], (scene.getY()*-1)+ii[0][1]);
+////                            if(geMathLinEq(ii[a], ii[0], mm) < 1) {
+////                                g.setColor(Color.BLACK);
+////                                g.drawString("L: " + geMathLinEq(ii[a], ii[0], mm), (scene.getX()*-1)+ii[0][0]+10, (scene.getY()*-1)+ii[0][1]+15);
+////                            }
+////                        }
+////                    }
+////                }
+////
+////                for(int a = 0; a < ii.length; a++){
+////                    g.setColor(Color.BLACK);
+////                    int[] i = ii[a];
+//////                g.drawString("x: " + scene.getX() + " " + (i[0]+10), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+//////                g.drawString("y: " + scene.getY() + " " + (i[1]+35), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+//////                    g.drawString("x: " + i[0], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+//////                    g.drawString("y: " + i[1], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+////
+////                    int[] mm = {getPlayerOwn().getX()+20, getPlayerOwn().getY()+63};
+////                    g.drawOval((scene.getX()*-1)+mm[0]-2, (scene.getY()*-1)+mm[1]-2, 4, 4);
+////                    if(a>0){
+////                        if(geMathLinEq(ii[a-1], i, mm) < 1)
+////                            g.drawString("L: " + geMathLinEq(ii[a-1], i, mm), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+////
+////                        g.setColor(Color.RED);
+////                        g.drawLine((scene.getX()*-1)+ii[a-1][0],(scene.getY()*-1)+ii[a-1][1], (scene.getX()*-1)+i[0], (scene.getY()*-1)+i[1]);
+////                        if(a == ii.length-1) {
+////                            g.drawLine((scene.getX()*-1)+ii[a][0],(scene.getY()*-1)+ii[a][1], (scene.getX()*-1)+ii[0][0], (scene.getY()*-1)+ii[0][1]);
+////                            if(geMathLinEq(ii[a], ii[0], mm) < 1) {
+////                                g.setColor(Color.BLACK);
+////                                g.drawString("L: " + geMathLinEq(ii[a], ii[0], mm), (scene.getX()*-1)+ii[0][0]+10, (scene.getY()*-1)+ii[0][1]+15);
+////                            }
+////                        }
+////                    }
+////                }
+////
+////                for(int a = 0; a < ii.length; a++){
+////                    g.setColor(Color.BLACK);
+////                    int[] i = ii[a];
+//////                g.drawString("x: " + scene.getX() + " " + (i[0]+10), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+//////                g.drawString("y: " + scene.getY() + " " + (i[1]+35), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+//////                    g.drawString("x: " + i[0], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+//////                    g.drawString("y: " + i[1], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+////
+////                    int[] mm = {getPlayerOwn().getX()+45, getPlayerOwn().getY()+63};
+////                    g.drawOval((scene.getX()*-1)+mm[0]-2, (scene.getY()*-1)+mm[1]-2, 4, 4);
+////                    if(a>0){
+////                        if(geMathLinEq(ii[a-1], i, mm) < 1)
+////                            g.drawString("L: " + geMathLinEq(ii[a-1], i, mm), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+////
+////                        g.setColor(Color.RED);
+////                        g.drawLine((scene.getX()*-1)+ii[a-1][0],(scene.getY()*-1)+ii[a-1][1], (scene.getX()*-1)+i[0], (scene.getY()*-1)+i[1]);
+////                        if(a == ii.length-1) {
+////                            g.drawLine((scene.getX()*-1)+ii[a][0],(scene.getY()*-1)+ii[a][1], (scene.getX()*-1)+ii[0][0], (scene.getY()*-1)+ii[0][1]);
+////                            if(geMathLinEq(ii[a], ii[0], mm) < 1) {
+////                                g.setColor(Color.BLACK);
+////                                g.drawString("L: " + geMathLinEq(ii[a], ii[0], mm), (scene.getX()*-1)+ii[0][0]+10, (scene.getY()*-1)+ii[0][1]+15);
+////                            }
+////                        }
+////                    }
+////                }
+//            }
         }
     }
 
@@ -465,8 +522,13 @@ public class Game extends JPanel {
     double v_speed = 1;
     public void runFunction(){
     }
+
+    public double getV_speed() {
+        return v_speed;
+    }
+
     public void run(int m_x, int m_y) {
-        if(getGame_status() == 2 || getGame_status() == 3) {
+        if(getGame_status() != 0) {
             if (!p_own.isDead()) {
                 if (movements[0]) p_own.moveUp(-1 * v_speed);
                 if (movements[1]) p_own.moveForward(-1 * v_speed);
@@ -488,8 +550,10 @@ public class Game extends JPanel {
 
                 if (movements[8]) v_speed = v_speed / 2;
                 if (movements[9] || p_own.isAmmo_reloading() || p_own.getAmmoRemain() == 0) {
-                    p_own.setAmmo(0);
-                    p_own.reloadAmmo();
+                    if(p_own.getAmmoRemain() != 37){
+                        p_own.setAmmo(0);
+                        p_own.reloadAmmo();
+                    }
                 }
             }
 
@@ -508,11 +572,12 @@ public class Game extends JPanel {
             }
 
             scene.updateMouse(m_x, m_y);
-//            System.out.println((scene.getPlayerTarget() == null) + " : " + ((scene.getPlayerTarget() != null) ? scene.getPlayerTarget().getUsername().equals(getPlayerOwn().getUsername()) : ""));
-            if(scene.getPlayerTarget() == null || scene.getPlayerTarget().getUsername().equals(getPlayerOwn().getUsername()))
-                scene.updatePosition(getPlayerOwn().getX(), getPlayerOwn().getY());
-            else
-                scene.updatePosition(scene.getPlayerTarget().getX(), scene.getPlayerTarget().getY());
+            scene.updatePosition(getPlayerOwn().getX(), getPlayerOwn().getY());
+//            if(scene.getPlayerTarget() == null || scene.getPlayerTarget().getUsername().equals(getPlayerOwn().getUsername())) {
+//                scene.updatePosition(getPlayerOwn().getX(), getPlayerOwn().getY());
+//            }
+//            else
+//                scene.updatePosition(scene.getPlayerTarget().getX(), scene.getPlayerTarget().getY());
         }
 
 //        if(scene.getX() < 0 || scene.getBoundX() > scene.getSize_x()){
