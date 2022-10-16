@@ -116,7 +116,6 @@ public class Player {
         this.scene = scene;
         cimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/cha/chars_"+c_r+".png"));
 
-        randomPosition();
     }
 
     public Player(Scene scene, String username, int chr) throws IOException {

@@ -30,6 +30,23 @@ public class Scene {
 
     boolean mouse_inp = false;
     int m_x = 0, m_y = 0;
+
+    double x = 0, y = 0;
+    double size = 1;
+    int size_x = 2000, size_y = 2000;
+    int opc = 0;
+    Player targ_p;
+
+    public void reset(){
+        mouse_inp = false;
+        m_x = 0;
+        m_y = 0;
+        x = 0;
+        y = 0;
+        opc = 0;
+        targ_p = null;
+
+    }
     public void updateMouse(int x, int y){
         if(!mouse_inp) mouse_inp = true;
         m_x = x;
@@ -54,11 +71,6 @@ public class Scene {
             this.y = 2000-cCanv.getHeight()-(posmy*15*getSize());
         }
     } ///TODO: ทำ Raw x,y ของ scene แยก
-
-    double x = 0, y = 0;
-    double size = 1;
-    int size_x = 2000, size_y = 2000;
-    int opc = 0;
 
     public void setSize(float size) {
         this.size = size;
@@ -136,7 +148,6 @@ public class Scene {
         return ingame ? (int)(p + (posmy*15*getSize())) : (int)y+cCanv.getHeight();
 //        return (int)(p*getZoomCanvas());
     }
-    Player targ_p;
 
     public Player getPlayerTarget(){
         return targ_p;
@@ -157,7 +168,7 @@ public class Scene {
                     try {
                         Thread.sleep(10000);
 //                            ClientHandler.broadcastMessage("host:shutdown");
-                        getGame().stopMode();
+                        if(getGame().getGame_status() == 3) getGame().stopMode();
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }

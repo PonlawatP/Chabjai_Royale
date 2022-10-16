@@ -65,7 +65,15 @@ public class Game extends JPanel {
         try{
             String user = p_own.getUsername();
             Player.getPlayers().clear();
-            new Game(cFrame, cCanv, movements, user, hosting);
+
+            scene.reset();
+
+            p_own = new Player(scene);
+            p_own.setUsername(user);
+            Player.getPlayers().add(p_own);
+
+            roomName = getPlayerOwn().getUsername()+"'s Room";
+//            new Game(cFrame, cCanv, movements, user, hosting);
         } catch (IOException e){
             System.out.println(e.getMessage());
 //            e.printStackTrace();
@@ -400,7 +408,33 @@ public class Game extends JPanel {
             g.drawOval((scene.getX() * -1) + getPlayerOwn().getX() + 45 - 2, (scene.getY() * -1) + getPlayerOwn().getY() + 15 - 2, 4, 4);
             g.drawOval((scene.getX() * -1) + getPlayerOwn().getX() + 20 - 2, (scene.getY() * -1) + getPlayerOwn().getY() + 63 - 2, 4, 4);
             g.drawOval((scene.getX() * -1) + getPlayerOwn().getX() + 45 - 2, (scene.getY() * -1) + getPlayerOwn().getY() + 63 - 2, 4, 4);
-//            for (int[][] ii : colld_data){
+            for (int[][] ii : colld_data){
+                for(int a = 0; a < ii.length; a++){
+                    g.setColor(Color.BLACK);
+                    int[] i = ii[a];
+//                g.drawString("x: " + scene.getX() + " " + (i[0]+10), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+//                g.drawString("y: " + scene.getY() + " " + (i[1]+35), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+                    g.drawString("[" + i[0] + ", " + i[1] + "]", (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+//                    g.drawString("y: " + i[1], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+
+                    int[] mm = {getPlayerOwn().getX()+20, getPlayerOwn().getY()+15};
+                    g.drawOval((scene.getX()*-1)+mm[0]-2, (scene.getY()*-1)+mm[1]-2, 4, 4);
+                    if(a>0){
+                        if(geMathLinEq(ii[a-1], i, mm) < 1)
+                            g.drawString("L: " + geMathLinEq(ii[a-1], i, mm), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+
+                        g.setColor(Color.RED);
+                        g.drawLine((scene.getX()*-1)+ii[a-1][0],(scene.getY()*-1)+ii[a-1][1], (scene.getX()*-1)+i[0], (scene.getY()*-1)+i[1]);
+                        if(a == ii.length-1) {
+                            g.drawLine((scene.getX()*-1)+ii[a][0],(scene.getY()*-1)+ii[a][1], (scene.getX()*-1)+ii[0][0], (scene.getY()*-1)+ii[0][1]);
+                            if(geMathLinEq(ii[a], ii[0], mm) < 1) {
+                                g.setColor(Color.BLACK);
+                                g.drawString("L: " + geMathLinEq(ii[a], ii[0], mm), (scene.getX()*-1)+ii[0][0]+10, (scene.getY()*-1)+ii[0][1]+35);
+                            }
+                        }
+                    }
+                }
+
 //                for(int a = 0; a < ii.length; a++){
 //                    g.setColor(Color.BLACK);
 //                    int[] i = ii[a];
@@ -409,7 +443,7 @@ public class Game extends JPanel {
 ////                    g.drawString("x: " + i[0], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
 ////                    g.drawString("y: " + i[1], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
 //
-//                    int[] mm = {getPlayerOwn().getX()+20, getPlayerOwn().getY()+15};
+//                    int[] mm = {getPlayerOwn().getX()+45, getPlayerOwn().getY()+15};
 //                    g.drawOval((scene.getX()*-1)+mm[0]-2, (scene.getY()*-1)+mm[1]-2, 4, 4);
 //                    if(a>0){
 //                        if(geMathLinEq(ii[a-1], i, mm) < 1)
@@ -427,84 +461,58 @@ public class Game extends JPanel {
 //                    }
 //                }
 //
-////                for(int a = 0; a < ii.length; a++){
-////                    g.setColor(Color.BLACK);
-////                    int[] i = ii[a];
-//////                g.drawString("x: " + scene.getX() + " " + (i[0]+10), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
-//////                g.drawString("y: " + scene.getY() + " " + (i[1]+35), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
-//////                    g.drawString("x: " + i[0], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
-//////                    g.drawString("y: " + i[1], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
-////
-////                    int[] mm = {getPlayerOwn().getX()+45, getPlayerOwn().getY()+15};
-////                    g.drawOval((scene.getX()*-1)+mm[0]-2, (scene.getY()*-1)+mm[1]-2, 4, 4);
-////                    if(a>0){
-////                        if(geMathLinEq(ii[a-1], i, mm) < 1)
-////                            g.drawString("L: " + geMathLinEq(ii[a-1], i, mm), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
-////
-////                        g.setColor(Color.RED);
-////                        g.drawLine((scene.getX()*-1)+ii[a-1][0],(scene.getY()*-1)+ii[a-1][1], (scene.getX()*-1)+i[0], (scene.getY()*-1)+i[1]);
-////                        if(a == ii.length-1) {
-////                            g.drawLine((scene.getX()*-1)+ii[a][0],(scene.getY()*-1)+ii[a][1], (scene.getX()*-1)+ii[0][0], (scene.getY()*-1)+ii[0][1]);
-////                            if(geMathLinEq(ii[a], ii[0], mm) < 1) {
-////                                g.setColor(Color.BLACK);
-////                                g.drawString("L: " + geMathLinEq(ii[a], ii[0], mm), (scene.getX()*-1)+ii[0][0]+10, (scene.getY()*-1)+ii[0][1]+15);
-////                            }
-////                        }
-////                    }
-////                }
-////
-////                for(int a = 0; a < ii.length; a++){
-////                    g.setColor(Color.BLACK);
-////                    int[] i = ii[a];
-//////                g.drawString("x: " + scene.getX() + " " + (i[0]+10), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
-//////                g.drawString("y: " + scene.getY() + " " + (i[1]+35), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
-//////                    g.drawString("x: " + i[0], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
-//////                    g.drawString("y: " + i[1], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
-////
-////                    int[] mm = {getPlayerOwn().getX()+20, getPlayerOwn().getY()+63};
-////                    g.drawOval((scene.getX()*-1)+mm[0]-2, (scene.getY()*-1)+mm[1]-2, 4, 4);
-////                    if(a>0){
-////                        if(geMathLinEq(ii[a-1], i, mm) < 1)
-////                            g.drawString("L: " + geMathLinEq(ii[a-1], i, mm), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
-////
-////                        g.setColor(Color.RED);
-////                        g.drawLine((scene.getX()*-1)+ii[a-1][0],(scene.getY()*-1)+ii[a-1][1], (scene.getX()*-1)+i[0], (scene.getY()*-1)+i[1]);
-////                        if(a == ii.length-1) {
-////                            g.drawLine((scene.getX()*-1)+ii[a][0],(scene.getY()*-1)+ii[a][1], (scene.getX()*-1)+ii[0][0], (scene.getY()*-1)+ii[0][1]);
-////                            if(geMathLinEq(ii[a], ii[0], mm) < 1) {
-////                                g.setColor(Color.BLACK);
-////                                g.drawString("L: " + geMathLinEq(ii[a], ii[0], mm), (scene.getX()*-1)+ii[0][0]+10, (scene.getY()*-1)+ii[0][1]+15);
-////                            }
-////                        }
-////                    }
-////                }
-////
-////                for(int a = 0; a < ii.length; a++){
-////                    g.setColor(Color.BLACK);
-////                    int[] i = ii[a];
-//////                g.drawString("x: " + scene.getX() + " " + (i[0]+10), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
-//////                g.drawString("y: " + scene.getY() + " " + (i[1]+35), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
-//////                    g.drawString("x: " + i[0], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
-//////                    g.drawString("y: " + i[1], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
-////
-////                    int[] mm = {getPlayerOwn().getX()+45, getPlayerOwn().getY()+63};
-////                    g.drawOval((scene.getX()*-1)+mm[0]-2, (scene.getY()*-1)+mm[1]-2, 4, 4);
-////                    if(a>0){
-////                        if(geMathLinEq(ii[a-1], i, mm) < 1)
-////                            g.drawString("L: " + geMathLinEq(ii[a-1], i, mm), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
-////
-////                        g.setColor(Color.RED);
-////                        g.drawLine((scene.getX()*-1)+ii[a-1][0],(scene.getY()*-1)+ii[a-1][1], (scene.getX()*-1)+i[0], (scene.getY()*-1)+i[1]);
-////                        if(a == ii.length-1) {
-////                            g.drawLine((scene.getX()*-1)+ii[a][0],(scene.getY()*-1)+ii[a][1], (scene.getX()*-1)+ii[0][0], (scene.getY()*-1)+ii[0][1]);
-////                            if(geMathLinEq(ii[a], ii[0], mm) < 1) {
-////                                g.setColor(Color.BLACK);
-////                                g.drawString("L: " + geMathLinEq(ii[a], ii[0], mm), (scene.getX()*-1)+ii[0][0]+10, (scene.getY()*-1)+ii[0][1]+15);
-////                            }
-////                        }
-////                    }
-////                }
-//            }
+//                for(int a = 0; a < ii.length; a++){
+//                    g.setColor(Color.BLACK);
+//                    int[] i = ii[a];
+////                g.drawString("x: " + scene.getX() + " " + (i[0]+10), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+////                g.drawString("y: " + scene.getY() + " " + (i[1]+35), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+////                    g.drawString("x: " + i[0], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+////                    g.drawString("y: " + i[1], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+//
+//                    int[] mm = {getPlayerOwn().getX()+20, getPlayerOwn().getY()+63};
+//                    g.drawOval((scene.getX()*-1)+mm[0]-2, (scene.getY()*-1)+mm[1]-2, 4, 4);
+//                    if(a>0){
+//                        if(geMathLinEq(ii[a-1], i, mm) < 1)
+//                            g.drawString("L: " + geMathLinEq(ii[a-1], i, mm), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+//
+//                        g.setColor(Color.RED);
+//                        g.drawLine((scene.getX()*-1)+ii[a-1][0],(scene.getY()*-1)+ii[a-1][1], (scene.getX()*-1)+i[0], (scene.getY()*-1)+i[1]);
+//                        if(a == ii.length-1) {
+//                            g.drawLine((scene.getX()*-1)+ii[a][0],(scene.getY()*-1)+ii[a][1], (scene.getX()*-1)+ii[0][0], (scene.getY()*-1)+ii[0][1]);
+//                            if(geMathLinEq(ii[a], ii[0], mm) < 1) {
+//                                g.setColor(Color.BLACK);
+//                                g.drawString("L: " + geMathLinEq(ii[a], ii[0], mm), (scene.getX()*-1)+ii[0][0]+10, (scene.getY()*-1)+ii[0][1]+15);
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                for(int a = 0; a < ii.length; a++){
+//                    g.setColor(Color.BLACK);
+//                    int[] i = ii[a];
+////                g.drawString("x: " + scene.getX() + " " + (i[0]+10), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+////                g.drawString("y: " + scene.getY() + " " + (i[1]+35), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+////                    g.drawString("x: " + i[0], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+////                    g.drawString("y: " + i[1], (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+35);
+//
+//                    int[] mm = {getPlayerOwn().getX()+45, getPlayerOwn().getY()+63};
+//                    g.drawOval((scene.getX()*-1)+mm[0]-2, (scene.getY()*-1)+mm[1]-2, 4, 4);
+//                    if(a>0){
+//                        if(geMathLinEq(ii[a-1], i, mm) < 1)
+//                            g.drawString("L: " + geMathLinEq(ii[a-1], i, mm), (scene.getX()*-1)+i[0]+10, (scene.getY()*-1)+i[1]+15);
+//
+//                        g.setColor(Color.RED);
+//                        g.drawLine((scene.getX()*-1)+ii[a-1][0],(scene.getY()*-1)+ii[a-1][1], (scene.getX()*-1)+i[0], (scene.getY()*-1)+i[1]);
+//                        if(a == ii.length-1) {
+//                            g.drawLine((scene.getX()*-1)+ii[a][0],(scene.getY()*-1)+ii[a][1], (scene.getX()*-1)+ii[0][0], (scene.getY()*-1)+ii[0][1]);
+//                            if(geMathLinEq(ii[a], ii[0], mm) < 1) {
+//                                g.setColor(Color.BLACK);
+//                                g.drawString("L: " + geMathLinEq(ii[a], ii[0], mm), (scene.getX()*-1)+ii[0][0]+10, (scene.getY()*-1)+ii[0][1]+15);
+//                            }
+//                        }
+//                    }
+//                }
+            }
         }
     }
 
@@ -561,6 +569,9 @@ public class Game extends JPanel {
             this.m_x = m_x;
             this.m_y = m_y;
 
+            scene.updateMouse(m_x, m_y);
+            scene.updatePosition(getPlayerOwn().getX(), getPlayerOwn().getY());
+
             Iterator<Player> ps = new ArrayList<>(Player.getPlayers()).iterator();
             while (ps.hasNext()) {
                 Player p = ps.next();
@@ -571,9 +582,6 @@ public class Game extends JPanel {
                     a.runProjectile();
                 }
             }
-
-            scene.updateMouse(m_x, m_y);
-            scene.updatePosition(getPlayerOwn().getX(), getPlayerOwn().getY());
 //            if(scene.getPlayerTarget() == null || scene.getPlayerTarget().getUsername().equals(getPlayerOwn().getUsername())) {
 //                scene.updatePosition(getPlayerOwn().getX(), getPlayerOwn().getY());
 //            }
