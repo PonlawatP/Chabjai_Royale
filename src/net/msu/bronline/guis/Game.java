@@ -1,6 +1,7 @@
 package net.msu.bronline.guis;
 
 import net.msu.bronline.comps.Ammo;
+import net.msu.bronline.comps.Armor;
 import net.msu.bronline.comps.Player;
 import net.msu.bronline.comps.Scene;
 import net.msu.bronline.network.CientProgram;
@@ -43,6 +44,8 @@ public class Game extends JPanel {
     int game_status = 0;
     String hostUser = "";
 
+    ArrayList<Armor> armors = new ArrayList<>();
+
     public Game(JFrame cFrame, Canvas canv, boolean[] movements, String username, boolean host) throws IOException {
         g = this;
         this.cFrame = cFrame;
@@ -65,6 +68,8 @@ public class Game extends JPanel {
         try{
             String user = p_own.getUsername();
             Player.getPlayers().clear();
+
+            armors.clear();
 
             scene.reset();
 
@@ -326,14 +331,10 @@ public class Game extends JPanel {
             int _97 = getInsidePosition(0, cCanv.getWidth(), 97);
             g.drawImage(Fimg, _3, cFrame.getHeight() - 150, this);
 
-            g.setColor(Color.BLACK);
-            g.fillRect(_3 + 147, cFrame.getHeight() - 90, 240, 13);
             g.setColor(Color.white);
             g.fillRect(_3 + 147, cFrame.getHeight() - 90, (int) (240 * p_own.getHpPercent()), 13);
             g.drawImage(p.getPlayerImage(), _3 + 65, cFrame.getHeight() - 70 - 70, _3 + 65 + 70, cFrame.getHeight() - 90 + 20, p.getSpriteX() + 17, p.getSpriteY() + 11, p.getSpriteDX() - 17, p.getSpriteDY() - 23, this);
 
-            g.setColor(Color.BLACK);
-            g.fillRect(_3 + 147, cFrame.getHeight() - 100, 220, 8);
             g.setColor(new Color(0xC5C5CE));
             g.fillRect(_3 + 147, cFrame.getHeight() - 100, (int) (220 * p_own.getArmorPercent()), 8);
 

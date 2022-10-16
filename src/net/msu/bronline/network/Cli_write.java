@@ -1,5 +1,7 @@
 package net.msu.bronline.network;
 
+import net.msu.bronline.funcs.Utils;
+
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
@@ -42,7 +44,7 @@ public class Cli_write extends Thread implements Runnable{
                 String mess = st.pop();
                 for (String Mdata : mess.split("::ln::")) {
                     String[] data = Mdata.split(":");
-                    if (!data[1].equalsIgnoreCase("player")) System.out.println("[s] " + Mdata);
+                    if (!data[1].equalsIgnoreCase("player") && Utils.dev) System.out.println("<- " + Mdata);
                 }
 
                 dos.writeUTF(mess);

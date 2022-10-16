@@ -1,6 +1,7 @@
 package net.msu.bronline.network;
 
 import net.msu.bronline.comps.Player;
+import net.msu.bronline.funcs.Utils;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -31,7 +32,7 @@ public class Cli_read extends Thread implements Runnable{
                 int cnt = 0;
                 for(String mess : dis.readUTF().split("::ln::")) {
                     String[] data = mess.split(":");
-                    if(!data[1].equalsIgnoreCase("player")) System.out.println("[r] " + mess);
+                    if(!data[1].equalsIgnoreCase("player") && Utils.dev) System.out.println("-> " + mess);
 //                    System.out.println("[r] " + mess);
 
                     if (data[1].equalsIgnoreCase("player")) {
