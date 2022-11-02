@@ -45,7 +45,7 @@ public class Scene {
         y = 0;
         opc = 0;
         targ_p = null;
-
+        Armor.getArmors().clear();
     }
     public void updateMouse(int x, int y){
         if(!mouse_inp) mouse_inp = true;

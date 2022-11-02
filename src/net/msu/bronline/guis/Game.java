@@ -215,12 +215,23 @@ public class Game extends JPanel {
 
                 ,this
         );
+
+        drawArmor(g);
         drawPlayer(g);
 
         try {
             drawUI(g);
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    public void drawArmor(Graphics2D g){
+        Iterator<Armor> amm = new ArrayList<>(Armor.getArmors()).iterator();
+
+        while (amm.hasNext()){
+            Armor p = amm.next();
+            g.drawImage(p.getImage(), p.getPosX(), p.getPosY(), p.getPosBoundX(), p.getPosBoundY(), 0,0,55,55,this);
         }
     }
 
@@ -236,7 +247,11 @@ public class Game extends JPanel {
             if(!p.isDead()){
                 g.setColor(Color.BLACK);
                 g.fillRoundRect(p.getPosX(),p.getPosY()+4, 64, 3, 2, 2);
-                g.setColor(new Color(0xC5C5CE));
+                if(p.getArmor_type() == 1){
+                    g.setColor(new Color(0xC5C5CE));
+                } else {
+                    g.setColor(new Color(0x7FF3F3));
+                }
                 g.fillRoundRect(p.getPosX(),p.getPosY()+4, (int) (64*p.getArmorPercent()), 3, 2, 2);
                 g.setColor(Color.BLACK);
                 g.fillRoundRect(p.getPosX(),p.getPosY()+7, 64, 3, 2, 2);
@@ -253,6 +268,9 @@ public class Game extends JPanel {
             drawAmmo(g, p);
 //            System.out.println(p.getUsername() + " : " + p.getAmmo().size());
             g.drawImage(p.getPlayerImage(), p.getPosX(), p.getPosY(), p.getPosBoundX(), p.getPosBoundY(), p.getSpriteX(),p.getSpriteY(),p.getSpriteDX(),p.getSpriteDY(),this);
+
+            if(scene.getPlayerTarget() != null && !scene.getPlayerTarget().getUsername().equals(getPlayerOwn().getUsername()))
+                scene.updatePosition(scene.getPlayerTarget().getX(), scene.getPlayerTarget().getY());
         }
     }
 
@@ -335,7 +353,11 @@ public class Game extends JPanel {
             g.fillRect(_3 + 147, cFrame.getHeight() - 90, (int) (240 * p_own.getHpPercent()), 13);
             g.drawImage(p.getPlayerImage(), _3 + 65, cFrame.getHeight() - 70 - 70, _3 + 65 + 70, cFrame.getHeight() - 90 + 20, p.getSpriteX() + 17, p.getSpriteY() + 11, p.getSpriteDX() - 17, p.getSpriteDY() - 23, this);
 
-            g.setColor(new Color(0xC5C5CE));
+            if(p_own.getArmor_type() == 1){
+                g.setColor(new Color(0xC5C5CE));
+            } else {
+                g.setColor(new Color(0x7FF3F3));
+            }
             g.fillRect(_3 + 147, cFrame.getHeight() - 100, (int) (220 * p_own.getArmorPercent()), 8);
 
             g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
@@ -570,9 +592,10 @@ public class Game extends JPanel {
             this.m_x = m_x;
             this.m_y = m_y;
 
-            scene.updateMouse(m_x, m_y);
-            scene.updatePosition(getPlayerOwn().getX(), getPlayerOwn().getY());
+            if(scene.getPlayerTarget() == null || scene.getPlayerTarget().getUsername().equals(getPlayerOwn().getUsername()))
+                scene.updatePosition(getPlayerOwn().getX(), getPlayerOwn().getY());
 
+            scene.updateMouse(m_x, m_y);
             Iterator<Player> ps = new ArrayList<>(Player.getPlayers()).iterator();
             while (ps.hasNext()) {
                 Player p = ps.next();
@@ -582,6 +605,20 @@ public class Game extends JPanel {
                     Ammo a = ams.next();
                     a.runProjectile();
                 }
+                if(p.getArmor() < (p.getArmor_type() == 1 ? 50 : 100)) {
+
+                    Iterator<Armor> amm = new ArrayList<>(Armor.getArmors()).iterator();
+                    while (amm.hasNext()) {
+                        Armor a = amm.next();
+
+                        if (a.checkInteract(p.getX(), p.getY())) {
+                            p.setArmor_type(a.getType());
+                            p.setArmor(a.getType() == 1 ? 50 : 100);
+                            a.remove();
+                        }
+                    }
+                }
+
             }
 //            if(scene.getPlayerTarget() == null || scene.getPlayerTarget().getUsername().equals(getPlayerOwn().getUsername())) {
 //                scene.updatePosition(getPlayerOwn().getX(), getPlayerOwn().getY());
@@ -642,19 +679,38 @@ public class Game extends JPanel {
                         ex.printStackTrace();
                     }
                     if(f) return;
-                    ClientHandler.broadcastMessage("host:act:start");
-                    setGame_status(2);
-                    getPresent().setGame_status(5);
+                    funcStart();
                 }
             }).start();
             return;
         }
+        funcStart();
+    }
 
+    void funcStart(){
         ClientHandler.broadcastMessage("host:act:start");
         setGame_status(2);
         getPresent().setGame_status(5);
-    }
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 8; i++){
+                    new Armor();
+                }
+                while (getGame_status() != 0){
+                    if(Armor.getArmors().size() >= 10) continue;
+
+                    new Armor();
+                    try {
+                        Thread.sleep(15000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }).start();
+    }
 
 
     public static Game getGame(){
