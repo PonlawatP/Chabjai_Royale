@@ -1,4 +1,5 @@
 package net.msu.bronline.network;
+import net.msu.bronline.comps.Armor;
 import net.msu.bronline.comps.Player;
 import net.msu.bronline.comps.Scene;
 import net.msu.bronline.guis.Game;
@@ -65,6 +66,7 @@ public class ClientHandler implements Runnable{
 
             broadcastMessage(clientUser+":join:"+p.getCharacterID()); //TODO: ทำแบบ broadcast
             loadPlayersIngame();
+            loadArmorsIngame();
         } catch (Exception e) {
 //            closeEverything(soc, bufReader, bufWriter);
         }
@@ -77,6 +79,14 @@ public class ClientHandler implements Runnable{
             Player p = pls.next();
             if(p.getUsername() == getClientUser()) continue;
             cw.sendMessage(p.getUsername() + ":" + p.getPacket("load"));
+        }
+    }
+    public void loadArmorsIngame() {
+        Iterator<Armor> ams = new ArrayList<>(Armor.getArmors()).iterator();
+
+        while (ams.hasNext()){
+            Armor a = ams.next();
+            cw.sendMessage("host:arm_load:"+a.getRawX()+":"+a.getRawY()+":"+a.getType());
         }
     }
 

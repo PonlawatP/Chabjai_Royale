@@ -695,9 +695,6 @@ public class Game extends JPanel {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < 8; i++){
-                    new Armor();
-                }
                 while (getGame_status() != 0){
                     if(Armor.getArmors().size() >= 10) continue;
 

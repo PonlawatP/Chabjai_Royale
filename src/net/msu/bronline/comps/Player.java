@@ -96,10 +96,10 @@ public class Player {
 
         boolean coll = false;
         for (int[][] ii : colld_data){
-            int x1 = colls(ii,(int) (x+14), y+20);
-            int x2 = colls(ii,(int) (x+64-14), y+20);
-            int x3 = colls(ii,(int) (x+14+x), y+64-2);
-            int x4 = colls(ii,(int) (x+64-14), y+64-2);
+            int x1 = colls(ii,(int) (x), y+20);
+            int x2 = colls(ii,(int) (x+64), y+20);
+            int x3 = colls(ii,(int) (x), y+64-2);
+            int x4 = colls(ii,(int) (x+64), y+64-2);
             if(x1 == 0 || x2 == 0 || x3 == 0 || x4 == 0) {
                 coll = true;
                 break;
@@ -115,7 +115,7 @@ public class Player {
     public Player(Scene scene) throws IOException {
         this.scene = scene;
         cimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/cha/chars_"+c_r+".png"));
-
+        randomPosition();
     }
 
     public Player(Scene scene, String username, int chr) throws IOException {
@@ -123,6 +123,7 @@ public class Player {
         this.username = username;
         c_r = chr;
         cimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/cha/chars_"+c_r+".png"));
+        randomPosition();
     }
 
     int ammo = 37;

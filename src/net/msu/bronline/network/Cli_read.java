@@ -1,5 +1,6 @@
 package net.msu.bronline.network;
 
+import net.msu.bronline.comps.Armor;
 import net.msu.bronline.comps.Player;
 import net.msu.bronline.funcs.Utils;
 
@@ -133,6 +134,15 @@ public class Cli_read extends Thread implements Runnable{
                                 break;
                             }
                         }
+                    } else if (data[1].equalsIgnoreCase("amrspawn") || data[1].equalsIgnoreCase("arm_load")){
+                        double x = Double.parseDouble(data[2]);
+                        double y = Double.parseDouble(data[3]);
+                        int type = Integer.parseInt(data[4]);
+                        new Armor(x,y,type);
+                    } else if (data[1].equalsIgnoreCase("amrremove")){
+                        double x = Double.parseDouble(data[2]);
+                        double y = Double.parseDouble(data[3]);
+                        Armor.remove(x,y);
                     }
                 }
 

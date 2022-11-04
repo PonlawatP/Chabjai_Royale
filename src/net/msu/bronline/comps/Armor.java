@@ -7,9 +7,11 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import static net.msu.bronline.funcs.Utils.colld_data;
 import static net.msu.bronline.funcs.Utils.geMathLinEq;
+import static net.msu.bronline.guis.Game.getGame;
 
 public class Armor {
     static ArrayList<Armor> armorArrayList = new ArrayList<>();
@@ -69,7 +71,7 @@ public class Armor {
         ClientHandler.broadcastMessage("host:amrspawn:" + x + ":" + y + ":" + type);
         armorArrayList.add(this);
     }
-    public Armor(int x, int y, int type){
+    public Armor(double x, double y, int type){
         this.x = x;
         this.y = y;
         if (coll()) return;
@@ -93,6 +95,15 @@ public class Armor {
     public int getY() {
         return (int) y;
     }
+    public double getRawX() {
+        return x;
+    }
+
+    public double getRawY() {
+        return y;
+    }
+
+
 
     public boolean checkInteract(int x, int y){
         return (
@@ -125,6 +136,22 @@ public class Armor {
         return armorArrayList;
     }
     public void remove(){
+        if (getGame().isHosting()) {
+            ClientHandler.broadcastMessage("host:amrremove:" + x + ":" + y);
+        } else {
+            getGame().getClientProgram().getCwrite().sendMessage(getGame().getPlayerOwn().getUsername()+":amrremove:" + x + ":" + y);
+        }
         armorArrayList.remove(this);
+    }
+    public static void remove(double x, double y){
+        Iterator<Armor> armorIterator = getArmors().iterator();
+        while (armorIterator.hasNext()){
+            Armor a = armorIterator.next();
+            if(a.getRawX() == x && a.getRawY() == y){
+//                armorArrayList.remove(a);
+                armorIterator.remove();
+                return;
+            }
+        }
     }
 }

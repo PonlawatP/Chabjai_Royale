@@ -1,5 +1,6 @@
 package net.msu.bronline.network;
 
+import net.msu.bronline.comps.Armor;
 import net.msu.bronline.comps.Player;
 
 import java.io.DataInputStream;
@@ -53,6 +54,10 @@ public class Sv_read extends Thread implements Runnable{
                                 break;
                             }
                         }
+                    } else if (data[1].equalsIgnoreCase("amrremove")){
+                        double x = Double.parseDouble(data[2]);
+                        double y = Double.parseDouble(data[3]);
+                        Armor.remove(x,y);
                     }
 
 
