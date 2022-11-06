@@ -28,6 +28,7 @@ public class Player {
     int armor = 50;
     int armor_type = 1;
     int score = 0;
+    boolean isMove = false;
 
     BufferedImage cimg;
     Scene scene;
@@ -223,6 +224,14 @@ public class Player {
         return s;
     }
 
+    public boolean isMove() {
+        return isMove;
+    }
+
+    public void setMove(boolean move) {
+        isMove = move;
+    }
+
     public void moveForward(double x){
         if(this.x+14+x >= 0 && this.x+64-14+x <= 2000){
             boolean coll = false;
@@ -240,6 +249,7 @@ public class Player {
 
             if(!coll) {
                 this.x+=x;
+                setMove(true);
             } else {
 //                this.y-=x;
             }
@@ -260,6 +270,7 @@ public class Player {
             }
             if(!coll) {
                 this.y+=y;
+                setMove(true);
             } else {
 //                this.x-=y;
             }
@@ -304,6 +315,7 @@ public class Player {
         double ty = m_y-(getPosY()+42);
         double atan = Math.atan2(ty,tx);
         double deg = Math.toDegrees(atan);
+        setMove(true);
         return deg;
     }
 
@@ -482,6 +494,7 @@ public class Player {
 
     public String getPacket(){
 //        username:player:skin:x:y:mouse_x:mouse_y:hp:armor:armor_type:fireTrigger
+        setMove(false);
         return "player:"+c_r+ ":" + getX() + ":" + getY() + ":" + getAngle() + ":" + getHp() + ":" + getArmor() + ":" + getArmor_type() + ":" + isDead() + ":" + getScore();
     }
     public String getPacket(String type){

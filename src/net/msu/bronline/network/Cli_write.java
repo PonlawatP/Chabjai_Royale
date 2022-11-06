@@ -62,10 +62,11 @@ public class Cli_write extends Thread implements Runnable{
     public void run() {
         while (!cp.quit && !soc.isClosed()){
             try {
-                if(getGame().getGame_status() == 2 || getGame().getGame_status() == 3) sendMessage(cp.getUsername() + ":" + getGame().getPlayerOwn().getPacket());
+                if(getGame().getGame_status() == 2 || getGame().getGame_status() == 3)
+                    if(getGame().getPlayerOwn().isMove()) sendMessage(cp.getUsername() + ":" + getGame().getPlayerOwn().getPacket());
 
                 sendMessageToServer();
-                sleep(5);
+                sleep(10);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

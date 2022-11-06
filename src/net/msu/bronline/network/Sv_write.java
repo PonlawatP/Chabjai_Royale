@@ -69,12 +69,12 @@ public class Sv_write extends Thread implements Runnable{
                     while (pls.hasNext()){
                         Player p = pls.next();
                         if(p.getUsername() == ch.getClientUser()) continue;
-                        sendMessage(p.getUsername() + ":" + p.getPacket());
+                        if(p.isMove()) sendMessage(p.getUsername() + ":" + p.getPacket());
                     }
                 }
 
                 sendMessageToServer();
-                sleep(5);
+                sleep(10);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
