@@ -1,5 +1,6 @@
 package net.msu.bronline;
 
+import net.msu.bronline.funcs.SoundClip;
 import net.msu.bronline.funcs.StartMenu;
 
 import javax.swing.*;
@@ -24,6 +25,7 @@ public class Main_1 {
         user.setText("Default_Player");
 
         try{
+//            SoundClip snd = new SoundClip(Main.class.getClassLoader().getResourceAsStream("imgs/snds/st.wav"));
             new StartMenu(user.getText(), true);
             return;
         }catch (IOException ex){
