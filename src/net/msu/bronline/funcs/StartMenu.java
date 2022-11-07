@@ -78,9 +78,9 @@ class Canv extends Canvas {
         ps = new Present(cFrame, this, username, movements);
         new Game(cFrame, this, movements, username, host);
 
-        ps.setGame_status(1);
-        ps.setFrameTime(120);
-        ps.getScene().setOpacity(40);
+//        ps.setGame_status(1);
+//        ps.setFrameTime(120);
+//        ps.getScene().setOpacity(40);
 
 //        addMouseWheelListener(new MouseWheelListener() {
 //            @Override

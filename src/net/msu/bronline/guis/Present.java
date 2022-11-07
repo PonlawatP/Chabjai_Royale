@@ -2,6 +2,7 @@ package net.msu.bronline.guis;
 
 import net.msu.bronline.comps.Player;
 import net.msu.bronline.comps.Scene;
+import net.msu.bronline.funcs.Utils;
 import net.msu.bronline.network.NetworkDevices;
 
 import javax.imageio.ImageIO;
@@ -152,7 +153,7 @@ public class Present extends JPanel {
 
                 if(getGame().getGame_status() == 0){
                     g.drawImage(btn_back, btn_back_px,btn_back_py, btn_back_px+btn_back_sx,btn_back_py+btn_back_sy,0,0,1020,400,this);
-                    g.drawImage(btn_play, b_cen_x,btn_py, b_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
+                    if(Player.getPlayers().size() >= Utils.allowed_start) g.drawImage(btn_play, b_cen_x,btn_py, b_cen_x+btn_sx,btn_py+btn_sy,0,0,480,160,this);
                 }
             }
             else if(game_status == 4){
@@ -402,9 +403,11 @@ public class Present extends JPanel {
             i_hover = hn;
             if(hn != -1) return 3;
 
-            } else if(game_status == 3) {
-            if((x >= btn_back_px && x <= btn_back_px+btn_back_sx) && (y >= btn_back_py && y <= btn_back_py+btn_back_sy)) return 0;
-            if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 1;
+        } else if(game_status == 3) {
+            if(getGame().getGame_status() != 1){
+                if((x >= btn_back_px && x <= btn_back_px+btn_back_sx) && (y >= btn_back_py && y <= btn_back_py+btn_back_sy)) return 0;
+                if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy) && Player.getPlayers().size() >= Utils.allowed_start) return 1;
+            }
         } else if(game_status == 4) {
             if((x >= btn_back_px && x <= btn_back_px+btn_back_sx) && (y >= btn_back_py && y <= btn_back_py+btn_back_sy)) return 0;
         }

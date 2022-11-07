@@ -1,5 +1,6 @@
 package net.msu.bronline.comps;
 
+import net.msu.bronline.funcs.Utils;
 import net.msu.bronline.network.ClientHandler;
 import net.msu.bronline.network.NetworkDevices;
 
@@ -30,12 +31,67 @@ public class Player {
     int score = 0;
     boolean isMove = false;
 
+    int ammo = 37;
+    boolean ammo_reloading = false;
+    int ammo_re_thr = 0;
+    int ammo_re_lim = 100;
+    int ammo_cld = 0;
+    int re_ammo_cld = 0;
+    int ammo_cld_lim = 5;
+    int dead_del = 0;
+
     BufferedImage cimg;
     Scene scene;
     String username = "Player";
     boolean dead = false;
     int c_r = (int) (1 + 8*Math.random());
+
+    boolean fireTrigger = false;
+
+    double ang = -999;
+    int i = 0, i1 = 0, a1 = 11, a1_lim = 8;
+    ArrayList<int[]> marker = new ArrayList<int[]>();
+    private ArrayList<Ammo> amms = new ArrayList<>();
     public List<Integer> c_r_t = new ArrayList<>();
+
+    public void reset(){
+        m_x = 0;
+        m_y = 0;
+        x = 150;
+        y = 150;
+        ox = 150;
+        oy = 150;
+        hp = 100;
+        armor = 50;
+        armor_type = 1;
+        score = 0;
+        isMove = false;
+
+        ammo = 37;
+        ammo_reloading = false;
+        ammo_re_thr = 0;
+        ammo_re_lim = 100;
+        ammo_cld = 0;
+        re_ammo_cld = 0;
+        ammo_cld_lim = 5;
+        dead_del = 0;
+
+        dead = false;
+        c_r = (int) (1 + 8*Math.random());
+
+        fireTrigger = false;
+
+        ang = -999;
+        i = 0;
+        i1 = 0;
+        a1 = 11;
+        a1_lim = 8;
+
+        marker = new ArrayList<int[]>();
+        amms = new ArrayList<>();
+        c_r_t = new ArrayList<>();
+    }
+
     public int randomCharID(){
         if(c_r_t.size() >= 8) return c_r;
         for (int i : c_r_t){
@@ -89,8 +145,6 @@ public class Player {
         this.fireTrigger = fireTrigger;
     }
 
-    boolean fireTrigger = false;
-
     public boolean randomPosition(){
         x = 64+(int) (Math.random()*(2000-128));
         y = 64+(int) (Math.random()*(2000-128));
@@ -126,15 +180,6 @@ public class Player {
         cimg = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/cha/chars_"+c_r+".png"));
         randomPosition();
     }
-
-    int ammo = 37;
-    boolean ammo_reloading = false;
-    int ammo_re_thr = 0;
-    int ammo_re_lim = 100;
-    int ammo_cld = 0;
-    int re_ammo_cld = 0;
-    int ammo_cld_lim = 5;
-    int dead_del = 0;
 
     public int getAmmoRemain(){
         return ammo;
@@ -308,7 +353,6 @@ public class Player {
         m_x = x;
         m_y = y;
     }
-    double ang = -999;
     public double getAngle(){
         if(ang != -999) return ang;
         double tx = m_x-(getPosX()+(64/2));
@@ -352,7 +396,7 @@ public class Player {
 
 //                System.out.println(p.getUsername() + " : " + getGame().getPlayerOwn().getUsername() + " : " + !p.getUsername().equalsIgnoreCase(getGame().getPlayerOwn().getUsername()));
                 if(!p.getUsername().equalsIgnoreCase(getGame().getPlayerOwn().getUsername())) scene.setPlayerTarget(p);
-                if(p.getScore() >= 2){
+                if(p.getScore() >= Utils.score_win){
                     getGame().getScene().winnerScene(p);
                     if(getGame().isHosting()){
                         ClientHandler.broadcastMessage(p.getUsername() + ":act:ended");
@@ -363,7 +407,6 @@ public class Player {
             }
         }
     }
-    int i = 0, i1 = 0, a1 = 11, a1_lim = 8;
     public void updateAnimation(){
         i++;
         boolean back = false;
@@ -471,8 +514,6 @@ public class Player {
         return (64*(a1+1))-1;
     }
 
-    ArrayList<int[]> marker = new ArrayList<int[]>();
-
     public ArrayList<int[]> getMarker() {
         return marker;
     }
@@ -525,7 +566,6 @@ public class Player {
         }
     }
 
-    private ArrayList<Ammo> amms = new ArrayList<>();
 
     public ArrayList<Ammo> getAmmo() {
         return amms;

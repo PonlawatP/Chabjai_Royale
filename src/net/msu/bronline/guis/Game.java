@@ -65,24 +65,16 @@ public class Game extends JPanel {
         roomName = getPlayerOwn().getUsername()+"'s Room";
     }
     public void resetGame() {
-        try{
-            String user = p_own.getUsername();
             Player.getPlayers().clear();
 
             armors.clear();
 
             scene.reset();
 
-            p_own = new Player(scene);
-            p_own.setUsername(user);
+            p_own.reset();
             Player.getPlayers().add(p_own);
 
             roomName = getPlayerOwn().getUsername()+"'s Room";
-//            new Game(cFrame, cCanv, movements, user, hosting);
-        } catch (IOException e){
-            System.out.println(e.getMessage());
-//            e.printStackTrace();
-        }
     }
     public void updateRoom(String[] data){
         //username:conf:name:amount:max:status
@@ -205,6 +197,10 @@ public class Game extends JPanel {
     int b_cen_x = 0, b_cen_y = 0;
     public void draw(Graphics ge)  {
         Graphics2D g = (Graphics2D) ge;
+
+        if(scene.getPlayerTarget() != null && !scene.getPlayerTarget().getUsername().equals(getPlayerOwn().getUsername()))
+            scene.updatePosition(scene.getPlayerTarget().getX(), scene.getPlayerTarget().getY());
+
         g.drawImage(
                 scene.getImg(false),
                 0,0
@@ -215,6 +211,7 @@ public class Game extends JPanel {
 
                 ,this
         );
+
 
         drawArmor(g);
         drawPlayer(g);
@@ -267,10 +264,9 @@ public class Game extends JPanel {
 //            draw ammo
             drawAmmo(g, p);
 //            System.out.println(p.getUsername() + " : " + p.getAmmo().size());
+
             g.drawImage(p.getPlayerImage(), p.getPosX(), p.getPosY(), p.getPosBoundX(), p.getPosBoundY(), p.getSpriteX(),p.getSpriteY(),p.getSpriteDX(),p.getSpriteDY(),this);
 
-            if(scene.getPlayerTarget() != null && !scene.getPlayerTarget().getUsername().equals(getPlayerOwn().getUsername()))
-                scene.updatePosition(scene.getPlayerTarget().getX(), scene.getPlayerTarget().getY());
         }
     }
 
