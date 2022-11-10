@@ -149,6 +149,7 @@ public class Game extends JPanel {
         t_host.start();
     }
     public void stopMode(){
+        setGame_status(0);
         if(hosting) {
             if(sp != null) sp.closeSev();
         } else {

@@ -395,7 +395,8 @@ public class Player {
                 p.setScore(p.getScore()+1);
 
 //                System.out.println(p.getUsername() + " : " + getGame().getPlayerOwn().getUsername() + " : " + !p.getUsername().equalsIgnoreCase(getGame().getPlayerOwn().getUsername()));
-                if(!p.getUsername().equalsIgnoreCase(getGame().getPlayerOwn().getUsername())) scene.setPlayerTarget(p);
+                if(!p.getUsername().equalsIgnoreCase(getGame().getPlayerOwn().getUsername()) && getGame().getPlayerOwn().getUsername().equalsIgnoreCase(getUsername())) scene.setPlayerTarget(p);
+//                System.out.println(name + " -> " + deadName);
                 if(p.getScore() >= Utils.score_win){
                     getGame().getScene().winnerScene(p);
                     if(getGame().isHosting()){
@@ -542,12 +543,21 @@ public class Player {
 //        username:player:skin:x:y:mouse_x:mouse_y:hp:armor:armor_type:fireTrigger
         return type+":"+c_r+ ":" + getX() + ":" + getY() + ":" + getAngle() + ":" + getHp() + ":" + getArmor() + ":" + getArmor_type() + ":" + isDead() + ":" + getScore();
     }
+    int prex = 0, prey = 0;
+    double prea = 0;
     public void updateFromPacket(String[] data){
 //        System.out.println("'"+username + "' : " + "'"+data[0]+"'");
         if(!(data[0].equalsIgnoreCase(username) && data[1].equalsIgnoreCase("player"))) return;
         x = Integer.parseInt(data[3]);
         y = Integer.parseInt(data[4]);
         ang = Double.parseDouble(data[5]);
+
+        if(x != prex || y != prey || ang != prea) setMove(true);
+
+        prex = x;
+        prey = y;
+        prea = ang;
+
         hp = Integer.parseInt(data[6]);
         armor = Integer.parseInt(data[7]);
         armor_type = Integer.parseInt(data[8]);
