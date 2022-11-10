@@ -148,6 +148,9 @@ public class Present extends JPanel {
 
                 g.setFont(new Font("Kanit Light", Font.PLAIN, 20));
                 g.drawString(getGame().getStatus_desc(), cCanv.getWidth()/2-((20*getGame().getStatus_desc().length()/2)/2), getInsidePosition(0, cCanv.getHeight(), 15));
+                g.setFont(new Font("Kanit Light", Font.PLAIN, 16));
+                g.setColor(Color.GRAY);
+                g.drawString("Your IP is: " + getGame().getIp(), 20, cCanv.getHeight()-20);
 
                 drawHostPlayerUI(g);
 

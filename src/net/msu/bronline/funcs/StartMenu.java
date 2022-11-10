@@ -10,8 +10,7 @@ import java.awt.event.*;
 import java.awt.image.BufferStrategy;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.lang.Thread.sleep;

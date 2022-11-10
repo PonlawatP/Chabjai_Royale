@@ -14,6 +14,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -45,6 +49,8 @@ public class Game extends JPanel {
     String hostUser = "";
 
     ArrayList<Armor> armors = new ArrayList<>();
+    String ip;
+
 
     public Game(JFrame cFrame, Canvas canv, boolean[] movements, String username, boolean host) throws IOException {
         g = this;
@@ -63,7 +69,20 @@ public class Game extends JPanel {
         Player.getPlayers().add(p_own);
 
         roomName = getPlayerOwn().getUsername()+"'s Room";
+
+        try(final DatagramSocket socket = new DatagramSocket()){
+            socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+            ip = socket.getLocalAddress().getHostAddress();
+        } catch (UnknownHostException | SocketException ex) {
+            throw new RuntimeException(ex);
+        }
+        System.out.println("Your IP is: " + ip);
     }
+
+    public String getIp() {
+        return ip;
+    }
+
     public void resetGame() {
             Player.getPlayers().clear();
 
@@ -123,8 +142,6 @@ public class Game extends JPanel {
     public void setStart(boolean start) {
         this.start = start;
     }
-
-    String ip = "0.0.0.0";
 
     public void setIp(String ip) {
         this.ip = ip;
