@@ -6,6 +6,8 @@
 โปรเจกต์ส่งวิชา Object Oriented Programming
 ส่งเสร็จเรียบร้อยแล้ว ไม่รู้จะยังไงต่อ เสียดายเวลา แจกไปเลยละกัน
 
+Download : https://github.com/PonlawatP/Chabjai_Royale/releases
+
 โปรเจกต์นี้ใช้ Java 19 ในการรัน (แนะนำ OpenJDK 19 https://jdk.java.net/19/)
 
 -------------------------------------------
