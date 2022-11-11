@@ -168,7 +168,9 @@ public class Scene {
                     try {
                         Thread.sleep(10000);
 //                            ClientHandler.broadcastMessage("host:shutdown");
-                        if(getGame().getGame_status() == 3) getGame().stopMode();
+                        if(getGame().getGame_status() == 3) {
+                            getGame().stopMode();
+                        }
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }

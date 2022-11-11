@@ -20,7 +20,7 @@ public class NetworkDevices {
         return fipList.get(fipList.keySet().toArray()[id]);
     }
     public static String getHostIP(int id){
-        return (String) fipList.keySet().toArray()[id];
+        return (fipList.keySet().size() == 0 || fipList.keySet().size() <= id ? "0.0.0.0" : (String) fipList.keySet().toArray()[id]);
     }
 
     public static HashMap<String, String[]>  getNetworkDevices(){

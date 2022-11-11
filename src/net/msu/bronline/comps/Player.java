@@ -62,6 +62,9 @@ public class Player {
         ox = 150;
         oy = 150;
         hp = 100;
+        prex = 150;
+        prey = 150;
+        prea = -999;
         armor = 50;
         armor_type = 1;
         score = 0;
@@ -77,7 +80,7 @@ public class Player {
         dead_del = 0;
 
         dead = false;
-        c_r = (int) (1 + 8*Math.random());
+        randomCharID();
 
         fireTrigger = false;
 

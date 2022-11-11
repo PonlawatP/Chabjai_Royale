@@ -141,7 +141,7 @@ public class ClientHandler implements Runnable{
         Player.removePlayer(clientUser);
         clientHandler.remove(this);
 
-        if(Player.getPlayers().size() <= 1){
+        if(Player.getPlayers().size() <= 1 && getGame().getGame_status() == 2){
             getGame().getScene().winnerScene(Game.getGame().getPlayerOwn());
         }
     }

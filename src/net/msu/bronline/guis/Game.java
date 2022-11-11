@@ -167,12 +167,13 @@ public class Game extends JPanel {
     }
     public void stopMode(){
         setGame_status(0);
+        status_desc = "Waiting Players";
+        getPresent().setGame_status(2);
         if(hosting) {
             if(sp != null) sp.closeSev();
         } else {
             if(cp != null) cp.closeEverything();
         }
-        getPresent().setGame_status(2);
         resetGame();
     }
 
