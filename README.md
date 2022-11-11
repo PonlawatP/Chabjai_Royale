@@ -3,7 +3,7 @@
 
 -------------------------------------------
 
-โปรเจกต์ส่งวิชา Object Oriented Programming
+โปรเจกต์ส่งวิชา Object Oriented Programming มหาวิทยาลัยมหาสารคาม
 ส่งเสร็จเรียบร้อยแล้ว ไม่รู้จะยังไงต่อ เสียดายเวลา แจกไปเลยละกัน
 
 Download : https://github.com/PonlawatP/Chabjai_Royale/releases
