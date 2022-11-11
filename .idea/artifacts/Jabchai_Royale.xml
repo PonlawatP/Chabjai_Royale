@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Jabchai_Royale">
+    <output-path>$PROJECT_DIR$/out/artifacts/Jabchai_Royale</output-path>
+    <root id="archive" name="Jabchai_Royale.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="oop-final" />
+    </root>
+  </artifact>
+</component>

@@ -9,10 +9,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class NetworkDevices {
-    public static final int port = 50394;
+    public static int port = 50394;
     public static String MULTICAST_INTERFACE = "wlp2s0";
-    public static final int MULTICAST_PORT = 4321;
-    public static final String MULTICAST_IP = "230.0.0.0";
+    public static int MULTICAST_PORT = 4321;
+    public static String MULTICAST_IP = "230.0.0.0";
 
     static HashMap<String, String[]>  fipList = new HashMap<>();
     static HashMap<String, String[]> tflp = new HashMap<>();

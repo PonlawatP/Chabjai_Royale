@@ -1,6 +1,8 @@
 package net.msu.bronline;
 
 import net.msu.bronline.funcs.StartMenu;
+import net.msu.bronline.funcs.Utils;
+import net.msu.bronline.network.NetworkDevices;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,14 +11,44 @@ import java.io.File;
 import java.io.IOException;
 
 public class Main {
-
+    static String sn = "";
     public static void main(String[] args) {
+        for (String s : args){
+
+            if(s.equalsIgnoreCase("score_win")){
+                int i = Integer.parseInt(s.split("=")[1]);
+                Utils.score_win=i;
+            } else if(s.equalsIgnoreCase("allowed_start")){
+                int i = Integer.parseInt(s.split("=")[1]);
+                Utils.allowed_start=i;
+            } else if(s.equalsIgnoreCase("port")){
+                int i = Integer.parseInt(s.split("=")[1]);
+                NetworkDevices.port=i;
+            } else if(s.equalsIgnoreCase("mc_port")){
+                int i = Integer.parseInt(s.split("=")[1]);
+                NetworkDevices.MULTICAST_PORT=i;
+            } else if(s.equalsIgnoreCase("mc_ip")){
+                NetworkDevices.MULTICAST_IP=s.split("=")[1];
+            } else if(s.equalsIgnoreCase("username")){
+                sn=s.split("=")[1];
+            }
+        }
+
         try {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, Main.class.getClassLoader().getResourceAsStream("imgs/Kanit-Light.ttf")));
             ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, Main.class.getClassLoader().getResourceAsStream("imgs/Kanit-Bold.ttf")));
         } catch (IOException|FontFormatException e) {
             //Handle exception
+        }
+
+        if(sn.length() > 0){
+            try{
+                new StartMenu(sn, true);
+            }catch (IOException ex){
+                System.out.println("File Missing?");
+            }
+            return;
         }
 
         JTextField user = new JTextField();
