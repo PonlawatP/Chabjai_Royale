@@ -10,7 +10,6 @@ import static net.msu.bronline.guis.Present.getPresent;
 public class Utils {
     public static int score_win = 6;
     public static int allowed_start = 1;
-
     public static int getInsidePosition(int p, int dp, double percent){
         return (int)(p + ((dp-p)*(percent/100)));
     }
@@ -43,9 +42,17 @@ public class Utils {
             @Override
             public void run() {
                 while (getPresent().getGame_status() == 2){
-                    NetworkDevices.getNetworkDevices();
+                    NetworkDevices.getHostPinged();
+                }
+            }
+        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (getPresent().getGame_status() == 2){
                     try {
-                        sleep(500);
+                        NetworkDevices.clearPingList();
+                        sleep(1500);
                         NetworkDevices.updateHost();
 //                        sleep(500);
                     } catch (InterruptedException ex) {

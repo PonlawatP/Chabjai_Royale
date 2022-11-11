@@ -14,18 +14,18 @@ import java.net.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.lang.Thread.sleep;
-import static net.msu.bronline.funcs.Utils.dev;
-import static net.msu.bronline.funcs.Utils.runServerFinder;
+import static net.msu.bronline.funcs.Utils.*;
 import static net.msu.bronline.guis.Game.getGame;
 import static net.msu.bronline.guis.Present.getPresent;
 
 public class StartMenu {
 
     public StartMenu(String username, boolean host) throws IOException {
-        
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                NetworkDevices.findNetworkInterface();
+
                 JFrame frame = new JFrame();
 
                 Canv canvas = null;

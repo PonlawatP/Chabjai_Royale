@@ -29,6 +29,23 @@ public class ServerProgram implements Runnable{
     public void startSev() {
         System.out.println("Server starting...");
         try {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (sev != null && !sev.isClosed()){
+                        try {
+                            NetworkDevices.sendMulticastMessage(NetworkDevices.MULTICAST_IP, NetworkDevices.MULTICAST_INTERFACE, NetworkDevices.MULTICAST_PORT,
+                                    getGame().getPlayerOwn().getUsername()+":conf:"+getGame().getRoomName()+":"+ Player.getPlayers().size()+":"+getGame().getMaxPlayer()+":"+getPresent().getGame_status()+":"+getGame().getGame_status()+":"+getGame().getIP()
+                            );
+
+                            Thread.sleep(1000);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            }).start();
+
             while (sev != null && !sev.isClosed()){
                 Socket soc = sev.accept();
 //                System.out.println("Client has connected!");
