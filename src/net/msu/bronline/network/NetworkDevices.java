@@ -124,7 +124,14 @@ public class NetworkDevices {
             try {
                 socket.connect(new InetSocketAddress(host, port), 500);
             } catch (ConnectException | SocketTimeoutException ex) {
+                if(retired < 3) {
+                    retired++;
+                    return getCustomHost(host);
+                } else {
+                    retired = 0;
+                    System.out.println("Socket " + host + " not found...");
                     System.out.println("\tSOCKET ERROR - " + ex.getMessage());
+                }
                 return null;
             }
 
@@ -160,7 +167,7 @@ public class NetworkDevices {
                     throw new RuntimeException(e);
                 }
             }
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         if(!found) {
