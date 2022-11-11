@@ -5,20 +5,19 @@ import java.nio.channels.DatagramChannel;
 import java.nio.channels.MembershipKey;
 
 public class MulticastReceiver {
-    private static final String MULTICAST_INTERFACE = "eth0";
+    private static String MULTICAST_INTERFACE = "wlp2s0";
     private static final int MULTICAST_PORT = 4321;
     private static final String MULTICAST_IP = "230.0.0.0";
     private String receiveMessage(String ip, String iface, int port)
             throws IOException {
         DatagramChannel datagramChannel = DatagramChannel
                 .open(StandardProtocolFamily.INET);
-        NetworkInterface networkInterface = NetworkInterface
-                .getByName(iface);
+        NetworkInterface networkInterface = NetworkInterface.getByName(iface);
         datagramChannel.setOption(StandardSocketOptions
                 .SO_REUSEADDR, true);
         datagramChannel.bind(new InetSocketAddress(port));
-        datagramChannel.setOption(StandardSocketOptions
-                .IP_MULTICAST_IF, networkInterface);
+        System.out.println("interface: " + networkInterface);
+        datagramChannel.setOption(StandardSocketOptions.IP_MULTICAST_IF, networkInterface);
         InetAddress inetAddress = InetAddress.getByName(ip);
         MembershipKey membershipKey = datagramChannel.join
                 (inetAddress, networkInterface);
@@ -32,6 +31,13 @@ public class MulticastReceiver {
         return new String(bytes);
     }
     public static void main(String[] args) throws IOException {
+        for(NetworkInterface s : NetworkInterface.networkInterfaces().toList()){
+//            System.out.println(s.getName() + " : " + s.supportsMulticast() + " : " + s.isUp() + " : " + s.isLoopback());
+            if(s.supportsMulticast() && s.isUp() && !s.isLoopback()){
+                MULTICAST_INTERFACE = s.getName();
+                break;
+            }
+        }
         MulticastReceiver mr = new MulticastReceiver();
         System.out.println("Message received : "
                 + mr.receiveMessage(MULTICAST_IP,
