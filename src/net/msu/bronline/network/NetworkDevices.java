@@ -114,6 +114,7 @@ public class NetworkDevices {
         }
 //        fipList = tflp;
     }
+    static int retired = 0;
     public static String[] getCustomHost(String host){
         String[] temp = {};
         boolean found = false;
@@ -143,6 +144,7 @@ public class NetworkDevices {
 //                                    System.out.println(s);
                         System.out.println("Found socket for: " + host);
                         found = true;
+                        retired = 0;
 
                         dis.close();
                         socket.close();
@@ -161,7 +163,15 @@ public class NetworkDevices {
         }catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if(!found) System.out.println("Socket " + host + " not found...");
+        if(!found) {
+            if(retired < 3) {
+                retired++;
+                return getCustomHost(host);
+            } else {
+                retired = 0;
+                System.out.println("Socket " + host + " not found...");
+            }
+        }
         return temp;
     }
 }

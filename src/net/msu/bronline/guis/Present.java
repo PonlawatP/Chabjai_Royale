@@ -259,6 +259,9 @@ public class Present extends JPanel {
 
             String ip = NetworkDevices.getHostIP(i);
             String[] data = NetworkDevices.getHostDetails(i);
+            if(data == null){
+                break;
+            }
             String room = data[2];
             String name = "("+data[0]+")";
             String amount = data[3]+"/"+data[4];
