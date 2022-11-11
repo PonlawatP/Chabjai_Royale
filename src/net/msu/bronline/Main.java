@@ -12,25 +12,28 @@ import java.io.IOException;
 
 public class Main {
     static String sn = "";
+    static boolean skip = false;
     public static void main(String[] args) {
-        for (String s : args){
-
-            if(s.equalsIgnoreCase("score_win")){
-                int i = Integer.parseInt(s.split("=")[1]);
+        for (String str : args){
+            String[] s = str.split("=");
+            if(s[0].equalsIgnoreCase("score_win")){
+                int i = Integer.parseInt(s[1]);
                 Utils.score_win=i;
-            } else if(s.equalsIgnoreCase("allowed_start")){
-                int i = Integer.parseInt(s.split("=")[1]);
+            } else if(s[0].equalsIgnoreCase("allowed_start")){
+                int i = Integer.parseInt(s[1]);
                 Utils.allowed_start=i;
-            } else if(s.equalsIgnoreCase("port")){
-                int i = Integer.parseInt(s.split("=")[1]);
+            } else if(s[0].equalsIgnoreCase("port")){
+                int i = Integer.parseInt(s[1]);
                 NetworkDevices.port=i;
-            } else if(s.equalsIgnoreCase("mc_port")){
-                int i = Integer.parseInt(s.split("=")[1]);
+            } else if(s[0].equalsIgnoreCase("mc_port")){
+                int i = Integer.parseInt(s[1]);
                 NetworkDevices.MULTICAST_PORT=i;
-            } else if(s.equalsIgnoreCase("mc_ip")){
-                NetworkDevices.MULTICAST_IP=s.split("=")[1];
-            } else if(s.equalsIgnoreCase("username")){
-                sn=s.split("=")[1];
+            } else if(s[0].equalsIgnoreCase("mc_ip")){
+                NetworkDevices.MULTICAST_IP=s[1];
+            } else if(s[0].equalsIgnoreCase("username")){
+                sn=s[1];
+            } else if(str.equalsIgnoreCase("skip_intro")){
+                skip=true;
             }
         }
 
@@ -44,7 +47,7 @@ public class Main {
 
         if(sn.length() > 0){
             try{
-                new StartMenu(sn, true);
+                new StartMenu(sn, true, skip);
             }catch (IOException ex){
                 System.out.println("File Missing?");
             }
@@ -81,7 +84,7 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 f.setVisible(false);
                 try{
-                    new StartMenu(user.getText(), true);
+                    new StartMenu(user.getText(), true, skip);
                 }catch (IOException ex){
                     System.out.println("File Missing?");
                 }

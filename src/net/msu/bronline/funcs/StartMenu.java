@@ -20,7 +20,7 @@ import static net.msu.bronline.guis.Present.getPresent;
 
 public class StartMenu {
 
-    public StartMenu(String username, boolean host) throws IOException {
+    public StartMenu(String username, boolean host, boolean skip) throws IOException {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -30,7 +30,7 @@ public class StartMenu {
 
                 Canv canvas = null;
                 try {
-                    canvas = new Canv(frame, username, host);
+                    canvas = new Canv(frame, username, host, skip);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -72,14 +72,16 @@ class Canv extends Canvas {
         cCur = c;
         setCursor(Cursor.getPredefinedCursor(c));
     }
-    public Canv(JFrame frame, String username, boolean host) throws IOException {
+    public Canv(JFrame frame, String username, boolean host, boolean skip) throws IOException {
         cFrame = frame;
         ps = new Present(cFrame, this, username, movements);
         new Game(cFrame, this, movements, username, host);
 
-//        ps.setGame_status(1);
-//        ps.setFrameTime(120);
-//        ps.getScene().setOpacity(40);
+        if(skip){
+            ps.setGame_status(1);
+            ps.setFrameTime(120);
+            ps.getScene().setOpacity(40);
+        }
 
 //        addMouseWheelListener(new MouseWheelListener() {
 //            @Override

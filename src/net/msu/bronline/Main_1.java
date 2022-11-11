@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Main_1 {
+    static boolean skip = true;
 
     public static void main(String[] args) {
         try {
@@ -26,7 +27,7 @@ public class Main_1 {
 
         try{
 //            SoundClip snd = new SoundClip(Main.class.getClassLoader().getResourceAsStream("imgs/snds/st.wav"));
-            new StartMenu(user.getText(), true);
+            new StartMenu(user.getText(), true, skip);
             return;
         }catch (IOException ex){
             System.out.println("File Missing?");
@@ -58,7 +59,7 @@ public class Main_1 {
             public void actionPerformed(ActionEvent e) {
                 f.setVisible(false);
                 try{
-                    new StartMenu(user.getText(), true);
+                    new StartMenu(user.getText(), true, skip);
                 }catch (IOException ex){
                     System.out.println("File Missing?");
                 }
