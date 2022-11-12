@@ -18,7 +18,7 @@ public class SoundClip {
         this.vol = vol;
         this.loop = loop;
         try {
-            stream = AudioSystem.getAudioInputStream(this.streamInput);
+            stream = AudioSystem.getAudioInputStream(new BufferedInputStream(this.streamInput));
             format = stream.getFormat();
             info = new DataLine.Info(Clip.class, format);
             clip = (Clip) AudioSystem.getLine(info);
