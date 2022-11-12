@@ -8,12 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferStrategy;
-import java.io.File;
 import java.io.IOException;
-import java.net.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static java.lang.Thread.sleep;
 import static net.msu.bronline.funcs.Utils.*;
 import static net.msu.bronline.guis.Game.getGame;
 import static net.msu.bronline.guis.Present.getPresent;
@@ -55,7 +52,11 @@ public class StartMenu {
 }
 
 class Canv extends Canvas {
-    JFrame cFrame;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -444131984409534079L;
+	JFrame cFrame;
     Present ps;
     int m_x = 0, m_y = 0;
     //w,a,s,d,shift,tab,lClick,rClick,ctrl,r
@@ -431,7 +432,6 @@ class Canv extends Canvas {
                 long now = getCurrentTime();
                 long gameTime = getCurrentTime();
 
-                long lastFpsCount = getCurrentTime();
                 long updateRate = 1000 / 45; // Update 60 times per second
                 while (keepRendering.get()) {
                     now = getCurrentTime();

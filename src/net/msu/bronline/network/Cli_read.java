@@ -2,6 +2,7 @@ package net.msu.bronline.network;
 
 import net.msu.bronline.comps.Armor;
 import net.msu.bronline.comps.Player;
+import net.msu.bronline.funcs.SoundClip;
 import net.msu.bronline.funcs.Utils;
 
 import java.io.DataInputStream;
@@ -60,6 +61,7 @@ public class Cli_read extends Thread implements Runnable{
                         Player.removePlayer(data[0]);
                     } else if (data[1].equalsIgnoreCase("desc")) {
                         getGame().setStatus_desc(data[2]);
+                        new SoundClip(getClass().getClassLoader().getResourceAsStream("sounds/clock.wav"), -10.0f, false).play();
                     } else if (data[1].equalsIgnoreCase("act")) {
                         switch (data[2]){
                             case "pre_start":
@@ -120,7 +122,8 @@ public class Cli_read extends Thread implements Runnable{
                         while (ps.hasNext()) {
                             Player p = ps.next();
                             if(data[0].equalsIgnoreCase(p.getUsername())){
-                                getGame().getScene().winnerScene(p);
+                                getGame().getScene().winnerScene(p, p.getUsername().equalsIgnoreCase(cp.getUsername()));
+
                                 break;
                             }
                         }

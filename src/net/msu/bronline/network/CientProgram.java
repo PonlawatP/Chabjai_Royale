@@ -1,12 +1,7 @@
 package net.msu.bronline.network;
-import net.msu.bronline.guis.Game;
-import net.msu.bronline.guis.Present;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Iterator;
-import java.util.Scanner;
 
 import static net.msu.bronline.funcs.Utils.runServerFinder;
 import static net.msu.bronline.guis.Game.getGame;

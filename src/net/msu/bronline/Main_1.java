@@ -1,8 +1,6 @@
 package net.msu.bronline;
 
-import net.msu.bronline.funcs.SoundClip;
 import net.msu.bronline.funcs.StartMenu;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -10,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Main_1 {
-    static boolean skip = true;
+    static boolean skip = false;
 
     public static void main(String[] args) {
         try {
@@ -26,7 +24,6 @@ public class Main_1 {
         user.setText("Default_Player");
 
         try{
-//            SoundClip snd = new SoundClip(Main.class.getClassLoader().getResourceAsStream("imgs/snds/st.wav"));
             new StartMenu(user.getText(), true, skip);
             return;
         }catch (IOException ex){

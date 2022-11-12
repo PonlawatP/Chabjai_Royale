@@ -4,6 +4,7 @@ import net.msu.bronline.comps.Ammo;
 import net.msu.bronline.comps.Armor;
 import net.msu.bronline.comps.Player;
 import net.msu.bronline.comps.Scene;
+import net.msu.bronline.funcs.SoundClip;
 import net.msu.bronline.network.CientProgram;
 import net.msu.bronline.network.ClientHandler;
 import net.msu.bronline.network.ServerProgram;
@@ -12,7 +13,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -25,7 +25,12 @@ import static net.msu.bronline.funcs.Utils.*;
 import static net.msu.bronline.guis.Present.getPresent;
 
 public class Game extends JPanel {
-    public static Game g;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7645399639040646860L;
+
+	public static Game g;
 
     JFrame cFrame;
     Canvas cCanv;
@@ -91,6 +96,8 @@ public class Game extends JPanel {
             scene.reset();
 
             p_own.reset();
+
+            isPlayingTrack = false;
             Player.getPlayers().add(p_own);
 
             roomName = getPlayerOwn().getUsername()+"'s Room";
@@ -160,6 +167,7 @@ public class Game extends JPanel {
             sp = new ServerProgram(scene, this);
             t_host = new Thread(sp);
         } else {
+            getPresent().s_main.stop();
             cp = new CientProgram(getPlayerOwn().getUsername(), ip);
             t_host = new Thread(cp);
         }
@@ -169,6 +177,9 @@ public class Game extends JPanel {
         setGame_status(0);
         status_desc = "Waiting Players";
         getPresent().setGame_status(2);
+        song.stop();
+        getPresent().s_main = new SoundClip(getClass().getClassLoader().getResourceAsStream("sounds/intro.wav"), -10.0f, true);
+        getPresent().s_main.play();
         if(hosting) {
             if(sp != null) sp.closeSev();
         } else {
@@ -194,14 +205,14 @@ public class Game extends JPanel {
 
     float btn_size = .5f;
     float btn_back_size = .1f;
-    int btn_sx = (int)(480*btn_size), btn_sy = (int)(160*btn_size); //ขนาดภาพ
-    int btn_back_sx = (int)(1020*btn_back_size), btn_back_sy = (int)(400*btn_back_size); //ขนาดภาพ
+    int btn_sx = (int)(480*btn_size), btn_sy = (int)(160*btn_size); //à¸‚à¸™à¸²à¸”à¸ à¸²à¸ž
+    int btn_back_sx = (int)(1020*btn_back_size), btn_back_sy = (int)(400*btn_back_size); //à¸‚à¸™à¸²à¸”à¸ à¸²à¸ž
     int btn_px = 0, btn_py = 0;
     int btn2_px = 0, btn2_py = 0;
     int btn_back_px = 0, btn_back_py = 0;
 
 
-//    method แปลงความใสภาพ
+//    method à¹�à¸›à¸¥à¸‡à¸„à¸§à¸²à¸¡à¹ƒà¸ªà¸ à¸²à¸ž
     BufferedImage getOpacityImg(BufferedImage img, int width, int height, int opacity) throws IOException {
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB_PRE);
 
@@ -574,8 +585,15 @@ public class Game extends JPanel {
         return v_speed;
     }
 
+    boolean isPlayingTrack = false;
+   public SoundClip song;
     public void run(int m_x, int m_y) {
         if(getGame_status() != 0) {
+            if(!isPlayingTrack && getGame_status() != 3) {
+                isPlayingTrack = true;
+                song = new SoundClip(getClass().getClassLoader().getResourceAsStream("sounds/playing.wav"), -15.0f, true);
+                song.play();
+            }
             if (!p_own.isDead()) {
                 if (movements[0]) p_own.moveUp(-1 * v_speed);
                 if (movements[1]) p_own.moveForward(-1 * v_speed);
@@ -660,7 +678,7 @@ public class Game extends JPanel {
         this.status_desc = status_desc;
     }
 
-    // ------------- ฟังก์ชันเช็คว่าเมาส์อยู่ในปุ่มมั้ย
+    // ------------- à¸Ÿà¸±à¸‡à¸�à¹Œà¸Šà¸±à¸™à¹€à¸Šà¹‡à¸„à¸§à¹ˆà¸²à¹€à¸¡à¸²à¸ªà¹Œà¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸›à¸¸à¹ˆà¸¡à¸¡à¸±à¹‰à¸¢
     public int isMouseOnStart(int x, int y){
         if(game_status == 0){
             if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 0;
@@ -688,6 +706,7 @@ public class Game extends JPanel {
                             }
                             ClientHandler.broadcastMessage("host:desc:Starting in " + i);
                             setStatus_desc("Starting in " + i);
+                            new SoundClip(getClass().getClassLoader().getResourceAsStream("sounds/clock.wav"), -10.0f, false).play();
                             Thread.sleep(1000);
                         }
                     } catch (InterruptedException ex) {
@@ -706,6 +725,7 @@ public class Game extends JPanel {
         ClientHandler.broadcastMessage("host:act:start");
         setGame_status(2);
         getPresent().setGame_status(5);
+        getPresent().s_main.stop();
 
         new Thread(new Runnable() {
             @Override

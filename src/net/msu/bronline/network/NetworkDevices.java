@@ -118,20 +118,23 @@ public class NetworkDevices {
     public static String[] getCustomHost(String host){
         String[] temp = {};
         boolean found = false;
-
+        Socket socket;
+        DataInputStream dis;
         try {
-            Socket socket = new Socket();
+            socket = new Socket();
             try {
                 socket.connect(new InetSocketAddress(host, port), 500);
             } catch (ConnectException | SocketTimeoutException ex) {
                 if(retired < 3) {
                     retired++;
+                    socket.close();
                     return getCustomHost(host);
                 } else {
                     retired = 0;
                     System.out.println("Socket " + host + " not found...");
                     System.out.println("\tSOCKET ERROR - " + ex.getMessage());
                 }
+                socket.close();
                 return null;
             }
 
@@ -139,7 +142,7 @@ public class NetworkDevices {
             dos.writeUTF("ping");
             dos.flush();
 
-            DataInputStream dis = new DataInputStream(socket.getInputStream());
+            dis = new DataInputStream(socket.getInputStream());
 
             int r = 0;
             while (!socket.isClosed()) {
@@ -164,6 +167,8 @@ public class NetworkDevices {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (InterruptedException e) {
+                	dis.close();
+                	socket.close();
                     throw new RuntimeException(e);
                 }
             }

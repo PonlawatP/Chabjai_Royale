@@ -3,7 +3,6 @@ import net.msu.bronline.comps.Player;
 import net.msu.bronline.comps.Scene;
 import net.msu.bronline.guis.Game;
 
-import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

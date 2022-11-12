@@ -4,12 +4,9 @@ import net.msu.bronline.comps.Player;
 import net.msu.bronline.comps.Scene;
 import net.msu.bronline.guis.Game;
 
-import  java.io.BufferedReader;
 import java.io.*;
 import java.net.Socket;
 import java.util.*;
-
-import static net.msu.bronline.guis.Game.getGame;
 
 public class ClientHandler implements Runnable{
     public static ArrayList<ClientHandler> clientHandler = new ArrayList<>();
@@ -64,7 +61,7 @@ public class ClientHandler implements Runnable{
             thrd_read = new Thread(new Sv_read(dis, this, cw));
             thrd_read.start();
 
-            broadcastMessage(clientUser+":join:"+p.getCharacterID()); //TODO: ทำแบบ broadcast
+            broadcastMessage(clientUser+":join:"+p.getCharacterID()); //TODO: à¸—à¸³à¹�à¸šà¸š broadcast
             loadPlayersIngame();
             loadArmorsIngame();
         } catch (Exception e) {
@@ -136,7 +133,7 @@ public class ClientHandler implements Runnable{
     boolean quit = false;
     private void removeClientHandler() {
         System.out.println("SERVER : "+clientUser+" quit");
-        broadcastMessage(clientUser+":quit"); //TODO: ทำแบบ broadcast
+        broadcastMessage(clientUser+":quit"); //TODO: à¸—à¸³à¹�à¸šà¸š broadcast
         quit = true;
         Player.removePlayer(clientUser);
         clientHandler.remove(this);

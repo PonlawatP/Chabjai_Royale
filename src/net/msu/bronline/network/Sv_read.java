@@ -6,11 +6,8 @@ import net.msu.bronline.comps.Player;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
-import java.net.Socket;
 import java.net.SocketException;
 import java.util.Iterator;
-
-import static net.msu.bronline.guis.Game.getGame;
 
 public class Sv_read extends Thread implements Runnable{
     DataInputStream dis;

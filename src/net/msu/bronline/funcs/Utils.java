@@ -9,7 +9,7 @@ import static net.msu.bronline.guis.Present.getPresent;
 
 public class Utils {
     public static int score_win = 6;
-    public static int allowed_start = 3;
+    public static int allowed_start = 1;
     public static int getInsidePosition(int p, int dp, double percent){
         return (int)(p + ((dp-p)*(percent/100)));
     }
@@ -84,8 +84,8 @@ public class Utils {
 
             ((my*-1)*x1)+(mx*y1)-((my*x2)-(mx*y2))
          */
-        int x1 = xy1[0], x2 = xy2[0];
-        int y1 = xy1[1], y2 = xy2[1];
+        int x2 = xy2[0];
+        int y2 = xy2[1];
         int my = (xy2[1] - xy1[1]);
         int mx = (xy2[0] - xy1[0]);
         int x = xy3[0], y = xy3[1];
@@ -144,7 +144,7 @@ public class Utils {
             {{571,1772},{583,1797},{624,1781},{614,1758}},
             {{135,1820},{161,1896},{439,1803},{412,1727}},
             {{196,1729},{217,1793},{332,1754},{311,1691}},
-            {{0,1606},{0,1818},{249,1618},{148,1492}}, //ตึกเบี้ยวๆ
+            {{0,1606},{0,1818},{249,1618},{148,1492}}, //à¸•à¸¶à¸�à¹€à¸šà¸µà¹‰à¸¢à¸§à¹†
             {{324,1271},{285,1408},{347,1515},{408,1295}},
             {{191,1382},{168,1467},{346,1518},{285,1409}},
             {{249,988},{235,1147},{360,1159},{374,1000}},

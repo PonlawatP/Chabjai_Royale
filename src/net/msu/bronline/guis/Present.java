@@ -2,6 +2,7 @@ package net.msu.bronline.guis;
 
 import net.msu.bronline.comps.Player;
 import net.msu.bronline.comps.Scene;
+import net.msu.bronline.funcs.SoundClip;
 import net.msu.bronline.funcs.Utils;
 import net.msu.bronline.network.NetworkDevices;
 
@@ -9,26 +10,25 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.InterfaceAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.util.*;
-import java.util.List;
 
 import static net.msu.bronline.funcs.Utils.getColor;
 import static net.msu.bronline.funcs.Utils.getInsidePosition;
 import static net.msu.bronline.guis.Game.getGame;
 
 public class Present extends JPanel {
-    static Present ps;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4831845848500438185L;
+	static Present ps;
     JFrame cFrame;
     Canvas cCanv;
     Scene scene;
     String username;
     boolean[] movements;
+    public SoundClip s_main;
     public Present(JFrame cFrame, Canvas canv, String username, boolean[] movements) throws IOException {
         ps = this;
         this.cFrame = cFrame;
@@ -40,18 +40,19 @@ public class Present extends JPanel {
         setPreferredSize(cFrame.getPreferredSize());
         setBackground(Color.white);
         setVisible(true);
+        s_main = new SoundClip(getClass().getClassLoader().getResourceAsStream("sounds/intro.wav"), -10.0f, true);
     }
 
-//    รับโลโก้มาแปลงขนาด แล้วเอามาวางตรงกลาง
+//    à¸£à¸±à¸šà¹‚à¸¥à¹‚à¸�à¹‰à¸¡à¸²à¹�à¸›à¸¥à¸‡à¸‚à¸™à¸²à¸” à¹�à¸¥à¹‰à¸§à¹€à¸­à¸²à¸¡à¸²à¸§à¸²à¸‡à¸•à¸£à¸‡à¸�à¸¥à¸²à¸‡
 //    ImageIcon ii = new ImageIcon(getClass().getClassLoader().getResource("imgs/logo.png"));
     
     BufferedImage logo = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/logo.png"));
     float size = .6f;
     int opc = 0;
-    int l_sx = (int)(537*size), l_sy = (int)(417*size); //ขนาดภาพ
-    int l_px = 0, l_py = 20; //ตำแหน่งภาพ
+    int l_sx = (int)(537*size), l_sy = (int)(417*size); //à¸‚à¸™à¸²à¸”à¸ à¸²à¸ž
+    int l_px = 0, l_py = 20; //à¸•à¸³à¹�à¸«à¸™à¹ˆà¸‡à¸ à¸²à¸ž
 
-//    ปุ่ม
+//    à¸›à¸¸à¹ˆà¸¡
     BufferedImage btn_play = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/btn_play.png"));
     BufferedImage btn_host = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/btn_host.png"));
     BufferedImage btn_join = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/btn_join.png"));
@@ -60,13 +61,13 @@ public class Present extends JPanel {
 
     float btn_size = .5f;
     float btn_back_size = .1f;
-    int btn_sx = (int)(480*btn_size), btn_sy = (int)(160*btn_size); //ขนาดภาพ
-    int btn_back_sx = (int)(1020*btn_back_size), btn_back_sy = (int)(400*btn_back_size); //ขนาดภาพ
+    int btn_sx = (int)(480*btn_size), btn_sy = (int)(160*btn_size); //à¸‚à¸™à¸²à¸”à¸ à¸²à¸ž
+    int btn_back_sx = (int)(1020*btn_back_size), btn_back_sy = (int)(400*btn_back_size); //à¸‚à¸™à¸²à¸”à¸ à¸²à¸ž
     int btn_px = 0, btn_py = 0;
     int btn2_px = 0, btn2_py = 0;
     int btn_back_px = 0, btn_back_py = 0;
 
-//    method แปลงความใสภาพ
+//    method à¹�à¸›à¸¥à¸‡à¸„à¸§à¸²à¸¡à¹ƒà¸ªà¸ à¸²à¸ž
     BufferedImage getOpacityImg(BufferedImage img, int width, int height, int opacity) throws IOException {
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB_PRE);
 
@@ -90,7 +91,7 @@ public class Present extends JPanel {
         cen_x = (cCanv.getWidth()/2)-(l_sx/2);
         cen_y = (cCanv.getHeight()/2)-(l_sy/2);
 
-//        วาด Logo
+//        à¸§à¸²à¸” Logo
         try {
             if(frameTime >= 120) g.drawImage(getOpacityImg(scene.getImg(), scene.getSize_x(), scene.getSize_y(), scene.getOpacity()), 0,0, cCanv.getWidth(), cCanv.getHeight(),scene.getX(), scene.getY(),scene.getBoundX(), scene.getBoundY(),this);
 
@@ -257,7 +258,6 @@ public class Present extends JPanel {
 
             y = y + (sy*(i))+(5*i) - (int)(25*scroll);
 
-            String ip = NetworkDevices.getHostIP(i);
             String[] data = NetworkDevices.getHostDetails(i);
             if(data == null){
                 break;
@@ -336,9 +336,10 @@ public class Present extends JPanel {
         this.game_status = game_status;
     }
 
-//    ตัวแปรทิศทาง ความเร็วของฉาก
+//    à¸•à¸±à¸§à¹�à¸›à¸£à¸—à¸´à¸¨à¸—à¸²à¸‡ à¸„à¸§à¸²à¸¡à¹€à¸£à¹‡à¸§à¸‚à¸­à¸‡à¸‰à¸²à¸�
     int s_x = Math.random()>=0.5?-1:1, s_y = Math.random()>=0.5?-1:1;
     double s_vx = 0.5 + (new Random().nextDouble()*0.7), s_vy = 0.5 + (new Random().nextDouble()*0.7);
+
 
     public void run() {
         if(frameTime >= 120){
@@ -368,6 +369,9 @@ public class Present extends JPanel {
                 if(scene.getY() < 0) scene.setY(0); else scene.setY(scene.getSize_y()-cCanv.getHeight()-1);
             }
         } else if(frameTime >= 80){
+            if(frameTime == 80){
+                s_main.play();
+            }
             opc -= opc > 0 ? 5 : 0;
             frameTime++;
         }
@@ -392,7 +396,7 @@ public class Present extends JPanel {
     }
 
     public boolean is_btn_load = false;
-    // ------------- ฟังก์ชันเช็คว่าเมาส์อยู่ในปุ่มมั้ย
+    // ------------- à¸Ÿà¸±à¸‡à¸�à¹Œà¸Šà¸±à¸™à¹€à¸Šà¹‡à¸„à¸§à¹ˆà¸²à¹€à¸¡à¸²à¸ªà¹Œà¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸›à¸¸à¹ˆà¸¡à¸¡à¸±à¹‰à¸¢
     public int isMouseOnStart(int x, int y){
         if(game_status == 1){
             if((x >= b_cen_x && x <= b_cen_x+btn_sx) && (y >= btn_py && y <= btn_py+btn_sy)) return 0;

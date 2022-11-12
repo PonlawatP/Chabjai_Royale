@@ -2,16 +2,13 @@ package net.msu.bronline.comps;
 
 import net.msu.bronline.funcs.Utils;
 import net.msu.bronline.network.ClientHandler;
-import net.msu.bronline.network.NetworkDevices;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import static net.msu.bronline.funcs.Utils.*;
 import static net.msu.bronline.guis.Game.getGame;
@@ -283,7 +280,6 @@ public class Player {
     public void moveForward(double x){
         if(this.x+14+x >= 0 && this.x+64-14+x <= 2000){
             boolean coll = false;
-            int back = 0;
             for (int[][] ii : colld_data){
                 int x1 = colls(ii,(int) (this.x+14+x), this.y+20);
                 int x2 = colls(ii,(int) (this.x+64-14+x), this.y+20);

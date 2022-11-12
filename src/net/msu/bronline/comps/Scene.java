@@ -1,12 +1,11 @@
 package net.msu.bronline.comps;
 
-import net.msu.bronline.network.ClientHandler;
+import net.msu.bronline.funcs.SoundClip;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 import static net.msu.bronline.guis.Game.getGame;
@@ -70,7 +69,7 @@ public class Scene {
         if(this.y+cCanv.getHeight()+(posmy*15*getSize()) > 2000){
             this.y = 2000-cCanv.getHeight()-(posmy*15*getSize());
         }
-    } ///TODO: ทำ Raw x,y ของ scene แยก
+    } ///TODO: à¸—à¸³ Raw x,y à¸‚à¸­à¸‡ scene à¹�à¸¢à¸�
 
     public void setSize(float size) {
         this.size = size;
@@ -158,6 +157,14 @@ public class Scene {
     }
 
     public void winnerScene(Player p){
+        winnerScene(p, true);
+    }
+    public void winnerScene(Player p, boolean win){
+        getGame().song.stop();
+        if(win)
+            new SoundClip(getClass().getClassLoader().getResourceAsStream("sounds/win.wav"), -10.0f, false).play();
+        else
+            new SoundClip(getClass().getClassLoader().getResourceAsStream("sounds/lose.wav"), -10.0f, false).play();
         getGame().setGame_status(3);
         targ_p = p;
 
