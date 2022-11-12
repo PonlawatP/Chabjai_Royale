@@ -167,7 +167,6 @@ public class Game extends JPanel {
             sp = new ServerProgram(scene, this);
             t_host = new Thread(sp);
         } else {
-            getPresent().s_main.stop();
             cp = new CientProgram(getPlayerOwn().getUsername(), ip);
             t_host = new Thread(cp);
         }
@@ -178,8 +177,10 @@ public class Game extends JPanel {
         status_desc = "Waiting Players";
         getPresent().setGame_status(2);
         if(song != null) song.stop();
-        getPresent().s_main = new SoundClip(getClass().getClassLoader().getResourceAsStream("sounds/intro.wav"), -10.0f, true);
-        getPresent().s_main.play();
+        if(!getPresent().s_main.isStarted()) {
+            getPresent().s_main = new SoundClip(getClass().getClassLoader().getResourceAsStream("sounds/intro.wav"), -10.0f, true);
+            getPresent().s_main.play();
+        }
         if(hosting) {
             if(sp != null) sp.closeSev();
         } else {
@@ -589,6 +590,12 @@ public class Game extends JPanel {
    public SoundClip song;
     public void run(int m_x, int m_y) {
         if(getGame_status() != 0) {
+            if(getGame_status() == 2 || getGame_status() == 3){
+                if(getPresent().s_main != null && getPresent().s_main.isStarted()) {
+                    getPresent().s_main.stop();
+                }
+            }
+
             if(!isPlayingTrack && getGame_status() != 3) {
                 isPlayingTrack = true;
                 song = new SoundClip(getClass().getClassLoader().getResourceAsStream("sounds/playing.wav"), -15.0f, true);

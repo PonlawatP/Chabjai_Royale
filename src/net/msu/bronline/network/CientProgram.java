@@ -1,5 +1,7 @@
 package net.msu.bronline.network;
 
+import net.msu.bronline.funcs.SoundClip;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -48,6 +50,10 @@ public class CientProgram extends Thread implements Runnable{
             quit = true;
             getPresent().setGame_status(2);
             getGame().resetGame();
+            if(!getPresent().s_main.isStarted()) {
+                getPresent().s_main = new SoundClip(getClass().getClassLoader().getResourceAsStream("sounds/intro.wav"), -10.0f, true);
+                getPresent().s_main.play();
+            }
             runServerFinder();
     }
 

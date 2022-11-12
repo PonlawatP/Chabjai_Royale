@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Iterator;
 
+import static net.msu.bronline.funcs.Utils.runServerFinder;
 import static net.msu.bronline.guis.Game.getGame;
 import static net.msu.bronline.guis.Present.getPresent;
 
@@ -76,6 +77,11 @@ public class Cli_read extends Thread implements Runnable{
                                 break;
                             case "stop":
                                 getGame().setGame_status(0);
+                                if(!getPresent().s_main.isStarted()) {
+                                    getPresent().s_main = new SoundClip(getClass().getClassLoader().getResourceAsStream("sounds/intro.wav"), -10.0f, true);
+                                    getPresent().s_main.play();
+                                }
+                                runServerFinder();
                                 break;
                         }
                     } else if (data[1].equalsIgnoreCase("shutdown")) {

@@ -8,6 +8,8 @@ import java.nio.channels.MembershipKey;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import static net.msu.bronline.guis.Present.getPresent;
+
 public class NetworkDevices {
     public static int port = 50394;
     public static String MULTICAST_INTERFACE = "wlp2s0";
@@ -103,7 +105,7 @@ public class NetworkDevices {
                 } else {
                     counthost.replace(s, counthost.get(s)+1);
                     System.out.println("cannot ping to " + s + " ["+counthost.get(s)+"]");
-                    if(counthost.get(s) >= 2){
+                    if(counthost.get(s) != null && counthost.get(s) >= 2){
                         System.out.println("remove " + s);
 //                        fipList.remove(s);
                         counthost.remove(s);

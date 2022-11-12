@@ -57,4 +57,8 @@ public class SoundClip {
     public void stop(){
         started = false;
     }
+
+    public boolean isStarted() {
+        return started;
+    }
 }
