@@ -177,7 +177,7 @@ public class Game extends JPanel {
         setGame_status(0);
         status_desc = "Waiting Players";
         getPresent().setGame_status(2);
-        song.stop();
+        if(song != null) song.stop();
         getPresent().s_main = new SoundClip(getClass().getClassLoader().getResourceAsStream("sounds/intro.wav"), -10.0f, true);
         getPresent().s_main.play();
         if(hosting) {

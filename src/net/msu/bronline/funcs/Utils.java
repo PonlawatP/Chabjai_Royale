@@ -9,7 +9,7 @@ import static net.msu.bronline.guis.Present.getPresent;
 
 public class Utils {
     public static int score_win = 6;
-    public static int allowed_start = 1;
+    public static int allowed_start = 3;
     public static int getInsidePosition(int p, int dp, double percent){
         return (int)(p + ((dp-p)*(percent/100)));
     }
