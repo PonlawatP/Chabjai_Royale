@@ -36,16 +36,19 @@ public class SoundClip {
                     gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
                     gainControl.setValue(vol);
                     if(loop) clip.loop(99);
+//                    clip.setFramePosition(5030080);
                     clip.start();
                     started = true;
 
                     while (clip.isOpen()){
-                        if(!started) {
+                        if(!started || (!loop && clip.getFramePosition() == clip.getFrameLength())) {
 //                            clip.setFramePosition(0);
                             clip.close();
                             break;
                         }
 //                        System.out.println(clip.getFramePosition() + " : " + clip.getFrameLength());
+
+                        Thread.sleep(2000);
                     }
                 } catch (Exception e){
                     e.printStackTrace();
@@ -56,6 +59,7 @@ public class SoundClip {
 
     public void stop(){
         started = false;
+        if(clip.isOpen()) clip.close();
     }
 
     public boolean isStarted() {
