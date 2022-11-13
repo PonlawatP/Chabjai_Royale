@@ -1,6 +1,7 @@
 package net.msu.bronline;
 
 import net.msu.bronline.funcs.StartMenu;
+import net.msu.bronline.network.NetworkDevices;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +23,7 @@ public class Main_2 {
         } catch (IOException|FontFormatException e) {
             //Handle exception
         }
+        NetworkDevices.findNetworkInterface();
 
         JTextField user = new JTextField();
         user.setFont(new Font("Kanit Light", Font.PLAIN, 16));

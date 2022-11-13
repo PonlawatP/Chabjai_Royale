@@ -1,5 +1,6 @@
 package net.msu.bronline.comps;
 
+import net.msu.bronline.funcs.SoundClip;
 import net.msu.bronline.network.ClientHandler;
 
 import java.awt.*;
@@ -29,9 +30,9 @@ public class Ammo {
         val_y = dv * Math.sin(rad);
         int a = (int) (Math.random()*5);
 
-//        if(shooter.getUsername().equalsIgnoreCase(getGame().getPlayerOwn().getUsername())) {
-//            new SoundClip(getClass().getClassLoader().getResourceAsStream("snds/shoot.wav"), -10.0f, false).play();
-//        }
+        if(shooter.getUsername().equalsIgnoreCase(getGame().getPlayerOwn().getUsername())) {
+            new SoundClip(getClass().getClassLoader().getResourceAsStream("sounds/shoot.wav"), -20.0f, false).play();
+        }
 
         switch (a){
             case 1:

@@ -1,5 +1,6 @@
 package net.msu.bronline.comps;
 
+import net.msu.bronline.funcs.SoundClip;
 import net.msu.bronline.funcs.Utils;
 import net.msu.bronline.network.ClientHandler;
 
@@ -190,7 +191,9 @@ public class Player {
     }
 
     public boolean reloadAmmo(){
+        if(!ammo_reloading) new SoundClip(getClass().getClassLoader().getResourceAsStream("sounds/reload.wav"), -20.0f, false).play();
         ammo_reloading = true;
+
         if(ammo_re_thr < ammo_re_lim){
             ammo_re_thr++;
             return false;
@@ -387,6 +390,7 @@ public class Player {
         hp = 0;
         dead = true;
         i1 = 0;
+        if(name.equalsIgnoreCase(getGame().getPlayerOwn().getUsername())) new SoundClip(getClass().getClassLoader().getResourceAsStream("sounds/dead.wav"), -5.0f, false).play();
         Iterator<Player> ps = new ArrayList<>(Player.getPlayers()).iterator();
         while (ps.hasNext()){
             Player p = ps.next();

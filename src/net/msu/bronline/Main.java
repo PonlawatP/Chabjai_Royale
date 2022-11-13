@@ -13,6 +13,7 @@ public class Main {
     static String sn = "";
     static boolean skip = false;
     public static void main(String[] args) {
+        boolean intf = false;
         for (String str : args){
             String[] s = str.split("=");
             if(s[0].equalsIgnoreCase("score_win")){
@@ -33,6 +34,27 @@ public class Main {
                 sn=s[1];
             } else if(str.equalsIgnoreCase("skip_intro")){
                 skip=true;
+            } else if(str.equalsIgnoreCase("inlist")){
+                NetworkDevices.findNetworkInterface();
+                System.out.println("- - - - Interface List - - - -");
+                for(String a : NetworkDevices.interfaceList.keySet()) {
+                    System.out.println(" - " + a + " : " + NetworkDevices.interfaceList.get(a));
+                }
+                System.out.println("\nSelect your right interface name then use this Argument to custom interface \n\"interf=<interface_name>\"");
+                return;
+            } else if(s[0].equalsIgnoreCase("interf")){
+                System.out.println("Selecting custom Interface: " + s[1]);
+                NetworkDevices.MULTICAST_INTERFACE = s[1];
+                NetworkDevices.findNetworkInterface();
+
+                if(NetworkDevices.interfaceList.get(s[1]) != null){
+                    intf = true;
+                    System.out.println("selected interface: " + s[1] + " : " + NetworkDevices.interfaceList.get(s[1]));
+                } else {
+                    System.out.println("Error: Invalid Interface");
+                    System.out.println("To check network interface please use Argument \n\"inlist\"");
+                    return;
+                }
             }
         }
 
@@ -43,6 +65,7 @@ public class Main {
         } catch (IOException|FontFormatException e) {
             //Handle exception
         }
+        if(!intf) NetworkDevices.findNetworkInterface();
 
         if(sn.length() > 0){
             try{

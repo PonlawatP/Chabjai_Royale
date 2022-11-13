@@ -12,7 +12,7 @@ import static net.msu.bronline.guis.Present.getPresent;
 
 public class NetworkDevices {
     public static int port = 50394;
-    public static String MULTICAST_INTERFACE = "wlp2s0";
+    public static String MULTICAST_INTERFACE = "";
     public static int MULTICAST_PORT = 4321;
     public static String MULTICAST_IP = "230.0.0.0";
 
@@ -28,13 +28,25 @@ public class NetworkDevices {
     public static String getHostIP(int id){
         return (fipList.keySet().size() == 0 || fipList.keySet().size() <= id ? "0.0.0.0" : (String) fipList.keySet().toArray()[id]);
     }
-
+    public static HashMap<String, String> interfaceList = new HashMap<>();
     public static void findNetworkInterface() {
         try{
+            for(NetworkInterface s : NetworkInterface.networkInterfaces().toList()) {
+//              System.out.println(s.getName() + " : " + s.supportsMulticast() + " : " + s.isUp() + " : " + s.isLoopback());
+                if (s.supportsMulticast() && s.isUp() && !s.isLoopback() && (s.getInetAddresses().nextElement() != null)) {
+                    interfaceList.put(s.getName(), s.getInetAddresses().nextElement().getHostAddress());
+                }
+            }
+//            for(String s : interfaceList.keySet()) {
+//                System.out.println(s + " : " + interfaceList.get(s));
+//            }
+            if(MULTICAST_INTERFACE.length() != 0) return;
+
             for(NetworkInterface s : NetworkInterface.networkInterfaces().toList()){
 //              System.out.println(s.getName() + " : " + s.supportsMulticast() + " : " + s.isUp() + " : " + s.isLoopback());
-                if(s.supportsMulticast() && s.isUp() && !s.isLoopback()){
+                if(s.supportsMulticast() && s.isUp() && !s.isLoopback() && (s.getInetAddresses().nextElement() != null)){
                     MULTICAST_INTERFACE = s.getName();
+                    System.out.println("selected interface: " + s.getName() + " : " + s.getInetAddresses().nextElement().getHostAddress());
                     break;
                 }
             }

@@ -21,8 +21,6 @@ public class StartMenu {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                NetworkDevices.findNetworkInterface();
-
                 JFrame frame = new JFrame();
 
                 Canv canvas = null;

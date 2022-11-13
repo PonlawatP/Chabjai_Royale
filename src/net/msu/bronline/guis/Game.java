@@ -623,6 +623,7 @@ public class Game extends JPanel {
                 if (movements[8]) v_speed = v_speed / 2;
                 if (movements[9] || p_own.isAmmo_reloading() || p_own.getAmmoRemain() == 0) {
                     if(p_own.getAmmoRemain() != 37){
+                        if(!p_own.isAmmo_reloading()) new SoundClip(getClass().getClassLoader().getResourceAsStream("sounds/click.wav"), -20.0f, false).play();
                         p_own.setAmmo(0);
                         p_own.reloadAmmo();
                     }
